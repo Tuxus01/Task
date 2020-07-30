@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% load l10n %}
+
+
+{% block content %}
+    
+<v-bottom-navigation
+    v-model="bottomNav"
+    dark
+    shift
+  >
+  <v-btn>
+    <span>Dashboard</span>
+    <v-icon>mdi-tablet-dashboard</v-icon>
+  </v-btn>
+
+    <v-btn>
+      <span>Table</span>
+      <v-icon>mdi-table-large-plus</v-icon>
+    </v-btn>
+
+    <v-btn>
+      <span>Board</span>
+      <v-icon>mdi-chart-tree</v-icon>
+    </v-btn>
+
+    <v-btn>
+      <span>TimeLine</span>
+      <v-icon>mdi-clock-digital</v-icon>
+    </v-btn>
+
+    <v-btn>
+      <span>Image</span>
+      <v-icon>mdi-image</v-icon>
+    </v-btn>
+  </v-bottom-navigation>
+
+
+<!--DIV DASHBOARD PRINCIPAL -->
+  <div v-if="bottomNav=== 0">
+    <v-container grid-list-lg>
+        <v-layout row wrap>
+            <v-flex xs12 lg6 md6>
+                <h2 align="center">Projects</h2></br>
+                    <v-card class="mx-auto" >
+                        <v-simple-table  dense dark>
+                            <template v-slot:default>
+                              <thead >
+                                <tr >
+                                  <th  class="text-left">Project</th>
+                                  <th class="text-left">Team</th>
+                                  <th class="text-left">Advance</th>
+                                  <th class="text-left">Comment</th>
+                                  <th class="text-left">Time</th>
+                                  <th class="text-left">Action</th>
+                                  
+                                </tr>
+                              </thead>
+                              <tbody>
+                              
+                                <tr >
+                                  <td> Nombre del proyecto</td>
+                                  <td> <v-icon>mdi-account-lock</v-icon>33</td>
+                                  <td> <v-progress-linear
+                                    
+                                    height="15"
+                                    value=70
+                                  >
+                                    <strong>70%</strong>
+                                  </v-progress-linear> 
+                                
+                                </td>
+                                  <td> 33k  <v-icon>mdi-comment</v-icon></td>
+                                  <td> 39 Days</td>
+                                  <td> <v-icon> mdi-content-save-edit-outline </v-icon> </td>
+                                </tr>
+                           
+                              </tbody>
+                            </template>
+                          </v-simple-table>
+                    </v-card>
+            </v-flex>
+
+            <v-flex xs12 lg6 md6>
+                <h2 align="center">Work Teams </h2></br>
+                    <v-card class="mx-auto" >
+
+                    </v-card>
+            </v-flex>
+        </v-layout>
+    </v-container>
+  </div>
+<!--DIV DASHBOARD PRINCIPAL -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--DIV Proyecto -->
+<div v-if="bottomNav=== 6">
+    <v-container grid-list-lg>
+        <v-layout row wrap>
+            <v-flex xs12 lg12 md12>
+                Información de Dashboard
+            </v-flex>
+        </v-layout>
+    </v-container>
+  </div>
+<!--DIV Proyecto -->
+
+{% endblock %}

@@ -1,0 +1,262 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<!-- Fotorama from CDNJS, 19 KB -->
+<link  href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script>
+
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+ 
+</head>
+<body>
+  <div id="app">
+
+
+
+        <template>
+            <v-app id="inspire">
+              <v-navigation-drawer
+                v-model="drawer"
+                :clipped="$vuetify.breakpoint.lgAndUp"
+                app
+                color="blue-grey lighten-5"
+                dense
+              >
+                <v-list >
+
+                
+                    <v-list nav class="py-2">
+                    <v-list-item two-line >
+                        <v-img  src="{% static 'img/dashboard.png' %}"></v-img>
+                    </v-list-item>
+          
+                <v-divider></v-divider>
+
+
+                  <template v-for="item in items">
+                    <v-row
+                      v-if="item.heading"
+                      :key="item.heading"
+                      align="center"
+                    >
+                      <v-col cols="6">
+                        <v-subheader v-if="item.heading">
+                          [[ item.heading ]]
+                        </v-subheader>
+                      </v-col>
+                      <v-col
+                        cols="6"
+                        class="text-center"
+                      >
+                        <a
+                          href="#!"
+                          class="body-2 black--text"
+                        >EDIT</a>
+                      </v-col>
+                    </v-row>
+                    <v-list-group
+                      v-else-if="item.children"
+                      :key="item.text"
+                      v-model="item.model"
+                      :prepend-icon="item.model ? item.icon : item['icon-alt']"
+                      append-icon=""
+                    >
+                      <template v-slot:activator>
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            [[ item.text ]]
+                          </v-list-item-title>
+                        </v-list-item-content>
+                      </template>
+                      <v-list-item
+                        v-for="(child, i) in item.children"
+                        :key="i"
+                        link
+                      >
+                        <v-list-item-action v-if="child.icon">
+                          <v-icon>[[ child.icon ]]</v-icon>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            [[ child.text ]]
+                          </v-list-item-title>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-list-group>
+                    <v-list-item
+                      v-else
+                      :key="item.text"
+                      link
+                      :href="item.url"
+                    >
+                      <v-list-item-action>
+                        <v-icon>[[ item.icon ]]</v-icon>
+                      </v-list-item-action>
+                      <v-list-item-content>
+                        <v-list-item-title>
+                          [[ item.text ]]
+                        </v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </template>
+                </v-list>
+              </v-navigation-drawer>
+              <form action="#" method="get">
+              <v-app-bar
+                :clipped-left="$vuetify.breakpoint.lgAndUp"
+                app
+                color="blue darken-2"
+                dark
+                dense
+              >
+                <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+                <v-toolbar-title
+                  style="width: 300px"
+                  class="ml-0 pl-4"
+                >
+                  <span class="hidden-sm-and-down">Task Manager </span>
+                </v-toolbar-title>
+                
+                <v-text-field
+                  flat
+                  solo-inverted
+                  hide-details
+                  prepend-inner-icon="mdi-magnify"
+                  label="Search ..."
+                  class="hidden-sm-and-down"
+                  type="search"
+                  id="buscar" name="buscar"
+
+                ></v-text-field>
+                
+                <v-spacer></v-spacer>
+
+             
+                  
+                
+              
+                {% if user.is_authenticated %}
+                <v-btn icon>
+                  <v-icon>mdi-plus-circle</v-icon>
+                </v-badge>
+                </v-btn>
+              
+                {{ user.first_name }} {{ user.last_name}}</br>
+
+               
+                {% else %}
+                <v-btn href="" icon>
+                  <v-icon>mdi-facebook</v-icon>
+                </v-badge>
+                </v-btn> 
+                
+                {% endif %}
+
+                
+                
+                
+                
+              </v-app-bar>
+            </form>
+                <v-main >
+                    {% block content %}
+
+                    {% endblock %}
+
+
+                </v-main>
+            
+            
+            </v-app>
+          </template>
+          
+    
+  </div>
+
+
+
+
+
+
+  
+  <!--Informacion del contenido a mostrar -->
+  
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+
+
+{% block script %}
+
+{% endblock %}
+
+  <script>
+
+var app = new Vue({
+  delimiters: ['[[', ']]'],
+  el: '#app',
+  vuetify: new Vuetify(),
+  data: {
+      dialog: false,
+      drawer: false,
+      items: [
+        { icon: 'mdi-store', text: 'Inicio' , url : '/store' },
+        { icon: 'mdi-content-copy', text: 'Mas Productos' , url : '#'},
+        { icon: 'mdi-cart', text: 'Carrito', url : '/store/carrito' },
+        {
+          icon: 'mdi-chevron-up',
+          'icon-alt': 'mdi-chevron-down',
+          text: 'Categorias',
+          model: false,
+          children: [
+            { icon: 'mdi-', text: 'Mujer' , url : '#'},
+            { icon: 'mdi-', text: 'Hombre', url : '#' },
+            { icon: 'mdi-', text: 'Niños' , url : '#'},
+            { icon: 'mdi--', text: 'Niña' , url : '#'},
+            { icon: 'mdi--', text: 'Otros Productos' , url : '#'},
+            
+       
+          ],
+        },
+      ],
+
+      bottomNav: 0,
+
+     
+     
+  },
+
+  computed: {
+      color () {
+        switch (this.bottomNav) {
+          case 0: return 'blue-grey'
+          case 1: return 'teal'
+          case 2: return 'brown'
+          case 3: return 'indigo'
+          case 4: return 'indigo'
+        }
+      },
+    },
+
+
+  methods: {
+     
+  }
+});
+
+
+  </script>
+</body>
+</html>
