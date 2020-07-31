@@ -26,92 +26,8 @@
 
         <template>
             <v-app id="inspire">
-              <v-navigation-drawer
-                v-model="drawer"
-                :clipped="$vuetify.breakpoint.lgAndUp"
-                app
-                color="blue-grey lighten-5"
-                dense
-              >
-                <v-list >
-
-                
-                    <v-list nav class="py-2">
-                    <v-list-item two-line >
-                        <v-img  src="{% static 'img/dashboard.png' %}"></v-img>
-                    </v-list-item>
-          
-                <v-divider></v-divider>
 
 
-                  <template v-for="item in items">
-                    <v-row
-                      v-if="item.heading"
-                      :key="item.heading"
-                      align="center"
-                    >
-                      <v-col cols="6">
-                        <v-subheader v-if="item.heading">
-                          [[ item.heading ]]
-                        </v-subheader>
-                      </v-col>
-                      <v-col
-                        cols="6"
-                        class="text-center"
-                      >
-                        <a
-                          href="#!"
-                          class="body-2 black--text"
-                        >EDIT</a>
-                      </v-col>
-                    </v-row>
-                    <v-list-group
-                      v-else-if="item.children"
-                      :key="item.text"
-                      v-model="item.model"
-                      :prepend-icon="item.model ? item.icon : item['icon-alt']"
-                      append-icon=""
-                    >
-                      <template v-slot:activator>
-                        <v-list-item-content>
-                          <v-list-item-title>
-                            [[ item.text ]]
-                          </v-list-item-title>
-                        </v-list-item-content>
-                      </template>
-                      <v-list-item
-                        v-for="(child, i) in item.children"
-                        :key="i"
-                        link
-                      >
-                        <v-list-item-action v-if="child.icon">
-                          <v-icon>[[ child.icon ]]</v-icon>
-                        </v-list-item-action>
-                        <v-list-item-content>
-                          <v-list-item-title>
-                            [[ child.text ]]
-                          </v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </v-list-group>
-                    <v-list-item
-                      v-else
-                      :key="item.text"
-                      link
-                      :href="item.url"
-                    >
-                      <v-list-item-action>
-                        <v-icon>[[ item.icon ]]</v-icon>
-                      </v-list-item-action>
-                      <v-list-item-content>
-                        <v-list-item-title>
-                          [[ item.text ]]
-                        </v-list-item-title>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </template>
-                </v-list>
-              </v-navigation-drawer>
               <form action="#" method="get">
               <v-app-bar
                 :clipped-left="$vuetify.breakpoint.lgAndUp"
@@ -147,10 +63,16 @@
                 
               
                 {% if user.is_authenticated %}
+                <v-btn  small fab color="green">
+                  <v-icon>mdi-plus</v-icon>
+                </v-btn>
+
                 <v-btn icon>
-                  <v-icon>mdi-plus-circle</v-icon>
+                  <v-icon >mdi-python</v-icon>
                 </v-badge>
                 </v-btn>
+                
+                
               
                 {{ user.first_name }} {{ user.last_name}}</br>
 
@@ -180,7 +102,7 @@
             
             </v-app>
           </template>
-          
+
     
   </div>
 
@@ -211,48 +133,96 @@ var app = new Vue({
   data: {
       dialog: false,
       drawer: false,
-      items: [
-        { icon: 'mdi-store', text: 'Inicio' , url : '/store' },
-        { icon: 'mdi-content-copy', text: 'Mas Productos' , url : '#'},
-        { icon: 'mdi-cart', text: 'Carrito', url : '/store/carrito' },
-        {
-          icon: 'mdi-chevron-up',
-          'icon-alt': 'mdi-chevron-down',
-          text: 'Categorias',
-          model: false,
-          children: [
-            { icon: 'mdi-', text: 'Mujer' , url : '#'},
-            { icon: 'mdi-', text: 'Hombre', url : '#' },
-            { icon: 'mdi-', text: 'Niños' , url : '#'},
-            { icon: 'mdi--', text: 'Niña' , url : '#'},
-            { icon: 'mdi--', text: 'Otros Productos' , url : '#'},
-            
-       
-          ],
-        },
-      ],
+      drawer2 : true,
+      drawerEdit : false,
 
-      bottomNav: 0,
+      //Menu Derecho con lista de Projectos 
+      items: [
+          { title: 'Proyect1', icon: 'mdi-view-dashboard' ,id:'Test' },
+          { title: 'Proyect2', icon: 'mdi-image',id:1 },
+          { title: 'Proyect3', icon: 'mdi-help-box',id:2 },
+          { title: 'Proyect4', icon: 'mdi-help-box',id:3 },
+          { title: 'Proyect5', icon: 'mdi-help-box',id:4 },
+        ],
+
+      //List Desplegado Kamban Table
+      itemsKamban: [
+          {
+            action: 'local_activity',
+            title: 'Inicio',
+            active:true,
+            items: [
+              { title: 'List Item', date_create:'2020-02-02',date_update:'2020-08-01', priority:'Urgent' },
+            ],
+          },
+          {
+            action: 'restaurant',
+            title: 'Proceso',
+            active: false,
+            items: [
+              { title: 'Breakfast & brunch' },
+              { title: 'New American' },
+              { title: 'Sushi' },
+            ],
+          },
+          {
+            action: 'school',
+            title: 'Evaluacion',
+            items: [
+              { title: 'List Item' },
+            ],
+          },
+          {
+            action: 'directions_run',
+            title: 'Rectificacion',
+            items: [
+              { title: 'List Item' },
+            ],
+          },
+          {
+            action: 'healing',
+            title: 'Health',
+            items: [
+              { title: 'List Item' },
+            ],
+          },
+          {
+            action: 'content_cut',
+            title: 'Office',
+            items: [
+              { title: 'List Item' },
+            ],
+          },
+          {
+            action: 'local_offer',
+            title: 'Close',
+            items: [
+              { title: 'List Item' },
+            ],
+          },
+        ],
+    
+
+      bottomNav: 2,
+      bottomNavProject : 'Test',
+
+
+
+
 
      
      
   },
 
   computed: {
-      color () {
-        switch (this.bottomNav) {
-          case 0: return 'blue-grey'
-          case 1: return 'teal'
-          case 2: return 'brown'
-          case 3: return 'indigo'
-          case 4: return 'indigo'
-        }
-      },
+   
+      
     },
 
 
   methods: {
-     
+   
+
   }
 });
 

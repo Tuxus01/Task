@@ -10,6 +10,7 @@
     v-model="bottomNav"
     dark
     shift
+    
   >
   <v-btn>
     <span>Dashboard</span>
@@ -38,12 +39,83 @@
   </v-bottom-navigation>
 
 
+   <!--Barra de navegacion entre projectos -->
+   <v-navigation-drawer
+   v-model="drawer2"
+   
+   expand-on-hover
+   mini-variant
+   permanent
+   absolute
+   dark
+ >
+   <v-list
+     dense
+     nav
+     class="py-1"
+   
+   >
+     <v-list-item two-line class="px-0">
+       <v-list-item-avatar>
+         <img src="https://k60.kn3.net/89F951249.gif">
+       </v-list-item-avatar>
+
+       <v-list-item-content>
+         <v-list-item-title>List Projects!!</v-list-item-title>
+         <v-list-item-subtitle>@Randy</v-list-item-subtitle>
+       </v-list-item-content>
+     </v-list-item>
+
+     <v-divider></v-divider>
+
+     <v-list-item
+       @click="bottomNavProject=item.id"
+       v-for="item in items"
+       :key="item.title"
+       link
+     >
+
+     
+
+       <v-list-item-icon>
+         <v-icon>[[ item.icon ]]</v-icon>
+       </v-list-item-icon>
+
+       <v-list-item-content>
+         <v-list-item-title>[[ item.title ]]</v-list-item-title>
+       </v-list-item-content>
+     </v-list-item>
+   </v-list>
+ </v-navigation-drawer>
+  <!--Barra de navegacion entre projectos -->
+
+
+
+
+  
+  <!--Barra de navegacion Izquierda para modificar eventos entre projectos -->
+   <v-navigation-drawer
+   v-model="drawerEdit"
+   width="1000"
+    temporary
+   absolute
+   color="blue-grey lighten-5"
+   right
+ >
+  
+ </v-navigation-drawer>
+  <!--Barra de navegacion Izquierda para modificar eventos entre projectos -->
+
+
+  
+
 <!--DIV DASHBOARD PRINCIPAL -->
   <div v-if="bottomNav=== 0">
+
     <v-container grid-list-lg>
         <v-layout row wrap>
             <v-flex xs12 lg6 md6>
-                <h2 align="center">Projects</h2></br>
+                <h2 align="center">Projects </h2> </br>
                     <v-card class="mx-auto" >
                         <v-simple-table  dense dark>
                             <template v-slot:default>
@@ -63,20 +135,11 @@
                                 <tr >
                                   <td> Nombre del proyecto</td>
                                   <td> <v-icon>mdi-account-lock</v-icon>33</td>
-                                  <td> <v-progress-linear
-                                    
-                                    height="15"
-                                    value=70
-                                  >
-                                    <strong>70%</strong>
-                                  </v-progress-linear> 
-                                
-                                </td>
+                                  <td> <v-progress-linear height="15"value=70><strong>70%</strong></v-progress-linear>  </td>
                                   <td> 33k  <v-icon>mdi-comment</v-icon></td>
                                   <td> 39 Days</td>
                                   <td> <v-icon> mdi-content-save-edit-outline </v-icon> </td>
                                 </tr>
-                           
                               </tbody>
                             </template>
                           </v-simple-table>
@@ -86,7 +149,31 @@
             <v-flex xs12 lg6 md6>
                 <h2 align="center">Work Teams </h2></br>
                     <v-card class="mx-auto" >
-
+                      <v-simple-table  dense dark>
+                        <template v-slot:default>
+                          <thead >
+                            <tr >
+                              <th class="text-left">User</th>
+                              <th class="text-left">Email</th>
+                              <th class="text-left">Projects</th>
+                              <th class="text-left">Comment</th>
+                              <th class="text-left">Like</th>
+                              <th class="text-left">Files</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr >
+                              <td> <v-icon>mdi-account</v-icon> Randy</td>
+                              <td> tuxus01@gmail.com</td>
+                              <td> 5 Active</td>
+                              <td>33k  <v-icon>mdi-comment</v-icon> </td>
+                              <td>100  <v-icon>mdi-thumb-up</v-icon></td>
+                              <td>100  <v-icon>mdi-file-link</v-icon></td>
+                              
+                            </tr>
+                          </tbody>
+                        </template>
+                      </v-simple-table>
                     </v-card>
             </v-flex>
         </v-layout>
@@ -98,31 +185,95 @@
 
 
 
+<!--DIV Table Data -->
+<div v-if="bottomNav=== 1">
+  <v-container grid-list-lg>
+    <v-layout row wrap>
+        <v-flex xs12 lg12 md12>
+          <!--Aqui van los diferentes datos de projecto v-if bottomNav-->
+          <div v-if="bottomNavProject=== 'Test'">
+            <v-card>
+            <v-list dense rounded >
+              <v-list-group
+                v-for="item in itemsKamban"
+                :key="item.title"
+                v-model="item.active"
+                :prepend-icon="item.action"
+                no-action
+                selected
+                
+                active-class="dark" 
+              >
+                <template v-slot:activator>
+                  <v-list-item-content>
+                    <v-list-item-title v-text="item.title"></v-list-item-title>
+                  </v-list-item-content>
+                </template>
+                
+                <v-list-item
+                  v-for="subItem in item.items"
+                  :key="subItem.title"
+                  @click="drawerEdit=true"
+               
+                 
+                >
+                
+      
+                  <!--Avatar del usuario asignado a la tarea-->
+                  <v-list-item-avatar >
+                        <v-img src="https://cdn.vuetifyjs.com/images/lists/2.jpg"></v-img>
+                  </v-list-item-avatar>
+                      
+                 
+                  <v-list-item-content  >
+                    <v-list-item-title  v-text="subItem.title"></v-list-item-title>
+                  </v-list-item-content>
+                
+
+                  <v-list-item-content  >
+                    <v-list-item-title  v-text="subItem.date_create"></v-list-item-title>
+                  </v-list-item-content>
+
+
+                  <v-list-item-content  >
+                    <v-list-item-title  v-text="subItem.date_update"></v-list-item-title>
+                  </v-list-item-content>
+
+                  <v-list-item-content  >
+                    <v-list-item-title  v-text="subItem.priority"></v-list-item-title>
+                  </v-list-item-content>
+                
+                </v-list-item>
+              
+              </v-list-group>
+            </v-list>
+            </v-card>
 
 
 
-
-
-
-
-
-
-
-
-
-
+          </div>
+          
+        </v-flex>
+    </v-layout>
+  </v-container>
+</div>
+<!--DIV Table Data -->
 
 
 <!--DIV Proyecto -->
-<div v-if="bottomNav=== 6">
+<div v-if="bottomNav=== 2">
     <v-container grid-list-lg>
         <v-layout row wrap>
             <v-flex xs12 lg12 md12>
-                Información de Dashboard
+                
+             d
+
             </v-flex>
         </v-layout>
     </v-container>
   </div>
 <!--DIV Proyecto -->
+
+
 
 {% endblock %}
