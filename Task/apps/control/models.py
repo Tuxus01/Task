@@ -97,13 +97,14 @@ class kamban(ModelBase):
         return item
 
     def __str__(self):
-        return self.name 
+        return self.project.name + " - " + self.name 
 
 
 class Task(ModelBase):
     title = models.CharField('task',max_length=80) #Titulo de la tarea
     project = models.ForeignKey(project, on_delete=models.CASCADE) #Project relacionado
     kamban = models.ForeignKey(kamban, on_delete=models.CASCADE, blank=True, null=True) #Paso actual del kamba
+    priority = models.IntegerField(choices=((1,("Low")),(2,("Medium")),(3,("Urgent")),(4,("Wait"))),default=1)
 
     def __str__(self):
         return self.title

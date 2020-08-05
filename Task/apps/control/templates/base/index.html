@@ -36,13 +36,12 @@
       <span>Image</span>
       <v-icon>mdi-image</v-icon>
     </v-btn>
-  </v-bottom-navigation>
+</v-bottom-navigation>
 
 
    <!--Barra de navegacion entre projectos -->
    <v-navigation-drawer
    v-model="drawer2"
-   
    expand-on-hover
    mini-variant
    permanent
@@ -62,27 +61,25 @@
 
        <v-list-item-content>
          <v-list-item-title>List Projects!!</v-list-item-title>
-         <v-list-item-subtitle>@Randy</v-list-item-subtitle>
+         <v-list-item-subtitle>@{{ user }}</v-list-item-subtitle>
        </v-list-item-content>
      </v-list-item>
 
      <v-divider></v-divider>
 
      <v-list-item
-       @click="bottomNavProject=item.id"
-       v-for="item in items"
-       :key="item.title"
+       
+       v-for="item in Project_list"
+       :key="item.id"
+       @click="List_Table(item.id)"
        link
      >
-
-     
-
        <v-list-item-icon>
-         <v-icon>[[ item.icon ]]</v-icon>
+         <v-icon>mdi-view-dashboard</v-icon>
        </v-list-item-icon>
 
        <v-list-item-content>
-         <v-list-item-title>[[ item.title ]]</v-list-item-title>
+         <v-list-item-title>[[ item.name ]]</v-list-item-title>
        </v-list-item-content>
      </v-list-item>
    </v-list>
@@ -90,19 +87,98 @@
   <!--Barra de navegacion entre projectos -->
 
 
-
-
-  
   <!--Barra de navegacion Izquierda para modificar eventos entre projectos -->
    <v-navigation-drawer
    v-model="drawerEdit"
    width="1000"
     temporary
    absolute
-   color="blue-grey lighten-5"
+
    right
+   dark
  >
-  
+  <v-container grid-list-lg >
+    <v-layout row wrap>
+        <v-flex xs12 lg12 md12>
+            <v-btn  text outlined  rounded color="success">
+              <v-icon left>mdi-content-save</v-icon> Mark as finished
+            </v-btn> 
+        </v-flex>
+
+        <v-flex xs12 lg12 md12 >
+          <v-col xs4 lg4 md4>
+            <h1 class="white--text">Nombre de la Tarea</h1>
+            <h4 class="white--text">Descripcion de la tarea, informacion adicional a la ejecucion, recomendacion o sugerencia</h4><br>
+
+            <h4 class="teal--text">Resposable</h4>
+            <v-avatar>
+              <v-img src="https://k60.kn3.net/89F951249.gif"></v-img>
+            </v-avatar>
+            <v-avatar>
+              <v-img src="https://k60.kn3.net/89F951249.gif"></v-img>
+            </v-avatar>
+            <v-avatar >
+              <v-img src="https://k60.kn3.net/89F951249.gif"></v-img>
+            </v-avatar>
+
+            <v-btn outlined fab dark>
+              <v-icon>mdi-account-multiple-plus</v-icon>
+            </v-btn>
+
+          </v-col>
+
+        </v-flex>
+
+      
+        <!--Sub Tarea dentro de la tarea-->
+        <v-flex xs12 lg12 md12 >
+          <v-virtual-scroll
+          :items="sub_tare_test"
+          :item-height="30"
+          height="340"
+          
+        >
+          <template  v-slot="{ item }">
+            <v-list-item outlined>
+              <v-list-item-avatar >
+                <v-avatar>
+                  <v-img :src="item.avatar"></v-img>
+                </v-avatar>
+              </v-list-item-avatar>
+    
+              <v-list-item-content >
+                
+                <v-list-item-title class="blue--text" v-html="item.title"></v-list-item-title>
+                <v-list-item-title v-html="item.subtitle"></v-list-item-title>
+                
+                
+                <v-divider></v-divider>
+              </v-list-item-content>
+              
+            </v-list-item>
+          </template>
+        </v-virtual-scroll>
+
+        </v-flex>
+        <!--Sub Tarea dentro de la tarea-->
+        <v-flex xs12 lg12 md12 >
+          <v-col cols="12" md="12">
+            <v-textarea
+              outlined
+              name="input-7-4"
+              label="New Comment"
+             
+            ></v-textarea>
+            <v-btn  text outlined  rounded color="success">
+              <v-icon left>mdi-pencil</v-icon> Add Comment
+            </v-btn> 
+          </v-col>
+        </v-flex>
+
+
+
+    </v-layout>
+  </v-container>
  </v-navigation-drawer>
   <!--Barra de navegacion Izquierda para modificar eventos entre projectos -->
 
@@ -191,37 +267,35 @@
     <v-layout row wrap>
         <v-flex xs12 lg12 md12>
           <!--Aqui van los diferentes datos de projecto v-if bottomNav-->
-          <div v-if="bottomNavProject=== 'Test'">
+          <div v-if="itemsKamban !='' ">
             <v-card>
             <v-list dense rounded >
               <v-list-group
                 v-for="item in itemsKamban"
-                :key="item.title"
+                :key="item.id"
                 v-model="item.active"
-                :prepend-icon="item.action"
+                prepend-icon="mdi-view-dashboard"
                 no-action
                 selected
+                @click="List_subTask(item.id)"
                 
                 active-class="dark" 
               >
                 <template v-slot:activator>
                   <v-list-item-content>
-                    <v-list-item-title v-text="item.title"></v-list-item-title>
+                    <v-list-item-title v-text="item.name"></v-list-item-title>
                   </v-list-item-content>
                 </template>
                 
                 <v-list-item
-                  v-for="subItem in item.items"
-                  :key="subItem.title"
+                  v-for="subItem in subitemKamban"
+                  :key="subItem.id"
                   @click="drawerEdit=true"
-               
-                 
+                  class="text-decoration-line-through"
                 >
-                
-      
                   <!--Avatar del usuario asignado a la tarea-->
                   <v-list-item-avatar >
-                        <v-img src="https://cdn.vuetifyjs.com/images/lists/2.jpg"></v-img>
+                        <v-img src="https://e7.pngegg.com/pngimages/266/560/png-clipart-python-computer-icons-programmer-javascript-programming-language-python-logo-angle-text.png"></v-img>
                   </v-list-item-avatar>
                       
                  
@@ -236,12 +310,37 @@
 
 
                   <v-list-item-content  >
-                    <v-list-item-title  v-text="subItem.date_update"></v-list-item-title>
+                    <v-list-item-title  v-text="subItem.date_change"></v-list-item-title>
                   </v-list-item-content>
+                  
 
-                  <v-list-item-content  >
-                    <v-list-item-title  v-text="subItem.priority"></v-list-item-title>
-                  </v-list-item-content>
+                  <template v-if="subItem.priority===1">
+                    <v-list-item-content>
+                      <v-list-item-title> <v-chip class="ma-2" color="green">Low</v-chip></v-list-item-title>
+                    </v-list-item-content>
+                  </template>
+
+                  <template v-if="subItem.priority===2">
+                    <v-list-item-content>
+                      <v-list-item-title> <v-chip class="ma-2" color="yellow">Medium</v-chip></v-list-item-title>
+                    </v-list-item-content>
+                  </template>
+
+                  <template v-if="subItem.priority===3">
+                    <v-list-item-content>
+                      <v-list-item-title> <v-chip class="ma-2" color="red">Urgent</v-chip></v-list-item-title>
+                    </v-list-item-content>
+                  </template>
+
+                  <template v-if="subItem.priority===4">
+                    <v-list-item-content>
+                      <v-list-item-title> <v-chip class="ma-2" color="blue">Wait</v-chip></v-list-item-title>
+                    </v-list-item-content>
+                  </template>
+
+
+                 
+                  
                 
                 </v-list-item>
               
@@ -252,6 +351,8 @@
 
 
           </div>
+
+          <div v-else ><h1 align="center">Please select the project to work</h1></div>
           
         </v-flex>
     </v-layout>

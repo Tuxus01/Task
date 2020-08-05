@@ -12,7 +12,5 @@ app_name='base'
 
 urlpatterns = [
     path('', Index, name='index'),
-   
-
 ]
 
