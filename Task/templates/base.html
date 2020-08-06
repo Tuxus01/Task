@@ -123,65 +123,17 @@ var app = new Vue({
       //List Desplegado Kamban Table
       itemsKamban :[],
       subitemKamban : [],
-      itemsKambanEjemplo: [
-          {
-            action: 'local_activity',
-            title: 'Inicio',
-            active:true,
-            items: [
-              { title: 'List Item', date_create:'2020-02-02',date_update:'2020-08-01', priority:'Urgent' },
-            ],
-          },
-          {
-            action: 'restaurant',
-            title: 'Proceso',
-            active: false,
-            items: [
-              { title: 'Breakfast & brunch' },
-              { title: 'New American' },
-              { title: 'Sushi' },
-            ],
-          },
-          {
-            action: 'school',
-            title: 'Evaluacion',
-            items: [
-              { title: 'List Item' },
-            ],
-          },
-          {
-            action: 'directions_run',
-            title: 'Rectificacion',
-            items: [
-              { title: 'List Item' },
-            ],
-          },
-          {
-            action: 'healing',
-            title: 'Health',
-            items: [
-              { title: 'List Item' },
-            ],
-          },
-          {
-            action: 'content_cut',
-            title: 'Office',
-            items: [
-              { title: 'List Item' },
-            ],
-          },
-          {
-            action: 'local_offer',
-            title: 'Close',
-            items: [
-              { title: 'List Item' },
-            ],
-          },
-        ],
+      
       bottomNav: 1,
       bottomNavProject : '', 
 
-
+      //Barra Izquierda 
+      //Listado de Comentarios
+      List_Task_drawer : [],
+      List_Comment_drawer : [],
+      //Adjunto de archivos varios
+      files: [],
+      
       sub_tare_test: [
                   { header: 'Today' },
                   {
@@ -262,20 +214,24 @@ var app = new Vue({
         })
         .catch(error => {console.log(error)})
     },
+
+
+
+
+    //Funcion para apartado de tabla
     //Funcion creada para llamar las tareas de las tablas por medio del id del project
     //Esto es muy importante para cargar solo la informacion de lo que se quiere trabajar.
     List_Table(id){
-      console.log(id)
+      //console.log(id)
       var self = this;
       axios.get('/api/v1.0/project/'+id+'/' )
         .then(response => {
           //this.Project_list = response.data
-          console.log(response.data)
+          //console.log(response.data)
           self.itemsKamban = response.data
         })
         .catch(error => {console.log(error)})
     },
-
     //Enlistar las tareas principales de los kamban de projecto en curso o ejecucion
     List_subTask(id){
       var self = this;
@@ -283,12 +239,57 @@ var app = new Vue({
       axios.get('/api/v1.0/kamban/'+id+'/' )
         .then(response => {
           //this.Project_list = response.data
-          console.log(response.data)
+          //console.log(response.data)
           self.subitemKamban = response.data
         })
         .catch(error => {console.log(error)})
 
     },
+    //Funcion para apartado de tabla
+
+    async List_Coment(id){
+      
+      var self = this;
+      self.drawerEdit=true
+      self.List_Comment_drawer = []
+      //Listado de Comentarios por Task
+      let List_Comentarios = await axios.get('/api/v1.0/comment/?search='+id)
+      //self.List_Comment_drawer = List_Comentarios.data
+      //console.log(List_Comentarios.data)
+      self.extraImage(List_Comentarios.data)
+
+      /*let ids = 0
+      for(i in List_Comentarios){
+        ids = List_Comentarios.data[i].owner.id
+        let Profile_Image = await axios.get('/api/v1.0/profile/?search='+ ids)
+        console.log(Profile_Image.data)
+      }*/
+
+
+      //Extraer detalles de la Tarea
+      let Detail_Task = await axios.get('/api/v1.0/task/'+id+'/')
+      self.List_Task_drawer = Detail_Task.data
+    },
+    //Informacion de barra lateral izquieda, muestra comentarios, participantes, form de modificacion de estatus 
+    //y mas detalles de la misma tarea
+    async extraImage(data){
+
+      var self = this;
+      for(i in data){
+        let Profile_Image = await axios.get('/api/v1.0/profile/?search='+ data[i].owner.id)
+        console.log(data[i])
+        console.log(Profile_Image.data[0])
+        if(Profile_Image.data[0] != undefined ){
+          self.List_Comment_drawer.push({'id':data[i].id, 'owner':data[i].owner, 'image':Profile_Image.data[0].image,'comment':data[i].comment,'date_create':data[i].date_create,'date_time_c':data[i].date_time_c})
+        }
+        else{
+          self.List_Comment_drawer.push({'id':data[i].id, 'owner':data[i].owner, 'image':'https://k60.kn3.net/89F951249.gif','comment':data[i].comment,'date_create':data[i].date_create,'date_time_c':data[i].date_time_c})
+        }
+       
+      }
+
+    },
+  
    
 
   }

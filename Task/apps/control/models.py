@@ -5,6 +5,9 @@ from django.urls import reverse
 from datetime import date
 from datetime import datetime
 from django.forms import model_to_dict
+from django.contrib.auth.models import AbstractUser
+from datetime import date
+from datetime import datetime
 
 
 
@@ -105,6 +108,7 @@ class Task(ModelBase):
     project = models.ForeignKey(project, on_delete=models.CASCADE) #Project relacionado
     kamban = models.ForeignKey(kamban, on_delete=models.CASCADE, blank=True, null=True) #Paso actual del kamba
     priority = models.IntegerField(choices=((1,("Low")),(2,("Medium")),(3,("Urgent")),(4,("Wait"))),default=1)
+    description = models.TextField(max_length=3000, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -132,3 +136,21 @@ class Comment(ModelBase):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, blank=True, null=True)
     subtask = models.ForeignKey(SubTask, on_delete=models.CASCADE, blank=True, null=True)
 
+
+#Extendiendo el modelo de USER para poder agregar contenido adicional al perfil
+
+def Profile_file(self,filename):
+    today = date.today()
+    year = format(today.year)
+    mes = format(today.month)
+    dia = format(today.day)
+    path = "static/MultimediaData/img/%s/%s/%s/%s/%s" %(str(year), str(mes), str(dia), str(self.user.username), str(filename))
+    return path
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to=Profile_file, blank=True, null=True)
+
+    def __str__(self):
+        return self.user.username

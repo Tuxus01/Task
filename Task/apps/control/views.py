@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView
 from .models import *
-
+from rest_framework import viewsets, permissions, filters
 from django.utils import timezone
 from django.contrib.auth.decorators import permission_required
 
@@ -26,6 +26,8 @@ from django.db.models import Prefetch
 from .models import *
 from .serializer import *
 from rest_framework.response import Response
+from rest_framework.request import Request
+from rest_framework.test import APIRequestFactory
 
 
 #JSON API
@@ -35,6 +37,42 @@ from django.http import JsonResponse
 # Create your views here.
 def Index(request):
     return render(request, 'base/index.html' )
+
+
+
+#Extraer Usuario del la base de datos.
+#Usuario
+from rest_framework import permissions
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.decorators import permission_required
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from django.contrib.auth.models import User, Group
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = User.objects.all().order_by('-date_joined')
+    serializer_class = UserSerializer
+    
+
+
+class GroupViewSet(viewsets.ModelViewSet):
+    
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+
+
+#Usuario
+
+
+
 
 #Listado de projectos en los que estoy trabajando
 class projectViewSet(viewsets.ModelViewSet):
@@ -84,9 +122,37 @@ class kambanViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request,  *args, **kwargs):
         id_kamban = kwargs.get('pk')
-        list_task = Task.objects.filter(kamban=id_kamban)
+        list_task = Task.objects.filter(kamban=id_kamban).filter(status=True)
         print(list_task)
         queryset = list_task
         serializer = TaskSerializer(queryset, many=True)
         return Response(serializer.data)
         
+
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all().order_by('-id')
+    serializer_class = CommentSerializer
+    #filter_fields = ('code',)
+    search_fields = ['task__id']
+    filter_backends = (filters.SearchFilter,)
+
+
+
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+    #filter_fields = ('code',)
+    search_fields = ['user__id']
+    filter_backends = (filters.SearchFilter,)
+
+    
+
+class TaskViewSet(viewsets.ModelViewSet):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    #filter_fields = ('code',)
+    #search_fields = ['task__id']
+    #filter_backends = (filters.SearchFilter,)

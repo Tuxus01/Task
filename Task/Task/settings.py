@@ -25,7 +25,7 @@ SECRET_KEY = '^o*26m*bcnofm!()_u^ig9ljromyc&t4okd-np%%-nuyi22@&_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.control',
     'rest_framework',
+
 ]
 
 MIDDLEWARE = [
@@ -121,3 +122,16 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+
+MEDIA_URL = '/'
+#STATIC_ROOT  = os.path.join(BASE_DIR, 'static/')
+
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+#MEDIA_URL = '/media/'
+
+#AUTH_USER_MODEL = 'user.User'
+
+
+
+

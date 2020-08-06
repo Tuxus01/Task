@@ -9,4 +9,5 @@ admin.site.register(Task)
 admin.site.register(Assigned)
 admin.site.register(SubTask)
 admin.site.register(Comment)
+admin.site.register(UserProfile)
 
