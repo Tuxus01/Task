@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -53,6 +54,45 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'Task.urls'
+
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
+
+CORS_ORIGIN_WHITELIST = (
+    '127.0.0.1:8081',  # Frontend
+    '127.0.0.1:8080',  # Backend
+    '127.0.0.1:8000',  # Frontend on dev mode
+)
+
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+    'VIEW',
+)
+
+CORS_ALLOW_HEADERS = (
+    'XMLHttpRequest',
+    'X_FILENAME',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'Pragma',
+    'token'
+)
+
+
+
 
 TEMPLATES = [
     {
@@ -119,12 +159,14 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
+# Vue project location
+
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static/')]
 
 
-MEDIA_URL = '/'
+#MEDIA_URL = '/'
 #STATIC_ROOT  = os.path.join(BASE_DIR, 'static/')
 
 #MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')

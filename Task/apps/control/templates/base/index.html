@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% load l10n %}
 
 
@@ -10,7 +9,6 @@
     v-model="bottomNav"
     dark
     shift
-    
   >
   <v-btn>
     <span>Dashboard</span>
@@ -40,7 +38,7 @@
 
 
    <!--Barra de navegacion entre projectos -->
-   <v-navigation-drawer
+<v-navigation-drawer
    v-model="drawer2"
    expand-on-hover
    mini-variant
@@ -83,12 +81,12 @@
        </v-list-item-content>
      </v-list-item>
    </v-list>
- </v-navigation-drawer>
+</v-navigation-drawer>
   <!--Barra de navegacion entre projectos -->
 
 
   <!--Barra de navegacion Izquierda para modificar eventos entre projectos -->
-   <v-navigation-drawer
+<v-navigation-drawer
    v-model="drawerEdit"
    width="1000"
     temporary
@@ -187,7 +185,7 @@
 
     </v-layout>
   </v-container>
- </v-navigation-drawer>
+</v-navigation-drawer>
   <!--Barra de navegacion Izquierda para modificar eventos entre projectos -->
 
 
@@ -269,8 +267,241 @@
 
 
 
+
+<!--Dialog Para agregar y modificar proyectos creados -->
+<template>
+  <v-row justify="center">
+    <v-dialog  v-model="dialogProyecto" fullscreen hide-overlay transition="dialog-bottom-transition">
+      <v-card class="d-inline-block mx-auto" outlined>
+        <v-toolbar dark color="primary">
+          <v-btn icon dark @click="dialogProyecto = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-toolbar-title>New Project</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-toolbar-items>
+            <v-btn dark text @click="dialogProyecto = false">Save</v-btn>
+          </v-toolbar-items>
+        </v-toolbar>
+        <v-list three-line subheader>
+          <v-subheader>Name this project</v-subheader>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-subtitle>
+                <v-row>
+                <!--Nombre del proyecto-->
+                <v-flex lg6 xs12 sm6 md4>
+                <v-col >
+                  <v-text-field
+                    label="Project Name"
+                    outlined
+                    shaped
+                  ></v-text-field>
+                </v-col>
+                </v-flex>
+                <!--Urgencias-->
+                <v-flex lg2 xs12 sm2 md2>
+                  <v-col>
+                    <v-select
+                      :items="Nivel_urgencia"
+                      outlined
+                      shaped
+                      item-text="nombre"
+                      item-value="id"
+                      label="Level of urgency"
+                      prepend-inner-icon="mdi-pencil"
+                      v-model="Nivel_urgencia_select"
+                    ></v-select>
+                  </v-col>
+                </v-flex>
+
+
+                <!--Descripcion del proyect-->
+                <v-flex lg12 xs12 sm6 md4>
+                  <v-col>
+                    <v-textarea
+                      outlined
+                      name="input-7-4"
+                      label="Project Descrition "
+                      value=""
+                      shaped
+                    ></v-textarea>
+                  </v-col>
+                </v-flex>
+
+              </v-row>
+                <v-list-item-subtitle>This project will only be visible by users who are given permission or assigned to a specific task</v-list-item-subtitle>
+
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          
+        </v-list>
+        <v-divider></v-divider>
+        <v-list three-line subheader>
+          <v-subheader>Kamban Structure 
+              <v-btn @click="dialogKamban=true" class="mx-2" fab dark small color="green">
+                <v-icon dark>mdi-plus</v-icon>
+              </v-btn> 
+        </v-subheader>
+          <v-list-item>
+            <v-list-item-content>
+             <!--Apartado del listado de Kamban -->
+              <v-flex lg2 xs12 sm6 md4>
+                <v-col>
+                  <!--Lista de Kamban tipo card-->
+                  <v-card dark class="mx-auto"> 
+                  <v-list-item>
+                    <v-list-item-avatar color="grey">
+                      <v-img src="https://cdn.vuetifyjs.com/images/cards/mountain.jpg"></v-img>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                      <v-list-item-title class="headline">Kamban Name</v-list-item-title>
+                      <v-list-item-subtitle>by Usuario</v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                    <v-card-title>
+                        Descripcion del Kamban
+                    </v-card-title>
+
+                    <v-card-actions>
+                      <v-btn  @click="dialogKambanTask = true" color="green" block>Add Task</v-btn>
+                    </v-card-actions>
+
+                    <v-expand-transition>
+                      <div v-show="show">
+                        <v-divider></v-divider>
+                        <v-card-text>
+                          <template>
+                            <v-simple-table>
+                              <template v-slot:default>
+                                <thead>
+                                  <tr>
+                                  
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr v-for="item in desserts" :key="item.name">
+                                    <td>[[ item.name ]]</td>
+                                    <td><v-btn color="red" fab small dark> <v-icon small >mdi-delete</v-icon></v-btn></td>
+                                  </tr>
+                                </tbody>
+                              </template>
+                            </v-simple-table>
+                          </template>
+
+                          
+                        </v-card-text>
+                      </div>
+                    </v-expand-transition>
+                  </v-card>
+                  <!--Lista de Kamban tipo card-->
+                </v-col>
+              </v-flex>
+            <!--Apartado del listado de Kamban -->
+            </v-list-item-content>
+          </v-list-item>
+         
+        </v-list>
+      </v-card>
+    </v-dialog>
+  </v-row>
+</template>
+<!--Dialog Para agregar y modificar proyectos creados -->
+
+
+<!--Sub Diaglo para agregar Kamban a Proyecto -->
+<template>
+  <v-row justify="center">
+    <v-dialog v-model="dialogKamban" persistent max-width="600px">
+     
+      <v-card dark>
+        <v-card-title align="center">
+          <span  class="headline text-center"><h2 class="headline text-center">New Kamban <v-icon>mdi-pencil</v-icon></h2> </span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12" sm="12" md="12">
+                <v-text-field outlined label="Name" required></v-text-field>
+              </v-col>
+
+              <v-col cols="12" md="12">
+                <v-textarea
+                  outlined
+                  name="input-7-4"
+                  required
+                  label="Description"
+                  value=""
+                ></v-textarea>
+              </v-col>
+            </v-row>
+          </v-container>
+          <small>All fields are required</small>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-1"  @click="dialogKamban = false">Close</v-btn>
+          <v-btn color="green darken-1"  @click="dialogKamban = false">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-row>
+</template>
+
+<!--Sub Diaglo para agregar Kamban a Proyecto -->
+
+
+
+
+<!--Sub Diaglo para agregar Task a Kamban del Proyecto -->
+<template>
+  <v-row justify="center">
+    <v-dialog v-model="dialogKambanTask" persistent max-width="600px">
+     
+      <v-card dark>
+        <v-card-title align="center">
+          <span  class="headline text-center"><h2 class="headline text-center">New Task <v-icon>mdi-pencil</v-icon></h2> </span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12" sm="12" md="12">
+                <v-text-field outlined label="Name" required></v-text-field>
+              </v-col>
+
+              <v-col cols="12" md="12">
+                <v-textarea
+                  outlined
+                  name="input-7-4"
+                  required
+                  label="Description"
+                  value=""
+                ></v-textarea>
+              </v-col>
+            </v-row>
+          </v-container>
+          <small>All fields are required</small>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-1"  @click="dialogKambanTask = false">Close</v-btn>
+          <v-btn color="green darken-1"  @click="dialogKambanTask = false">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-row>
+</template>
+
+<!--Sub Diaglo para agregar Task a Kamban del Proyecto -->
+
+
+
+
 <!--DIV Table Data -->
 <div v-if="bottomNav=== 1">
+
+
   <v-container grid-list-lg>
     <v-layout row wrap>
         <v-flex xs12 lg12 md12>
@@ -286,9 +517,10 @@
                 no-action
                 selected
                 @click="List_subTask(item.id)"
-                
+                v-on:dblclick="List_subTask2()"
                 active-class="dark" 
               >
+         
                 <template v-slot:activator>
                   <v-list-item-content>
                     <v-list-item-title v-text="item.name"></v-list-item-title>
@@ -381,7 +613,7 @@
             </v-flex>
         </v-layout>
     </v-container>
-  </div>
+</div>
 <!--DIV Proyecto -->
 
 

@@ -54,7 +54,7 @@
                 <v-spacer></v-spacer>
 
                 {% if user.is_authenticated %}
-                <v-btn  small fab color="green">
+                <v-btn @click="dialogProyecto=true" small fab color="green">
                   <v-icon>mdi-plus</v-icon>
                 </v-btn>
 
@@ -79,6 +79,7 @@
                     {% block content %}
 
                     {% endblock %}
+                    <Pixel />
                 </v-main>
             </v-app>
           </template>
@@ -104,11 +105,14 @@
 
 {% endblock %}
 
-  <script>
 
+  <script>
+  
 var app = new Vue({
+  
   delimiters: ['[[', ']]'],
   el: '#app',
+  
   vuetify: new Vuetify(),
   data: {
       dialog: false,
@@ -124,6 +128,7 @@ var app = new Vue({
       itemsKamban :[],
       subitemKamban : [],
       
+      //Navegacion entre opciones, Lista, Dashboard, Table, Kamban, TimeLine, Image
       bottomNav: 1,
       bottomNavProject : '', 
 
@@ -132,67 +137,46 @@ var app = new Vue({
       List_Task_drawer : [],
       List_Comment_drawer : [],
       //Adjunto de archivos varios
+
+
+      //Diaglo para agregar y modificar Proyecto
+      dialogProyecto : false,
+      //Diaglogo para agregar Kamban a Proyecto
+      dialogKamban : false,
+      //Diaglo para agregar task a kamban del proyecto
+      dialogKambanTask : false,
       files: [],
-      
-      sub_tare_test: [
-                  { header: 'Today' },
-                  {
-                    avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-                    title: 'Nombre de Usuario - ( 12-Feb-2020 a 18:59:01 )',
-                    subtitle: "Aqui ira el comentario que da el usuario del proyecto Aqui ira el comentario que da el usuario del proyecto Aqui ira el comentario que da el usuario del proyecto Aqui ira el comentario que da el usuario del proyecto Aqui ira el comentario que da el usuario del proyecto ",
-                  },
-                  { divider: true, inset: true },
-                  {
-                    avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-                    title: 'Summer BBQ <span class="grey--text text--lighten-1">4</span>',
-                    subtitle: "<span class='text--primary'>to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend.",
-                  },
-                  { divider: true, inset: true },
-                  {
-                    avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-                    title: 'Oui oui',
-                    subtitle: "<span class='text--primary'>Sandra Adams</span> &mdash; Do you have Paris recommendations? Have you ever been?",
-                  },
-                  { divider: true, inset: true },
-                  {
-                    avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
-                    title: 'Birthday gift',
-                    subtitle: "<span class='text--primary'>Trevor Hansen</span> &mdash; Have any ideas about what we should get Heidi for her birthday?",
-                  },
-                  { divider: true, inset: true },
-                  {
-                    avatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
-                    title: 'Recipe to try',
-                    subtitle: "<span class='text--primary'>Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.",
-                  },
-                  { divider: true, inset: true },
-                  {
-                    avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-                    title: 'Summer BBQ <span class="grey--text text--lighten-1">4</span>',
-                    subtitle: "<span class='text--primary'>to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend.",
-                  },
-                  { divider: true, inset: true },
-                  {
-                    avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-                    title: 'Oui oui',
-                    subtitle: "<span class='text--primary'>Sandra Adams</span> &mdash; Do you have Paris recommendations? Have you ever been?",
-                  },
-                  { divider: true, inset: true },
-                  {
-                    avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
-                    title: 'Birthday gift',
-                    subtitle: "<span class='text--primary'>Trevor Hansen</span> &mdash; Have any ideas about what we should get Heidi for her birthday?",
-                  },
-                  { divider: true, inset: true },
-                  {
-                    avatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
-                    title: 'Recipe to try',
-                    subtitle: "<span class='text--primary'>Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.",
-                  },
-                  
-                ],
+
+      //Urgencia Select creacion de proyecto
+      Nivel_urgencia: [
+        {'id':1,'nombre':'Low'},
+        {'id':2,'nombre':'Medium'},
+        {'id':3,'nombre':'Urgent'},
+        {'id':4,'nombre':'Wait'},
+      ],
+      Nivel_urgencia_select :'',
 
 
+      //Card de creacion de task
+      show: true,
+
+
+      desserts: [
+          {
+            name: 'Task1',
+            calories: 159,
+          },
+          {
+            name: 'Task2',
+            calories: 237,
+          },
+          {
+            name: 'Task3',
+            calories: 262,
+          },
+        
+        ],
+     
   },
 
   computed: {
@@ -200,11 +184,14 @@ var app = new Vue({
       
     },
     mounted () {
-       this.ListProject()
-      
+      //Mostrar listado de proyecto automaticamente 
+      this.ListProject()
     },
 
   methods: {
+    List_subTask2(){
+      console.log("DOBLE CLICK")
+    },
     //Listar projecto a los cuales pertenezco 
     ListProject(){
       var self = this;
@@ -214,10 +201,6 @@ var app = new Vue({
         })
         .catch(error => {console.log(error)})
     },
-
-
-
-
     //Funcion para apartado de tabla
     //Funcion creada para llamar las tareas de las tablas por medio del id del project
     //Esto es muy importante para cargar solo la informacion de lo que se quiere trabajar.
@@ -246,9 +229,7 @@ var app = new Vue({
 
     },
     //Funcion para apartado de tabla
-
     async List_Coment(id){
-      
       var self = this;
       self.drawerEdit=true
       self.List_Comment_drawer = []
@@ -257,15 +238,12 @@ var app = new Vue({
       //self.List_Comment_drawer = List_Comentarios.data
       //console.log(List_Comentarios.data)
       self.extraImage(List_Comentarios.data)
-
       /*let ids = 0
       for(i in List_Comentarios){
         ids = List_Comentarios.data[i].owner.id
         let Profile_Image = await axios.get('/api/v1.0/profile/?search='+ ids)
         console.log(Profile_Image.data)
       }*/
-
-
       //Extraer detalles de la Tarea
       let Detail_Task = await axios.get('/api/v1.0/task/'+id+'/')
       self.List_Task_drawer = Detail_Task.data
@@ -273,7 +251,6 @@ var app = new Vue({
     //Informacion de barra lateral izquieda, muestra comentarios, participantes, form de modificacion de estatus 
     //y mas detalles de la misma tarea
     async extraImage(data){
-
       var self = this;
       for(i in data){
         let Profile_Image = await axios.get('/api/v1.0/profile/?search='+ data[i].owner.id)
@@ -285,14 +262,10 @@ var app = new Vue({
         else{
           self.List_Comment_drawer.push({'id':data[i].id, 'owner':data[i].owner, 'image':'https://k60.kn3.net/89F951249.gif','comment':data[i].comment,'date_create':data[i].date_create,'date_time_c':data[i].date_time_c})
         }
-       
       }
-
     },
-  
-   
 
-  }
+  },
 });
 
 

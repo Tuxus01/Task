@@ -81,7 +81,8 @@ class projectViewSet(viewsets.ModelViewSet):
     filter_fields = ('code',)
     #Extraccion de solo los projectos activo en los que estoy trabajando
     def list(self, request):
-        list_ = members.objects.filter(member=request.user)
+        #list_ = members.objects.filter(member=request.user)
+        list_ = members.objects.all()
         #print(list_)
         #Ciclo que recolecta y agraga a la lista visual del html los project activos en los que estoy laborando
         projecto_list = []
@@ -139,8 +140,6 @@ class CommentViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
 
 
-
-
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
@@ -149,7 +148,6 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
 
     
-
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
