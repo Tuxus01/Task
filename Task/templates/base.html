@@ -31,7 +31,7 @@
       <v-app id="inspire">
         <form action="#" method="get">
           <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app color="blue darken-2" dark dense>
-            <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+            <v-app-bar-nav-icon @click.stop="drawer2 = !drawer2"></v-app-bar-nav-icon>
             <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
               <span class="hidden-sm-and-down">Task Manager </span>
             </v-toolbar-title>
@@ -45,11 +45,9 @@
             <v-btn @click="dialogProyecto=true" small fab color="green">
               <v-icon>mdi-plus</v-icon>
             </v-btn>
+            <v-divider inset class="mx-4" vertical></v-divider>
 
-            <v-btn icon>
-              <v-icon>mdi-python</v-icon>
-              </v-badge>
-            </v-btn>
+          
 
             {{ user.first_name }} {{ user.last_name}}</br>
 
@@ -64,9 +62,10 @@
           </v-app-bar>
         </form>
         <v-main>
+          
           {% block content %}
 
-          {% endblock %}
+          {%  endblock %}
          
         </v-main>
       </v-app>
@@ -117,7 +116,7 @@
       data: {
         dialog: false,
         drawer: false,
-        drawer2: true,
+        drawer2: false,
         drawerEdit: false,
 
         //ID temporal del task que servira para poder realizar la insercion de comentarios desde
@@ -153,6 +152,11 @@
         dialogKambanTask: false,
         files: [],
 
+        //NOTIFICACIONES PUSH
+        snackbar : false,
+        snackbar_titulo : '',
+        snackbar_comentario : '',
+
         //Urgencia Select creacion de proyecto
         Nivel_urgencia: [
           { 'id': 1, 'nombre': 'Low' },
@@ -162,10 +166,8 @@
         ],
         Nivel_urgencia_select: '',
 
-
         //Card de creacion de task
         show: true,
-
 
         desserts: [
           {
@@ -288,6 +290,7 @@
               //console.log(response);
               self.List_Coment(self.id_task)
               self.id_task_comentario = ""
+              self.notification('New comment', 'Action added successfully' )
             })
             .catch(function (error) {
               console.log(error);
@@ -316,6 +319,16 @@
             .catch(function (error) {
               console.log(error);
             });
+
+        },
+
+        //NOTIFICACIONES PUSH
+        notification( titulo, comentario ){
+          var self = this;
+         
+          self.snackbar_titulo = titulo
+          self.snackbar_comentario = comentario
+          self.snackbar = true
 
         },
 

@@ -10,7 +10,7 @@
 
 <!--################################ DRAWER IZQUIERO Y DERECHO #####################################-->
 <!--Barra de navegacion entre projectos -->
-<v-navigation-drawer v-model="drawer2" expand-on-hover mini-variant permanent absolute dark>
+<v-navigation-drawer v-model="drawer2" temporary  absolute dark app>
   <v-list dense nav class="py-1">
     <v-list-item two-line class="px-0">
       <v-list-item-avatar>
@@ -40,12 +40,19 @@
 
 
 <!--Barra de navegacion Izquierda para modificar eventos entre projectos -->
-<v-navigation-drawer v-model="drawerEdit" width="1000" temporary absolute right dark>
+<v-navigation-drawer v-model="drawerEdit" width="1000" temporary absolute right dark app>
   <v-container grid-list-lg>
     <v-layout row wrap>
       <v-flex xs12 lg12 md12>
-        <v-btn @click="Task_Mark_Finished()" text outlined rounded color="success">
+        <template v-if="List_Task_drawer.status === true">
+          <v-btn @click="Task_Mark_Finished()" text outlined rounded color="success">
           <v-icon left>mdi-content-save</v-icon> Mark as finished
+        </template>
+        <template v-else>
+          <h1 class="red--text">Task Mark Finished</h1>
+        </template>
+        <v-btn @click="drawerEdit=false" text outlined rounded color="warning">
+          <v-icon left>mdi-arrow-left-bold</v-icon> Minimize
         </v-btn>
       </v-flex>
 
@@ -76,7 +83,10 @@
       <!--Sub Tarea dentro de la tarea-->
       <v-flex xs12 lg12 md12>
         <template v-if="List_Comment_drawer != ''">
-          <v-virtual-scroll :items="List_Comment_drawer" :item-height="60" height="210">
+        
+            <v-virtual-scroll :items="List_Comment_drawer" :item-height="60" height="330">
+         
+          
             <template v-slot="{ item }">
               <v-list-item three-line outlined>
                 <v-list-item-avatar>
@@ -102,8 +112,9 @@
         </template>
       </v-flex>
       <!--Sub Tarea dentro de la tarea-->
-      <v-flex xs12 lg12 md12>
 
+      <template v-if="List_Task_drawer.status === true">
+      <v-flex xs12 lg12 md12>
         <v-col cols="12" md="12">
           <v-textarea outlined name="input-7-4" v-model="id_task_comentario" label="New Comment" dense></v-textarea>
           <v-btn small text outlined rounded color="success" @click="Task_add_comment()">
@@ -111,6 +122,21 @@
           </v-btn>
         </v-col>
       </v-flex>
+    </template>
+
+    <template v-else>
+      <v-flex xs12 lg12 md12>
+        <v-col cols="12" md="12">
+          <v-textarea outlined name="input-7-4" v-model="id_task_comentario" label="New Comment" disabled dense></v-textarea>
+          <v-btn disabled small text outlined rounded color="success" @click="Task_add_comment()">
+            <v-icon small left>mdi-pencil</v-icon> Add Comment
+          </v-btn>
+        </v-col>
+      </v-flex>
+    </template>
+
+
+
     </v-layout>
   </v-container>
 </v-navigation-drawer>
@@ -121,9 +147,9 @@
 <!--Dialog Para agregar y modificar proyectos creados -->
 <template>
   <v-row justify="center">
-    <v-dialog v-model="dialogProyecto" fullscreen hide-overlay transition="dialog-bottom-transition">
+    <v-dialog  v-model="dialogProyecto" fullscreen hide-overlay transition="dialog-bottom-transition">
       <v-card class="d-inline-block mx-auto" outlined>
-        <v-toolbar dark color="primary">
+        <v-toolbar dark >
           <v-btn icon dark @click="dialogProyecto = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
@@ -142,13 +168,13 @@
                   <!--Nombre del proyecto-->
                   <v-flex lg6 xs12 sm6 md4>
                     <v-col>
-                      <v-text-field label="Project Name" outlined shaped></v-text-field>
+                      <v-text-field label="Project Name" outlined ></v-text-field>
                     </v-col>
                   </v-flex>
                   <!--Urgencias-->
                   <v-flex lg2 xs12 sm2 md2>
                     <v-col>
-                      <v-select :items="Nivel_urgencia" outlined shaped item-text="nombre" item-value="id"
+                      <v-select :items="Nivel_urgencia" outlined  item-text="nombre" item-value="id"
                         label="Level of urgency" prepend-inner-icon="mdi-pencil" v-model="Nivel_urgencia_select">
                       </v-select>
                     </v-col>
@@ -158,7 +184,7 @@
                   <!--Descripcion del proyect-->
                   <v-flex lg12 xs12 sm6 md4>
                     <v-col>
-                      <v-textarea outlined name="input-7-4" label="Project Descrition " value="" shaped></v-textarea>
+                      <v-textarea outlined name="input-7-4" label="Project Descrition " value="" ></v-textarea>
                     </v-col>
                   </v-flex>
 
@@ -333,7 +359,7 @@
 
 <!--########################################### BOTON NAVEGACION DASHBOARD #######################################-->
 <!-- Botones de navegacion -->
-<v-bottom-navigation v-model="bottomNav" dark shift>
+<v-bottom-navigation  v-model="bottomNav" dark shift>
   <v-btn>
     <span>Dashboard</span>
     <v-icon>mdi-tablet-dashboard</v-icon>
@@ -447,13 +473,13 @@
 
 <!--DIV Table Data -->
 <div v-if="bottomNav=== 1">
-  <v-container grid-list-lg>
-    <v-layout row wrap>
-      <v-flex xs12 lg12 md12>
+  <v-container grid-list-lg >
+    <v-layout row wrap justify-center>
+      <v-flex xs12 lg10 md10 >
         <!--Aqui van los diferentes datos de projecto v-if bottomNav-->
         <div v-if="itemsKamban !='' ">
-          <v-card>
-            <v-list dense rounded>
+          <v-card outlined dense>
+            <v-list  dense rounded>
               <v-list-group v-for="item in itemsKamban" :key="item.id" v-model="item.active"
                 prepend-icon="mdi-view-dashboard" no-action selected @click="List_subTask(item.id)"
                 v-on:dblclick="List_subTask2()" active-class="dark">
@@ -468,8 +494,8 @@
 
                   <!--Avatar del usuario asignado a la tarea-->
                
-                  <v-list-item-avatar >
-                    <v-img
+                  <v-list-item-avatar class="hidden-sm-and-down" >
+                    <v-img 
                       src="https://e7.pngegg.com/pngimages/266/560/png-clipart-python-computer-icons-programmer-javascript-programming-language-python-logo-angle-text.png">
                     </v-img>
                   </v-list-item-avatar>
@@ -483,18 +509,18 @@
                   </v-list-item-content>
 
 
-                  <v-list-item-content v-if="subItem.status === false" class="text-decoration-line-through font-italic ">
+                  <v-list-item-content v-if="subItem.status === false" class="text-decoration-line-through font-italic hidden-sm-and-down ">
                     <v-list-item-title v-text="subItem.date_create"></v-list-item-title>
                   </v-list-item-content>
-                  <v-list-item-content v-else>
+                  <v-list-item-content v-else class="hidden-sm-and-down">
                     <v-list-item-title v-text="subItem.date_create"></v-list-item-title>
                   </v-list-item-content>
 
 
-                  <v-list-item-content v-if="subItem.status === false" class="text-decoration-line-through font-italic">
+                  <v-list-item-content v-if="subItem.status === false" class="text-decoration-line-through font-italic hidden-sm-and-down">
                     <v-list-item-title v-text="subItem.date_change"></v-list-item-title>
                   </v-list-item-content>
-                  <v-list-item-content v-else>
+                  <v-list-item-content v-else class="hidden-sm-and-down">
                     <v-list-item-title v-text="subItem.date_change"></v-list-item-title>
                   </v-list-item-content>
 
@@ -530,19 +556,10 @@
                       </v-list-item-title>
                     </v-list-item-content>
                   </template>
-
-
-                
                 </v-list-item>
-
-              
-
               </v-list-group>
             </v-list>
           </v-card>
-
-
-
         </div>
 
         <div v-else>
@@ -571,5 +588,35 @@
 <!--DIV Proyecto -->
 <!--########################################### BOTON NAVEGACION DASHBOARD #######################################-->
 
+
+
+<!--########################################### NOTIFICACIONES PUSH ###############################################-->
+<template>
+  <v-snackbar
+  v-model="snackbar"
+  multi-line
+  right
+  top
+  timeout="3800"
+  vertical
+  shaped
+  app 
+>
+<template>
+  <v-card
+    class="mx-auto"
+    max-width="344"
+    outlined
+  >
+    <v-list-item three-line>
+      <v-list-item-content>
+        <v-list-item-title class="headline mb-1"><v-icon>mdi-comment</v-icon> [[ snackbar_titulo ]]</v-list-item-title>
+        <v-list-item-subtitle>[[ snackbar_comentario ]]</v-list-item-subtitle>
+      </v-list-item-content>
+    </v-list-item>
+</template>
+</v-snackbar>
+</template>
+<!--########################################### NOTIFICACIONES PUSH ###############################################-->
 
 {% endblock %}
