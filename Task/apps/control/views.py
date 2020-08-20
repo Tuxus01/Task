@@ -123,7 +123,8 @@ class kambanViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request,  *args, **kwargs):
         id_kamban = kwargs.get('pk')
-        list_task = Task.objects.filter(kamban=id_kamban).filter(status=True)
+        #list_task = Task.objects.filter(kamban=id_kamban).filter(status=True)
+        list_task = Task.objects.filter(kamban=id_kamban)
         print(list_task)
         queryset = list_task
         serializer = TaskSerializer(queryset, many=True)
@@ -154,3 +155,11 @@ class TaskViewSet(viewsets.ModelViewSet):
     #filter_fields = ('code',)
     #search_fields = ['task__id']
     #filter_backends = (filters.SearchFilter,)
+
+
+
+##Seccion para agregar informacion###
+class CommentAddViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all().order_by('-id')
+    serializer_class = CommentAddSerializer
+    

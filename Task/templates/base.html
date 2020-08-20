@@ -1,13 +1,18 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-<head>
-  
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
-<!-- Fotorama from CDNJS, 19 KB -->
-<link  href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script>
+<head>
+
+  <!--############################### TE GUSTA LEER EL CODIGO AJENO ? #####################################-->
+  <!--############################### SUERTE ENTENDIENDO LO QUE HICE :(  #####################################-->
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+  <!-- Fotorama from CDNJS, 19 KB -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script>
 
 
   <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
@@ -17,74 +22,57 @@
   <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
   <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
- 
+
 </head>
+
 <body>
   <div id="app">
-        <template>
-            <v-app id="inspire">
-              <form action="#" method="get">
-              <v-app-bar
-                :clipped-left="$vuetify.breakpoint.lgAndUp"
-                app
-                color="blue darken-2"
-                dark
-                dense
-              >
-                <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-                <v-toolbar-title
-                  style="width: 300px"
-                  class="ml-0 pl-4"
-                >
-                  <span class="hidden-sm-and-down">Task Manager </span>
-                </v-toolbar-title>
-                
-                <v-text-field
-                  flat
-                  solo-inverted
-                  hide-details
-                  prepend-inner-icon="mdi-magnify"
-                  label="Search ..."
-                  class="hidden-sm-and-down"
-                  type="search"
-                  id="buscar" name="buscar"
+    <template>
+      <v-app id="inspire">
+        <form action="#" method="get">
+          <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app color="blue darken-2" dark dense>
+            <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+            <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
+              <span class="hidden-sm-and-down">Task Manager </span>
+            </v-toolbar-title>
 
-                ></v-text-field>
-                
-                <v-spacer></v-spacer>
+            <v-text-field flat solo-inverted hide-details prepend-inner-icon="mdi-magnify" label="Search ..."
+              class="hidden-sm-and-down" type="search" id="buscar" name="buscar"></v-text-field>
 
-                {% if user.is_authenticated %}
-                <v-btn @click="dialogProyecto=true" small fab color="green">
-                  <v-icon>mdi-plus</v-icon>
-                </v-btn>
+            <v-spacer></v-spacer>
 
-                <v-btn icon>
-                  <v-icon >mdi-python</v-icon>
-                </v-badge>
-                </v-btn>
-                
-                {{ user.first_name }} {{ user.last_name}}</br>
+            {% if user.is_authenticated %}
+            <v-btn @click="dialogProyecto=true" small fab color="green">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
 
-                {% else %}
-                <v-btn href="" icon>
-                  <v-icon>mdi-facebook</v-icon>
-                </v-badge>
-                </v-btn> 
-                
-                {% endif %}
+            <v-btn icon>
+              <v-icon>mdi-python</v-icon>
+              </v-badge>
+            </v-btn>
 
-              </v-app-bar>
-            </form>
-                <v-main >
-                    {% block content %}
+            {{ user.first_name }} {{ user.last_name}}</br>
 
-                    {% endblock %}
-                    <Pixel />
-                </v-main>
-            </v-app>
-          </template>
+            {% else %}
+            <v-btn href="" icon>
+              <v-icon>mdi-facebook</v-icon>
+              </v-badge>
+            </v-btn>
 
-    
+            {% endif %}
+
+          </v-app-bar>
+        </form>
+        <v-main>
+          {% block content %}
+
+          {% endblock %}
+         
+        </v-main>
+      </v-app>
+    </template>
+
+
   </div>
 
 
@@ -92,76 +80,94 @@
 
 
 
-  
+
   <!--Informacion del contenido a mostrar -->
-  
+
 
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
 
 
-{% block script %}
+  {% block script %}
 
-{% endblock %}
+  {% endblock %}
+
+
+  
+<script>
+ 
+
+  var CSRF_TOKEN = '{{ csrf_token }}'
+  var ID_Token = {{ user.id }}
+
+  console.log(csrf_token)
+ </script>
+
 
 
   <script>
-  
-var app = new Vue({
-  
-  delimiters: ['[[', ']]'],
-  el: '#app',
-  
-  vuetify: new Vuetify(),
-  data: {
-      dialog: false,
-      drawer: false,
-      drawer2 : true,
-      drawerEdit : false,
 
-      //Menu Derecho con lista de Projectos agregados como miembro.
-      Project_list :[],
+    var app = new Vue({
 
+      delimiters: ['[[', ']]'],
+      el: '#app',
 
-      //List Desplegado Kamban Table
-      itemsKamban :[],
-      subitemKamban : [],
-      
-      //Navegacion entre opciones, Lista, Dashboard, Table, Kamban, TimeLine, Image
-      bottomNav: 1,
-      bottomNavProject : '', 
+      vuetify: new Vuetify(),
+      data: {
+        dialog: false,
+        drawer: false,
+        drawer2: true,
+        drawerEdit: false,
 
-      //Barra Izquierda 
-      //Listado de Comentarios
-      List_Task_drawer : [],
-      List_Comment_drawer : [],
-      //Adjunto de archivos varios
+        //ID temporal del task que servira para poder realizar la insercion de comentarios desde
+        //el drawer izquierdo de la aplicacion
+        id_task: 0,
+        id_task_comentario :'',
+        id_Project_Task : 0,
+
+        //Menu Derecho con lista de Projectos agregados como miembro.
+        Project_list: [],
 
 
-      //Diaglo para agregar y modificar Proyecto
-      dialogProyecto : false,
-      //Diaglogo para agregar Kamban a Proyecto
-      dialogKamban : false,
-      //Diaglo para agregar task a kamban del proyecto
-      dialogKambanTask : false,
-      files: [],
+        //List Desplegado Kamban Table
+        itemsKamban: [],
+        subitemKamban: [],
 
-      //Urgencia Select creacion de proyecto
-      Nivel_urgencia: [
-        {'id':1,'nombre':'Low'},
-        {'id':2,'nombre':'Medium'},
-        {'id':3,'nombre':'Urgent'},
-        {'id':4,'nombre':'Wait'},
-      ],
-      Nivel_urgencia_select :'',
+        //Navegacion entre opciones, Lista, Dashboard, Table, Kamban, TimeLine, Image
+        bottomNav: 1,
+        bottomNavProject: '',
+
+        //Barra Izquierda 
+        //Listado de Comentarios
+        List_Task_drawer: [],
+        List_Comment_drawer: [],
+        //Adjunto de archivos varios
 
 
-      //Card de creacion de task
-      show: true,
+        //Diaglo para agregar y modificar Proyecto
+        dialogProyecto: false,
+        //Diaglogo para agregar Kamban a Proyecto
+        dialogKamban: false,
+        //Diaglo para agregar task a kamban del proyecto
+        dialogKambanTask: false,
+        files: [],
+
+        //Urgencia Select creacion de proyecto
+        Nivel_urgencia: [
+          { 'id': 1, 'nombre': 'Low' },
+          { 'id': 2, 'nombre': 'Medium' },
+          { 'id': 3, 'nombre': 'Urgent' },
+          { 'id': 4, 'nombre': 'Wait' },
+        ],
+        Nivel_urgencia_select: '',
 
 
-      desserts: [
+        //Card de creacion de task
+        show: true,
+
+
+        desserts: [
           {
             name: 'Task1',
             calories: 159,
@@ -174,101 +180,150 @@ var app = new Vue({
             name: 'Task3',
             calories: 262,
           },
-        
+
         ],
-     
-  },
 
-  computed: {
-   
-      
-    },
-    mounted () {
-      //Mostrar listado de proyecto automaticamente 
-      this.ListProject()
-    },
+      },
+      computed: {
+      },
+      mounted() {
+        //Mostrar listado de proyecto automaticamente 
+        this.ListProject()
+      },
 
-  methods: {
-    List_subTask2(){
-      console.log("DOBLE CLICK")
-    },
-    //Listar projecto a los cuales pertenezco 
-    ListProject(){
-      var self = this;
-      axios.get('/api/v1.0/project/' )
-        .then(response => {
-          this.Project_list = response.data
-        })
-        .catch(error => {console.log(error)})
-    },
-    //Funcion para apartado de tabla
-    //Funcion creada para llamar las tareas de las tablas por medio del id del project
-    //Esto es muy importante para cargar solo la informacion de lo que se quiere trabajar.
-    List_Table(id){
-      //console.log(id)
-      var self = this;
-      axios.get('/api/v1.0/project/'+id+'/' )
-        .then(response => {
-          //this.Project_list = response.data
-          //console.log(response.data)
-          self.itemsKamban = response.data
-        })
-        .catch(error => {console.log(error)})
-    },
-    //Enlistar las tareas principales de los kamban de projecto en curso o ejecucion
-    List_subTask(id){
-      var self = this;
-      console.log(id)
-      axios.get('/api/v1.0/kamban/'+id+'/' )
-        .then(response => {
-          //this.Project_list = response.data
-          //console.log(response.data)
-          self.subitemKamban = response.data
-        })
-        .catch(error => {console.log(error)})
+      methods: {
+        List_subTask2() {
+          console.log("DOBLE CLICK")
+        },
+        //Listar projecto a los cuales pertenezco 
+        ListProject() {
+          var self = this;
+          axios.get('/api/v1.0/project/')
+            .then(response => {
+              this.Project_list = response.data
+            })
+            .catch(error => { console.log(error) })
+        },
+        //Funcion para apartado de tabla
+        //Funcion creada para llamar las tareas de las tablas por medio del id del project
+        //Esto es muy importante para cargar solo la informacion de lo que se quiere trabajar.
+        List_Table(id) {
+          //console.log(id)
+          var self = this;
+          axios.get('/api/v1.0/project/' + id + '/')
+            .then(response => {
+              //this.Project_list = response.data
+              //console.log(response.data)
+              self.itemsKamban = response.data
+            })
+            .catch(error => { console.log(error) })
+        },
+        //Enlistar las tareas principales de los kamban de projecto en curso o ejecucion
+        List_subTask(id) {
+          var self = this;
+          //console.log(id)
+          axios.get('/api/v1.0/kamban/' + id + '/')
+            .then(response => {
+              //this.Project_list = response.data
+              //console.log(response.data)
+              self.subitemKamban = response.data
+            })
+            .catch(error => { console.log(error) })
 
-    },
-    //Funcion para apartado de tabla
-    async List_Coment(id){
-      var self = this;
-      self.drawerEdit=true
-      self.List_Comment_drawer = []
-      //Listado de Comentarios por Task
-      let List_Comentarios = await axios.get('/api/v1.0/comment/?search='+id)
-      //self.List_Comment_drawer = List_Comentarios.data
-      //console.log(List_Comentarios.data)
-      self.extraImage(List_Comentarios.data)
-      /*let ids = 0
-      for(i in List_Comentarios){
-        ids = List_Comentarios.data[i].owner.id
-        let Profile_Image = await axios.get('/api/v1.0/profile/?search='+ ids)
-        console.log(Profile_Image.data)
-      }*/
-      //Extraer detalles de la Tarea
-      let Detail_Task = await axios.get('/api/v1.0/task/'+id+'/')
-      self.List_Task_drawer = Detail_Task.data
-    },
-    //Informacion de barra lateral izquieda, muestra comentarios, participantes, form de modificacion de estatus 
-    //y mas detalles de la misma tarea
-    async extraImage(data){
-      var self = this;
-      for(i in data){
-        let Profile_Image = await axios.get('/api/v1.0/profile/?search='+ data[i].owner.id)
-        console.log(data[i])
-        console.log(Profile_Image.data[0])
-        if(Profile_Image.data[0] != undefined ){
-          self.List_Comment_drawer.push({'id':data[i].id, 'owner':data[i].owner, 'image':Profile_Image.data[0].image,'comment':data[i].comment,'date_create':data[i].date_create,'date_time_c':data[i].date_time_c})
-        }
-        else{
-          self.List_Comment_drawer.push({'id':data[i].id, 'owner':data[i].owner, 'image':'https://k60.kn3.net/89F951249.gif','comment':data[i].comment,'date_create':data[i].date_create,'date_time_c':data[i].date_time_c})
-        }
-      }
-    },
+        },
+        //Funcion para apartado de tabla
+        async List_Coment(id) {
+          var self = this;
+          self.drawerEdit = true
+          self.List_Comment_drawer = []
+          //Listado de Comentarios por Task
+          let List_Comentarios = await axios.get('/api/v1.0/comment/?search=' + id)
+          //self.List_Comment_drawer = List_Comentarios.data
+          //console.log(List_Comentarios.data)
+          self.extraImage(List_Comentarios.data)
+          /*let ids = 0
+          for(i in List_Comentarios){
+            ids = List_Comentarios.data[i].owner.id
+            let Profile_Image = await axios.get('/api/v1.0/profile/?search='+ ids)
+            console.log(Profile_Image.data)
+          }*/
+          //Extraer detalles de la Tarea
+          let Detail_Task = await axios.get('/api/v1.0/task/' + id + '/')
+          self.List_Task_drawer = Detail_Task.data
+          //console.log(self.List_Task_drawer)
 
-  },
-});
+          //Guadamos temporal el id para agragar a futuro nuevos comentarios
+          self.id_task = id
+        },
+        //Informacion de barra lateral izquieda, muestra comentarios, participantes, form de modificacion de estatus 
+        //y mas detalles de la misma tarea
+        async extraImage(data) {
+          var self = this;
+          for (i in data) {
+            let Profile_Image = await axios.get('/api/v1.0/profile/?search=' + data[i].owner.id)
+            console.log(data[i])
+            console.log(Profile_Image.data[0])
+            if (Profile_Image.data[0] != undefined) {
+              self.List_Comment_drawer.push({ 'id': data[i].id, 'owner': data[i].owner, 'image': Profile_Image.data[0].image, 'comment': data[i].comment, 'date_create': data[i].date_create, 'date_time_c': data[i].date_time_c })
+            }
+            else {
+              self.List_Comment_drawer.push({ 'id': data[i].id, 'owner': data[i].owner, 'image': 'https://k60.kn3.net/89F951249.gif', 'comment': data[i].comment, 'date_create': data[i].date_create, 'date_time_c': data[i].date_time_c })
+            }
+          }
+        },
+
+        //AGREGAR COMENTARIO A TASK POR MEDIO DEL ID DE TASK
+        Task_add_comment() {
+          var self = this;
+          //console.log(self.id_task)
+
+          axios.post('/api/v1.0/commentAdd/', {
+            comment: self.id_task_comentario,
+            owner: ID_Token,
+            task : self.id_task,
+          },{
+            headers: {'X-CSRFTOKEN': CSRF_TOKEN,},
+          })
+            .then(function (response) {
+              //console.log(response);
+              self.List_Coment(self.id_task)
+              self.id_task_comentario = ""
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        },
+
+        async Task_Mark_Finished(){
+          var self = this;
+          //console.log(self.id_task)
+
+          axios.put('/api/v1.0/task/'+ self.id_task + '/', {
+            id: self.id_task,
+            status : false,
+            owner: ID_Token,
+            title : self.List_Task_drawer.title,
+            project : self.List_Task_drawer.project,
+
+            
+          },{
+            headers: {'X-CSRFTOKEN': CSRF_TOKEN,},
+          })
+            .then(function (response) {
+              console.log(response);
+              
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+
+        },
+
+      },
+    });
 
 
   </script>
 </body>
+
 </html>

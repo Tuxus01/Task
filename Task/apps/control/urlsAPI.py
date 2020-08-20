@@ -15,4 +15,9 @@ router.register('users', UserViewSet)
 router.register('groups', GroupViewSet)
 
 
+
+##Seccion para agregar informacion###
+router.register('commentAdd',CommentAddViewSet )
+
+
 urlpatterns = router.urls
