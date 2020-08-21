@@ -10,7 +10,7 @@
 
 <!--################################ DRAWER IZQUIERO Y DERECHO #####################################-->
 <!--Barra de navegacion entre projectos -->
-<v-navigation-drawer v-model="drawer2" temporary  absolute dark app>
+<v-navigation-drawer v-model="drawer2" temporary absolute dark app>
   <v-list dense nav class="py-1">
     <v-list-item two-line class="px-0">
       <v-list-item-avatar>
@@ -46,7 +46,7 @@
       <v-flex xs12 lg12 md12>
         <template v-if="List_Task_drawer.status === true">
           <v-btn @click="Task_Mark_Finished()" text outlined rounded color="success">
-          <v-icon left>mdi-content-save</v-icon> Mark as finished
+            <v-icon left>mdi-content-save</v-icon> Mark as finished
         </template>
         <template v-else>
           <h1 class="red--text">Task Mark Finished</h1>
@@ -58,7 +58,7 @@
 
       <v-flex xs12 lg12 md12>
         <v-col xs4 lg4 md4>
-          <h1 class="white--text">[[ List_Task_drawer.title ]]</h1>
+          <h3 class="green--text">Subject : [[ List_Task_drawer.title ]]</h3>
           <h4 class="white--text" v-if="List_Task_drawer.priority===1"> Level of urgency : <v-chip class="ma-2"
               color="primary"> Low</v-chip>
           </h4>
@@ -73,7 +73,7 @@
           </h4>
           <h4 class="white--text">[[ List_Task_drawer.description ]]</h4><br>
 
-          
+
 
         </v-col>
 
@@ -83,57 +83,65 @@
       <!--Sub Tarea dentro de la tarea-->
       <v-flex xs12 lg12 md12>
         <template v-if="List_Comment_drawer != ''">
-        
-            <v-virtual-scroll :items="List_Comment_drawer" :item-height="60" height="330">
-         
-          
+
+
+          <v-virtual-scroll :items="List_Comment_drawer" :item-height="60" height="330">
+
             <template v-slot="{ item }">
+
               <v-list-item three-line outlined>
+
                 <v-list-item-avatar>
                   <v-avatar>
                     <v-img :src="item.image"></v-img>
-                    
                   </v-avatar>
                 </v-list-item-avatar>
-                
                 <v-list-item-content>
-
-                  <v-list-item-title class="blue--text"
-                    v-text='"@"+item.owner.username +"  -  (" + item.date_create + ")" + "-" + item.date_time_c '>
+                  <v-list-item-title three-line dark class="blue--text"
+                    v-text='item.owner.username +"  -  (" + item.date_create + ")" + "-" + item.date_time_c '>
                   </v-list-item-title>
-                  <v-list-item-subtitle v-text="item.comment"></v-list-item-subtitle>
+                  <v-list-item-subtitle dense v-text="item.comment"></v-list-item-subtitle>
                   <v-divider></v-divider>
 
                 </v-list-item-content>
 
               </v-list-item>
+
             </template>
+
           </v-virtual-scroll>
+
+
+
         </template>
+
+
       </v-flex>
       <!--Sub Tarea dentro de la tarea-->
 
       <template v-if="List_Task_drawer.status === true">
-      <v-flex xs12 lg12 md12>
-        <v-col cols="12" md="12">
-          <v-textarea outlined name="input-7-4" v-model="id_task_comentario" label="New Comment" dense></v-textarea>
-          <v-btn small text outlined rounded color="success" @click="Task_add_comment()">
-            <v-icon small left>mdi-pencil</v-icon> Add Comment
-          </v-btn>
-        </v-col>
-      </v-flex>
-    </template>
+        <v-flex xs12 lg12 md12>
+          <v-col>
+            <v-textarea rows="3" outlined dense name="input-7-4" v-model="id_task_comentario" label="New Comment" dense>
+            </v-textarea>
+            <v-btn small text outlined rounded color="success" @click="Task_add_comment()">
+              <v-icon small left>mdi-pencil</v-icon> Add Comment
+            </v-btn>
+          </v-col>
+        </v-flex>
+      </template>
 
-    <template v-else>
-      <v-flex xs12 lg12 md12>
-        <v-col cols="12" md="12">
-          <v-textarea outlined name="input-7-4" v-model="id_task_comentario" label="New Comment" disabled dense></v-textarea>
-          <v-btn disabled small text outlined rounded color="success" @click="Task_add_comment()">
-            <v-icon small left>mdi-pencil</v-icon> Add Comment
-          </v-btn>
-        </v-col>
-      </v-flex>
-    </template>
+      <template v-else>
+        <v-flex xs12 lg12 md12>
+          <v-col cols="12" md="12">
+            <v-textarea rows="3" outlined name="input-7-4" v-model="id_task_comentario" label="New Comment" disabled
+              dense></v-textarea>
+            <v-btn disabled small text outlined rounded color="success" @click="Task_add_comment()">
+              <v-icon small left>mdi-pencil</v-icon> Add Comment
+            </v-btn>
+          </v-col>
+        </v-flex>
+      </template>
 
 
 
@@ -145,12 +153,12 @@
 
 <!--############################# Seccion de Dialog ##################################-->
 <!--Dialog Para agregar y modificar proyectos creados -->
-<template >
-  <v-row >
-   
-    <v-dialog  v-model="dialogProyecto" fullscreen hide-overlay transition="dialog-bottom-transition">
+<template>
+  <v-row>
+
+    <v-dialog dark v-model="dialogProyecto" fullscreen hide-overlay transition="dialog-bottom-transition">
       <v-card class="d-inline-block mx-auto" outlined>
-        <v-toolbar dark >
+        <v-toolbar dark>
           <v-btn icon dark @click="dialogProyecto = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
@@ -166,52 +174,42 @@
             <v-list-item-content>
               <v-list-item-subtitle>
                 <v-row>
-               
+
                   <!--Nombre del proyecto-->
                   <v-flex lg5 xs12 sm5 md5>
                     <v-col>
-                      <v-text-field label="Project Name" outlined ></v-text-field>
+                      <v-text-field v-model="project_name_add" label="Project Name" outlined></v-text-field>
                     </v-col>
-
                     <v-col>
-                      <v-select :items="Nivel_urgencia" outlined  item-text="nombre" item-value="id"
-                        label="Level of urgency" prepend-inner-icon="mdi-pencil" v-model="Nivel_urgencia_select">
-                      </v-select>
+                      <v-textarea outlined v-model="project_description_add" label="Project Descrition " value="">
+                      </v-textarea>
                     </v-col>
-
                     <v-col>
-                      <v-textarea outlined name="input-7-4" label="Project Descrition " value="" ></v-textarea>
+                      <div class="text-center">
+                        <v-btn rounded @click="ListProjectAdd()" color="primary" block dark>Create</v-btn>
+                      </div>
                     </v-col>
                   </v-flex>
 
                   <!--Datatable de proyectos creados -->
-                  <v-flex  lg7 xs12 sm7 md7>
+                  <v-flex lg7 xs12 sm7 md7>
                     <template>
-                      <v-data-table
-                        v-model="selectedProjectCreate"
-                        :headers="headersProjectCreate"
-                        :items="dessertsProjectCreate"
-                        single-select
-                        item-key="name"
-                        show-select
-                        class="elevation-1"
-                        
-                      >
+                      <v-data-table v-model="selectedProjectCreate" :headers="headersProjectCreate"
+                        :items="dessertsProjectCreate" single-select item-key="id" show-select class="elevation-2">
                       </v-data-table>
+                      [[selectedProjectCreate]]
+
                     </template>
-                  
+
                   </v-flex>
-                   <!--Datatable de proyectos creados -->
-                  
-                  
-                
+                  <!--Datatable de proyectos creados -->
 
-
-                  
 
                 </v-row>
-                <v-list-item-subtitle>This project will only be visible by users who are given permission or assigned to
-                  a specific task</v-list-item-subtitle>
+                <v-list-item-subtitle>
+                  <h3>This project will only be visible by users who are given permission or assigned to
+                    a specific task</h3>
+                </v-list-item-subtitle>
 
               </v-list-item-subtitle>
             </v-list-item-content>
@@ -219,7 +217,7 @@
 
         </v-list>
         <v-divider></v-divider>
-        <v-list three-line subheader>
+        <v-list v-if="getProjectID != ''" three-line subheader>
           <v-subheader>Kamban Structure
             <v-btn @click="dialogKamban=true" class="mx-2" fab dark small color="green">
               <v-icon dark>mdi-plus</v-icon>
@@ -228,7 +226,7 @@
           <v-list-item>
             <v-list-item-content>
               <!--Apartado del listado de Kamban -->
-              <v-flex lg2 xs12 sm6 md4>
+              <v-flex lg2 xs12 sm3 md3 v-for="item in kambaProjectCreate" :key="item.id">
                 <v-col>
                   <!--Lista de Kamban tipo card-->
                   <v-card dark class="mx-auto">
@@ -237,12 +235,12 @@
                         <v-img src="https://cdn.vuetifyjs.com/images/cards/mountain.jpg"></v-img>
                       </v-list-item-avatar>
                       <v-list-item-content>
-                        <v-list-item-title class="headline">Kamban Name</v-list-item-title>
+                        <v-list-item-title class="headline">[[ item.name ]]</v-list-item-title>
                         <v-list-item-subtitle>by Usuario</v-list-item-subtitle>
                       </v-list-item-content>
                     </v-list-item>
                     <v-card-title>
-                      Descripcion del Kamban
+                      [[ item.description ]]
                     </v-card-title>
 
                     <v-card-actions>
@@ -380,7 +378,10 @@
 
 <!--########################################### BOTON NAVEGACION DASHBOARD #######################################-->
 <!-- Botones de navegacion -->
-<v-bottom-navigation  v-model="bottomNav" dark shift>
+
+
+
+<v-bottom-navigation dense v-model="bottomNav" dark shift fixed grow>
   <v-btn>
     <span>Dashboard</span>
     <v-icon>mdi-tablet-dashboard</v-icon>
@@ -392,13 +393,13 @@
   </v-btn>
 
   <v-btn>
-    <span>Board</span>
-    <v-icon>mdi-chart-tree</v-icon>
+    <span>History</span>
+    <v-icon>mdi-comment-multiple-outline</v-icon>
   </v-btn>
 
   <v-btn>
-    <span>TimeLine</span>
-    <v-icon>mdi-clock-digital</v-icon>
+    <span>Calendar</span>
+    <v-icon>mdi-calendar</v-icon>
   </v-btn>
 
   <v-btn>
@@ -406,6 +407,8 @@
     <v-icon>mdi-image</v-icon>
   </v-btn>
 </v-bottom-navigation>
+
+
 <!-- Botones de navegacion -->
 
 <!--DIV DASHBOARD PRINCIPAL -->
@@ -494,98 +497,104 @@
 
 <!--DIV Table Data -->
 <div v-if="bottomNav=== 1">
-  <v-container grid-list-lg >
+  <v-container grid-list-lg>
     <v-layout row wrap justify-center>
-      <v-flex xs12 lg10 md10 >
-        <!--Aqui van los diferentes datos de projecto v-if bottomNav-->
-        <div v-if="itemsKamban !='' ">
-          <v-card outlined dense>
-            <v-list  dense rounded>
-              <v-list-group v-for="item in itemsKamban" :key="item.id" v-model="item.active"
-                prepend-icon="mdi-view-dashboard" no-action selected @click="List_subTask(item.id)"
-                v-on:dblclick="List_subTask2()" active-class="dark">
+      <v-flex xs12 lg10 md10>
+        <template>
+          <v-expansion-panels popout dark flat>
+            <v-expansion-panel v-for="item in itemsKamban" :key="item.id" v-model="item.active"
+              @click="List_subTask(item.id)">
+              <v-expansion-panel-header>
+                <h4>
+                  <v-icon> mdi-checkbox-multiple-marked-outline</v-icon>
+                  [[ item.name ]]
+                  <v-divider vertical></v-divider>
+                  <v-btn small @click="dialogKambanTask = true" class="mx-2" fab dark small outlined>
+                    <v-icon small dense dark>mdi-plus</v-icon>
+                  </v-btn>
+                </h4>
 
-                <template v-slot:activator>
-                  <v-list-item-content>
-                    <v-list-item-title v-text="item.name"></v-list-item-title>
-                  </v-list-item-content>
+                <template v-slot:actions>
+                  <v-icon color="green">$expand</v-icon>
+                </template>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+
+                <template>
+                  <v-card class="mx-auto">
+                    <v-simple-table fixed-header dense dark>
+                      <template v-slot:default>
+                        <thead>
+                          <tr>
+                            <th class="text-left">Owner</th>
+                            <th class="text-left">Name</th>
+                            <th class="text-left hidden-sm-and-down">Date create</th>
+                            <th class="text-left hidden-sm-and-down">Date change</th>
+                            <th class="text-left">priority</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="subItem in subitemKamban" :key="subItem.id" @click="List_Coment(subItem.id)">
+
+                            <td>
+                              <v-avatar size="40" color="red">
+                                <img
+                                  src="https://e7.pngegg.com/pngimages/266/560/png-clipart-python-computer-icons-programmer-javascript-programming-language-python-logo-angle-text.png"
+                                  alt="alt">
+                              </v-avatar>
+                            </td>
+                            <template v-if="subItem.status === false ">
+                              <td class="text-decoration-line-through">[[subItem.title]]</td>
+                              <td class="text-left hidden-sm-and-down text-decoration-line-through ">
+                                [[subItem.date_create]]</td>
+                              <td class="text-left hidden-sm-and-down text-decoration-line-through ">
+                                [[subItem.date_change]]</td>
+                            </template>
+
+                            <template v-else>
+                              <td class="">[[subItem.title]]</td>
+                              <td class="text-left hidden-sm-and-down ">[[subItem.date_create]]</td>
+                              <td class="text-left hidden-sm-and-down ">[[subItem.date_change]]</td>
+                            </template>
+
+                            <template v-if="subItem.priority===1">
+                              <td>
+                                <v-chip class="ma-2" color="primary">Low</v-chip>
+                              </td>
+                            </template>
+                            <template v-if="subItem.priority===2">
+                              <td>
+                                <v-chip class="ma-2" color="warning">Medium</v-chip>
+                              </td>
+                            </template>
+                            <template v-if="subItem.priority===3">
+                              <td>
+                                <v-chip class="ma-2" color="red">Urgent</v-chip>
+                              </td>
+                            </template>
+                            <template v-if="subItem.priority===4">
+                              <td>
+                                <v-chip class="ma-2" color="blue">Wait</v-chip>
+                              </td>
+                            </template>
+
+
+                          </tr>
+                        </tbody>
+                      </template>
+                    </v-simple-table>
+                  </v-card>
                 </template>
 
-                <v-list-item  v-for="subItem in subitemKamban" :key="subItem.id" @click="List_Coment(subItem.id)">
 
-                  <!--Avatar del usuario asignado a la tarea-->
-               
-                  <v-list-item-avatar class="hidden-sm-and-down" >
-                    <v-img 
-                      src="https://e7.pngegg.com/pngimages/266/560/png-clipart-python-computer-icons-programmer-javascript-programming-language-python-logo-angle-text.png">
-                    </v-img>
-                  </v-list-item-avatar>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </template>
 
 
-                  <v-list-item-content v-if="subItem.status === false" class="text-decoration-line-through  font-italic" >
-                    <v-list-item-title v-text="subItem.title"></v-list-item-title>
-                  </v-list-item-content>
-                  <v-list-item-content v-else >
-                    <v-list-item-title v-text="subItem.title"></v-list-item-title>
-                  </v-list-item-content>
 
 
-                  <v-list-item-content v-if="subItem.status === false" class="text-decoration-line-through font-italic hidden-sm-and-down ">
-                    <v-list-item-title v-text="subItem.date_create"></v-list-item-title>
-                  </v-list-item-content>
-                  <v-list-item-content v-else class="hidden-sm-and-down">
-                    <v-list-item-title v-text="subItem.date_create"></v-list-item-title>
-                  </v-list-item-content>
-
-
-                  <v-list-item-content v-if="subItem.status === false" class="text-decoration-line-through font-italic hidden-sm-and-down">
-                    <v-list-item-title v-text="subItem.date_change"></v-list-item-title>
-                  </v-list-item-content>
-                  <v-list-item-content v-else class="hidden-sm-and-down">
-                    <v-list-item-title v-text="subItem.date_change"></v-list-item-title>
-                  </v-list-item-content>
-
-
-                  <template v-if="subItem.priority===1">
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        <v-chip class="ma-2" color="primary">Low</v-chip>
-                      </v-list-item-title>
-                    </v-list-item-content>
-                  </template>
-
-                  <template v-if="subItem.priority===2">
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        <v-chip class="ma-2" color="yellow">Medium</v-chip>
-                      </v-list-item-title>
-                    </v-list-item-content>
-                  </template>
-
-                  <template v-if="subItem.priority===3">
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        <v-chip class="ma-2" color="red">Urgent</v-chip>
-                      </v-list-item-title>
-                    </v-list-item-content>
-                  </template>
-
-                  <template v-if="subItem.priority===4">
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        <v-chip class="ma-2" color="blue">Wait</v-chip>
-                      </v-list-item-title>
-                    </v-list-item-content>
-                  </template>
-                </v-list-item>
-              </v-list-group>
-            </v-list>
-          </v-card>
-        </div>
-
-        <div v-else>
-          <h1 align="center">Please select the project to work</h1>
-        </div>
 
       </v-flex>
     </v-layout>
@@ -597,155 +606,208 @@
 <!--DIV Proyecto -->
 <div v-if="bottomNav=== 2">
   <v-container grid-list-lg>
-    <v-layout row wrap justify-center>
-      <v-flex xs12 lg8 md8>
+    <v-layout row wrap justify-left>
+      <v-flex xs12 lg12 md12>
 
-        <!--Calendario de eventos de proyectos -->
 
-       
-          <v-row class="fill-height">
-            <v-col>
-              <v-sheet height="64">
-                <v-toolbar flat color="white">
-                  <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
-                    Today
-                  </v-btn>
-                  <v-btn fab text small color="grey darken-2" @click="prev">
-                    <v-icon small>mdi-chevron-left</v-icon>
-                  </v-btn>
-                  <v-btn fab text small color="grey darken-2" @click="next">
-                    <v-icon small>mdi-chevron-right</v-icon>
-                  </v-btn>
-                  <v-toolbar-title v-if="$refs.calendar">
-                    [[ $refs.calendar.title ]]
-                  </v-toolbar-title>
-                  <v-spacer></v-spacer>
-                  <v-menu bottom right>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        outlined
-                        color="grey darken-2"
-                        v-bind="attrs"
-                        v-on="on"
-                      >
-                        <span>[[ typeToLabel[type] ]]</span>
-                        <v-icon right>mdi-menu-down</v-icon>
-                      </v-btn>
-                    </template>
-                    <v-list>
-                      <v-list-item @click="type = 'day'">
-                        <v-list-item-title>Day</v-list-item-title>
-                      </v-list-item>
-                      <v-list-item @click="type = 'week'">
-                        <v-list-item-title>Week</v-list-item-title>
-                      </v-list-item>
-                      <v-list-item @click="type = 'month'">
-                        <v-list-item-title>Month</v-list-item-title>
-                      </v-list-item>
-                      <v-list-item @click="type = '4day'">
-                        <v-list-item-title>4 days</v-list-item-title>
-                      </v-list-item>
-                    </v-list>
-                  </v-menu>
-                </v-toolbar>
-              </v-sheet>
-              <v-sheet height="600">
-                <v-calendar
-                  ref="calendar"
-                  v-model="focus"
-                  color="primary"
-                  :events="events"
-                  :event-color="getEventColor"
-                  :type="type"
-                  @click:event="showEvent"
-                  @click:more="viewDay"
-                  @click:date="viewDay"
-                  @change="updateRange"
-                  
-                ></v-calendar>
-                <v-menu
-                  v-model="selectedOpen"
-                  :close-on-content-click="false"
-                  :activator="selectedElement"
-                  offset-x
-                >
-                  <v-card
-                    color="grey lighten-4"
-                    min-width="350px"
-                    flat
-                  >
-                    <v-toolbar
-                      :color="selectedEvent.color"
-                      dark
-                    >
-                      <v-btn icon>
-                        <v-icon>mdi-pencil</v-icon>
-                      </v-btn>
-                      <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-                      <v-spacer></v-spacer>
-                      <v-btn icon>
-                        <v-icon>mdi-heart</v-icon>
-                      </v-btn>
-                      <v-btn icon>
-                        <v-icon>mdi-dots-vertical</v-icon>
-                      </v-btn>
-                    </v-toolbar>
-                    <v-card-text>
-                      <span v-html="selectedEvent.details"></span>
-                    </v-card-text>
-                    <v-card-actions>
-                      <v-btn
-                        text
-                        color="secondary"
-                        @click="selectedOpen = false"
-                      >
-                        Cancel
-                      </v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-menu>
-              </v-sheet>
-            </v-col>
-          </v-row>
-      
+        <template>
+          <v-expansion-panels dark popout flat >
+            <v-expansion-panel v-for="(item,i) in 5" :key="i">
+              <v-expansion-panel-header >
 
-        <!--Calendario de eventos de proyectos -->
+                <h4>
+                  <v-icon color="green"> mdi-checkbox-multiple-marked-outline</v-icon>
+                  Nombre del proyecto
+                </h4>
+
+
+                <template v-slot:actions>
+                  <v-icon color="green">$expand</v-icon>
+                </template>
+               </v-expansion-panel-header>
+              
+              <v-expansion-panel-content>
+                  <!--Tareas del proyecto -->
+                  <template>
+                    <v-expansion-panels dark popout flat>
+                      <v-expansion-panel v-for="(item,i) in 2" :key="i">
+                        <v-expansion-panel-header>Nombre Task </v-expansion-panel-header>
+                        <v-expansion-panel-content>
+
+                          
+                          <!--Lista de comentario y eventos dentro de ese task-->
+                          <template>
+                            <v-timeline dense>
+                              <v-timeline-item v-for="n in 4" :key="n">
+                                <template v-slot:icon>
+                                  <v-avatar>
+                                    <img src="http://i.pravatar.cc/64">
+                                  </v-avatar>
+                                </template>
+
+                                <v-card class="elevation-2">
+                                  <v-card-title class="headline">Lorem ipsum</v-card-title>
+                                  <v-card-text>
+                                    Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed
+                                    euismod convenire principes at. Est et nobis iisque percipit, an vim zril disputando
+                                    voluptatibus, vix an salutandi sententiae.
+                                  </v-card-text>
+                                </v-card>
+                              </v-timeline-item>
+                            </v-timeline>
+                          </template>
+                          <!--Lista de comentario y eventos dentro de ese task-->
+
+
+                         
+                        </v-expansion-panel-content>
+                      </v-expansion-panel>
+                    </v-expansion-panels>
+                  </template>
+                  <!--Tareas del proyecto-->
+               
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </template>
+
+
+
 
       </v-flex>
     </v-layout>
   </v-container>
 </div>
 <!--DIV Proyecto -->
+
+
+<!--Calendar -->
+<div v-if="bottomNav === 3">
+  <template>
+    <v-row  class="fill-height">
+      <v-col>
+        <v-sheet darkheight="64">
+          <v-toolbar dark flat color="white">
+            
+            <v-btn fab text small color="grey darken-2" @click="prev">
+              <v-icon small>mdi-chevron-left</v-icon>
+            </v-btn>
+            <v-btn fab text small color="grey darken-2" @click="next">
+              <v-icon small>mdi-chevron-right</v-icon>
+            </v-btn>
+            <v-toolbar-title v-if="$refs.calendar">
+              [[ $refs.calendar.title ]]
+            </v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-menu bottom right>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  outlined
+                  color="grey darken-2"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <span>[[ typeToLabel[type] ]]</span>
+                  <v-icon right>mdi-menu-down</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="type = 'day'">
+                  <v-list-item-title>Day</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="type = 'week'">
+                  <v-list-item-title>Week</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="type = 'month'">
+                  <v-list-item-title>Month</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="type = '4day'">
+                  <v-list-item-title>4 days</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </v-toolbar>
+        </v-sheet>
+        <v-sheet height="600">
+          <v-calendar
+            
+            ref="calendar"
+            v-model="focus"
+            color="primary"
+            :events="events"
+            :event-color="getEventColor"
+            :type="type"
+            @click:event="showEvent"
+            @click:more="viewDay"
+            @click:date="viewDay"
+            @change="updateRange"
+          ></v-calendar>
+          <v-menu
+            v-model="selectedOpen"
+            :close-on-content-click="false"
+            :activator="selectedElement"
+            offset-x
+          >
+            <v-card
+              color="grey lighten-4"
+              min-width="350px"
+              flat
+            >
+              <v-toolbar
+                :color="selectedEvent.color"
+                dark
+              >
+                <v-btn icon>
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+                <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn icon>
+                  <v-icon>mdi-heart</v-icon>
+                </v-btn>
+                <v-btn icon>
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </v-toolbar>
+              <v-card-text>
+                <span v-html="selectedEvent.details"></span>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn
+                  text
+                  color="secondary"
+                  @click="selectedOpen = false"
+                >
+                  Cancel
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-menu>
+        </v-sheet>
+      </v-col>
+    </v-row>
+  </template>
+</div>
+<!--Calendar -->
 <!--########################################### BOTON NAVEGACION DASHBOARD #######################################-->
 
 
 
 <!--########################################### NOTIFICACIONES PUSH ###############################################-->
 <template>
-  <v-snackbar
-  v-model="snackbar"
-  multi-line
-  right
-  top
-  timeout="3800"
-  vertical
-  shaped
-  app 
->
-<template>
-  <v-card
-    class="mx-auto"
-    max-width="344"
-    outlined
-  >
-    <v-list-item three-line>
-      <v-list-item-content>
-        <v-list-item-title class="headline mb-1"><v-icon>mdi-comment</v-icon> [[ snackbar_titulo ]]</v-list-item-title>
-        <v-list-item-subtitle>[[ snackbar_comentario ]]</v-list-item-subtitle>
-      </v-list-item-content>
-    </v-list-item>
-</template>
-</v-snackbar>
+  <v-snackbar v-model="snackbar" multi-line right top timeout="3800" vertical shaped app>
+    <template>
+      <v-card class="mx-auto" max-width="344" outlined>
+        <v-list-item three-line>
+          <v-list-item-content>
+            <v-list-item-title class="headline mb-1">
+              <v-icon>mdi-comment</v-icon> [[ snackbar_titulo ]]
+            </v-list-item-title>
+            <v-list-item-subtitle>[[ snackbar_comentario ]]</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+    </template>
+  </v-snackbar>
 </template>
 <!--########################################### NOTIFICACIONES PUSH ###############################################-->
 

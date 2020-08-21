@@ -72,3 +72,9 @@ class CommentAddSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = '__all__'
+
+
+class MembersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = members
+        fields = '__all__'

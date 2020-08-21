@@ -30,14 +30,12 @@
     <template>
       <v-app id="inspire">
         <form action="#" method="get">
-          <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app color="blue darken-2" dark dense>
+          <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app dark dense>
             <v-app-bar-nav-icon @click.stop="drawer2 = !drawer2"></v-app-bar-nav-icon>
             <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
-              <span class="hidden-sm-and-down">Task Manager </span>
+              <span >Task Manager </span>
             </v-toolbar-title>
 
-            <v-text-field flat solo-inverted hide-details prepend-inner-icon="mdi-magnify" label="Search ..."
-              class="hidden-sm-and-down" type="search" id="buscar" name="buscar"></v-text-field>
 
             <v-spacer></v-spacer>
 
@@ -47,7 +45,7 @@
             </v-btn>
             <v-divider inset class="mx-4" vertical></v-divider>
 
-          
+
 
             {{ user.first_name }} {{ user.last_name}}</br>
 
@@ -59,14 +57,20 @@
 
             {% endif %}
 
+
           </v-app-bar>
+
+
         </form>
-        <v-main >
-          
+
+
+
+        <v-main>
+
           {% block content %}
 
           {%  endblock %}
-         
+
         </v-main>
       </v-app>
     </template>
@@ -93,15 +97,15 @@
   {% endblock %}
 
 
-  
-<script>
- 
 
-  var CSRF_TOKEN = '{{ csrf_token }}'
-  var ID_Token = {{ user.id }}
+  <script>
 
-  console.log(csrf_token)
- </script>
+
+    var CSRF_TOKEN = '{{ csrf_token }}'
+    var ID_Token = {{ user.id }}
+
+    console.log(csrf_token)
+  </script>
 
 
 
@@ -122,8 +126,8 @@
         //ID temporal del task que servira para poder realizar la insercion de comentarios desde
         //el drawer izquierdo de la aplicacion
         id_task: 0,
-        id_task_comentario :'',
-        id_Project_Task : 0,
+        id_task_comentario: '',
+        id_Project_Task: 0,
 
         //Menu Derecho con lista de Projectos agregados como miembro.
         Project_list: [],
@@ -134,7 +138,7 @@
         subitemKamban: [],
 
         //Navegacion entre opciones, Lista, Dashboard, Table, Kamban, TimeLine, Image
-        bottomNav: 2,
+        bottomNav: 3,
         bottomNavProject: '',
 
         //Barra Izquierda 
@@ -153,9 +157,9 @@
         files: [],
 
         //NOTIFICACIONES PUSH
-        snackbar : false,
-        snackbar_titulo : '',
-        snackbar_comentario : '',
+        snackbar: false,
+        snackbar_titulo: '',
+        snackbar_comentario: '',
 
         //Urgencia Select creacion de proyecto
         Nivel_urgencia: [
@@ -186,9 +190,13 @@
         ],
 
 
+        //Variables para agregar proyecto desde fomulario Dialogo
+        project_name_add: '',
+        project_description_add: '',
         //Projecto Lista de Tabla 
         singleSelectProjectCreate: false,
         selectedProjectCreate: [],
+        kambaProjectCreate : [],
         headersProjectCreate: [
           {
             text: 'Project Name',
@@ -196,9 +204,9 @@
             sortable: false,
             value: 'name',
           },
-          { text: 'Urgency', value: 'calories' },
-          { text: 'Description', value: 'fat' },
-         
+
+          { text: 'Description', value: 'description' },
+
         ],
         dessertsProjectCreate: [
           {
@@ -225,48 +233,185 @@
             protein: 6.0,
             iron: '7%',
           },
-         
+
         ],
 
 
+          ///CALENDAR PRUEBASSSSSSSS
+          focus: '',
+          type: 'month',
+          typeToLabel: {
+            month: 'Month',
+            week: 'Week',
+            day: 'Day',
+            '4day': '4 Days',
+          },
+          selectedEvent: {},
+          selectedElement: null,
+          selectedOpen: false,
+          events: [],
+          colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
+          names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
 
-        ///Calendarios 
-        focus: '',
-      type: 'month',
-      typeToLabel: {
-        month: 'Month',
-        week: 'Week',
-        day: 'Day',
-        '4day': '4 Days',
-      },
-      selectedEvent: {},
-      selectedElement: null,
-      selectedOpen: false,
-      events: [],
-      colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
-      names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
+          ///CALENDAR PRUEBASSSSSSSS
 
-        ///Calendarios
       },
+      watch: {
+      },
+
       computed: {
+        getProjectID: function () {
+          var id = 0
+          if (this.selectedProjectCreate) {
+            id = this.selectedProjectCreate
+            this.List_Kamban_Task_Project_Select(id)
+            return this.selectedProjectCreate
+          }
+        }
+
+
       },
       mounted() {
         ///Calendarios
         this.$refs.calendar.checkChange()
+
         //Mostrar listado de proyecto automaticamente 
         this.ListProject()
       },
 
       methods: {
+
+        ///CALENDAR PRUEBASSSSSSSSSSSSSSSSSSSSSSS
+
+        viewDay ({ date }) {
+        this.focus = date
+        this.type = 'day'
+      },
+      getEventColor (event) {
+        return event.color
+      },
+      setToday() {
+        this.focus = ''
+      },
+      prev () {
+        this.$refs.calendar.prev()
+      },
+      next () {
+        this.$refs.calendar.next()
+      },
+      showEvent ({ nativeEvent, event }) {
+        const open = () => {
+          this.selectedEvent = event
+          this.selectedElement = nativeEvent.target
+          setTimeout(() => this.selectedOpen = true, 10)
+        }
+
+        if (this.selectedOpen) {
+          this.selectedOpen = false
+          setTimeout(open, 10)
+        } else {
+          open()
+        }
+
+        nativeEvent.stopPropagation()
+      },
+      updateRange ({ start, end }) {
+        const events = []
+
+        const min = new Date(`${start.date}T00:00:00`)
+        const max = new Date(`${end.date}T23:59:59`)
+        const days = (max.getTime() - min.getTime()) / 86400000
+        const eventCount = this.rnd(days, days + 20)
+
+        for (let i = 0; i < eventCount; i++) {
+          const allDay = this.rnd(0, 3) === 0
+          const firstTimestamp = this.rnd(min.getTime(), max.getTime())
+          const first = new Date(firstTimestamp - (firstTimestamp % 900000))
+          const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
+          const second = new Date(first.getTime() + secondTimestamp)
+
+          events.push({
+            name: this.names[this.rnd(0, this.names.length - 1)],
+            start: first,
+            end: second,
+            color: this.colors[this.rnd(0, this.colors.length - 1)],
+            timed: !allDay,
+          })
+        }
+
+        this.events = events
+      },
+      rnd (a, b) {
+        return Math.floor((b - a + 1) * Math.random()) + a
+      },
+
+
+      ///CALENDAR PRUEBASSSSSSSSSSSSSSSSSSSSSSSSS
+
+        alert(dato){
+          console.log('Click')
+        },
+
         List_subTask2() {
           console.log("DOBLE CLICK")
         },
         //Listar projecto a los cuales pertenezco 
+
+        //Funcion para agregar nuevos proyectos a db
+        ListProjectAdd() {
+          var self = this;
+          //console.log(self.id_task)
+
+          axios.post('/api/v1.0/project/', {
+            name: self.project_name_add,
+            owner: ID_Token,
+            description: self.project_description_add,
+          }, {
+            headers: { 'X-CSRFTOKEN': CSRF_TOKEN, },
+          })
+            .then(function (response) {
+              //console.log(response);
+              self.project_name_add = ""
+              self.project_description_add = ""
+              self.notification('New Project', 'Action added successfully')
+              self.Members_add(response.data.id, ID_Token)
+
+
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+
+        },
+
+        Members_add(project_id, user_id) {
+          var self = this;
+          //console.log(self.id_task)
+
+          axios.post('/api/v1.0/members/', {
+            project: project_id,
+            owner: ID_Token,
+            member: user_id,
+          }, {
+            headers: { 'X-CSRFTOKEN': CSRF_TOKEN, },
+          })
+            .then(function (response) {
+              //console.log(response);
+              self.ListProject()
+
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+
+        },
+
         ListProject() {
           var self = this;
           axios.get('/api/v1.0/project/')
             .then(response => {
               this.Project_list = response.data
+              this.dessertsProjectCreate = response.data
             })
             .catch(error => { console.log(error) })
         },
@@ -346,39 +491,39 @@
           axios.post('/api/v1.0/commentAdd/', {
             comment: self.id_task_comentario,
             owner: ID_Token,
-            task : self.id_task,
-          },{
-            headers: {'X-CSRFTOKEN': CSRF_TOKEN,},
+            task: self.id_task,
+          }, {
+            headers: { 'X-CSRFTOKEN': CSRF_TOKEN, },
           })
             .then(function (response) {
               //console.log(response);
               self.List_Coment(self.id_task)
               self.id_task_comentario = ""
-              self.notification('New comment', 'Action added successfully' )
+              self.notification('New comment', 'Action added successfully')
             })
             .catch(function (error) {
               console.log(error);
             });
         },
 
-        async Task_Mark_Finished(){
+        async Task_Mark_Finished() {
           var self = this;
           //console.log(self.id_task)
 
-          axios.put('/api/v1.0/task/'+ self.id_task + '/', {
+          axios.put('/api/v1.0/task/' + self.id_task + '/', {
             id: self.id_task,
-            status : false,
+            status: false,
             owner: ID_Token,
-            title : self.List_Task_drawer.title,
-            project : self.List_Task_drawer.project,
+            title: self.List_Task_drawer.title,
+            project: self.List_Task_drawer.project,
 
-            
-          },{
-            headers: {'X-CSRFTOKEN': CSRF_TOKEN,},
+
+          }, {
+            headers: { 'X-CSRFTOKEN': CSRF_TOKEN, },
           })
             .then(function (response) {
               console.log(response);
-              
+
             })
             .catch(function (error) {
               console.log(error);
@@ -387,9 +532,9 @@
         },
 
         //NOTIFICACIONES PUSH
-        notification( titulo, comentario ){
+        notification(titulo, comentario) {
           var self = this;
-         
+
           self.snackbar_titulo = titulo
           self.snackbar_comentario = comentario
           self.snackbar = true
@@ -398,74 +543,30 @@
 
 
 
-        ///Calendarios
+        ///CREACION DE PROYECTOS
+        //Funcion traera desde la el create project todos los Kamban y sus respectivas task 
+        List_Kamban_Task_Project_Select(data) {
+          //Extraer Kamban del proyecto seleccionado
+          console.log("Ejecutando")
+          if(data.length > 0 ){
+          
+          axios.get('/api/v1.0/project/' + data[0].id + '/')
+            .then(response => {
+              this.kambaProjectCreate = response.data
+              console.log(response.data)
+              //self.itemsKamban = response.data
+            })
+            .catch(error => { console.log(error) })
+          }
+
+        },
 
 
-        viewDay ({ date }) {
-        this.focus = date
-        this.type = 'day'
-      },
-      getEventColor (event) {
-        return event.color
-      },
-      setToday () {
-        this.focus = ''
-      },
-      prev () {
-        this.$refs.calendar.prev()
-      },
-      next () {
-        this.$refs.calendar.next()
-      },
-      showEvent ({ nativeEvent, event }) {
-        const open = () => {
-          this.selectedEvent = event
-          this.selectedElement = nativeEvent.target
-          setTimeout(() => this.selectedOpen = true, 10)
-        }
 
-        if (this.selectedOpen) {
-          this.selectedOpen = false
-          setTimeout(open, 10)
-        } else {
-          open()
-        }
 
-        nativeEvent.stopPropagation()
-      },
-      updateRange ({ start, end }) {
-        const events = []
 
-        const min = new Date(`${start.date}T00:00:00`)
-        const max = new Date(`${end.date}T23:59:59`)
-        const days = (max.getTime() - min.getTime()) / 86400000
-        const eventCount = this.rnd(days, days + 20)
 
-        for (let i = 0; i < eventCount; i++) {
-          const allDay = this.rnd(0, 3) === 0
-          const firstTimestamp = this.rnd(min.getTime(), max.getTime())
-          const first = new Date(firstTimestamp - (firstTimestamp % 900000))
-          const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
-          const second = new Date(first.getTime() + secondTimestamp)
-
-          events.push({
-            name: this.names[this.rnd(0, this.names.length - 1)],
-            start: first,
-            end: second,
-            color: this.colors[this.rnd(0, this.colors.length - 1)],
-            timed: !allDay,
-          })
-        }
-
-        this.events = events
-      },
-      rnd (a, b) {
-        return Math.floor((b - a + 1) * Math.random()) + a
-      },
-
-      
-
-        ///Calendarios
+        ///CREACION DE PROYECTOS
 
       },
     });

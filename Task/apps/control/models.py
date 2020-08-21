@@ -119,7 +119,7 @@ class Assigned(ModelBase):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        return self.assigned
+        return self.assigned.member.username
 
 
 class SubTask(ModelBase):

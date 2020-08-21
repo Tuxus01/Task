@@ -81,16 +81,16 @@ class projectViewSet(viewsets.ModelViewSet):
     filter_fields = ('code',)
     #Extraccion de solo los projectos activo en los que estoy trabajando
     def list(self, request):
-        #list_ = members.objects.filter(member=request.user)
-        list_ = members.objects.all()
+        list_ = members.objects.filter(member=request.user)
+        #list_ = members.objects.all()
         #print(list_)
         #Ciclo que recolecta y agraga a la lista visual del html los project activos en los que estoy laborando
         projecto_list = []
         for i in list_:
             pro = project.objects.get(pk=i.project.id)
             #Validacion de project activo
-            #if pro.status == True:
-            projecto_list.append(pro)
+            if pro.status == True:
+                projecto_list.append(pro)
         
         #print(projecto_list)
         #queryset = project.objects.filter(owner=request.user)
@@ -163,3 +163,8 @@ class CommentAddViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all().order_by('-id')
     serializer_class = CommentAddSerializer
     
+
+
+class MembersViewSet(viewsets.ModelViewSet):
+    queryset = members.objects.all().order_by('-id')
+    serializer_class = MembersSerializer
