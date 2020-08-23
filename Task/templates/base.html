@@ -138,13 +138,14 @@
         subitemKamban: [],
 
         //Navegacion entre opciones, Lista, Dashboard, Table, Kamban, TimeLine, Image
-        bottomNav: 3,
+        bottomNav: 1,
         bottomNavProject: '',
 
         //Barra Izquierda 
         //Listado de Comentarios
         List_Task_drawer: [],
         List_Comment_drawer: [],
+        rules: [v => v.length <= 225 || 'Max 225 characters'],
         //Adjunto de archivos varios
 
 
@@ -154,6 +155,18 @@
         dialogKamban: false,
         //Diaglo para agregar task a kamban del proyecto
         dialogKambanTask: false,
+        //ID que se usara para la creacion de kambas
+        Proyect_ID_Kamba:0,
+        kamban_name : '',
+        kamban_description :'',
+
+        task_project_id : 0,
+        //Variables para fomulario y guardar task de proyecto
+        task_id:0,
+        task_title :'',
+        task_description :'',
+
+
         files: [],
 
         //NOTIFICACIONES PUSH
@@ -173,21 +186,7 @@
         //Card de creacion de task
         show: true,
 
-        desserts: [
-          {
-            name: 'Task1',
-            calories: 159,
-          },
-          {
-            name: 'Task2',
-            calories: 237,
-          },
-          {
-            name: 'Task3',
-            calories: 262,
-          },
-
-        ],
+        Task_Kamban: [ ],
 
 
         //Variables para agregar proyecto desde fomulario Dialogo
@@ -236,6 +235,10 @@
 
         ],
 
+        ///////////HISTORY
+        history_task_comment_var : [],
+        //////////HISTORY
+
 
           ///CALENDAR PRUEBASSSSSSSS
           focus: '',
@@ -273,7 +276,7 @@
       },
       mounted() {
         ///Calendarios
-        this.$refs.calendar.checkChange()
+        //this.$refs.calendar.checkChange()
 
         //Mostrar listado de proyecto automaticamente 
         this.ListProject()
@@ -282,7 +285,6 @@
       methods: {
 
         ///CALENDAR PRUEBASSSSSSSSSSSSSSSSSSSSSSS
-
         viewDay ({ date }) {
         this.focus = date
         this.type = 'day'
@@ -344,16 +346,24 @@
       rnd (a, b) {
         return Math.floor((b - a + 1) * Math.random()) + a
       },
-
-
       ///CALENDAR PRUEBASSSSSSSSSSSSSSSSSSSSSSSSS
 
         alert(dato){
           console.log('Click')
         },
 
-        List_subTask2() {
-          console.log("DOBLE CLICK")
+
+        //funcion que captura todas las tareas 
+        List_Task_Kamban() {
+          var self = this;
+          //console.log(id)
+          axios.get('/api/v1.0/task/')
+            .then(response => {
+              //this.Project_list = response.data
+              //console.log(response.data)
+              self.Task_Kamban = response.data
+            })
+            .catch(error => { console.log(error) })
         },
         //Listar projecto a los cuales pertenezco 
 
@@ -398,6 +408,70 @@
             .then(function (response) {
               //console.log(response);
               self.ListProject()
+
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+
+        },
+
+
+        Kamban_add(id_proyecto){
+          
+          console.log(id_proyecto)
+          var self = this;
+          self.dialogKamban=true
+          axios.post('/api/v1.0/kamban/', {
+            project: id_proyecto,
+            owner: ID_Token,
+            name: self.kamban_name,
+            description : self.kamban_description,
+          }, {
+            headers: { 'X-CSRFTOKEN': CSRF_TOKEN, },
+          })
+            .then(function (response) {
+              console.log(response);
+              self.kamban_description=""
+              self.kamban_name =""
+              self.List_Kamban_Task_Project_Select(self.selectedProjectCreate)
+              
+
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+
+        },
+
+
+        task_kamban_modal(id_kamban,id_project){
+          var self=this;
+          self.dialogKambanTask = true
+          self.task_id = id_kamban
+          self.task_project_id = id_project
+        },
+
+        task_kamban_add(){
+          
+          var self = this;
+          //console.log(id_kamban)
+          axios.post('/api/v1.0/task/', {
+            project: self.task_project_id,
+            kamban : self.task_id,
+            owner: ID_Token,
+            title: self.task_title,
+            description : self.task_description,
+            priority : self.Nivel_urgencia_select
+          }, {
+            headers: { 'X-CSRFTOKEN': CSRF_TOKEN, },
+          })
+            .then(function (response) {
+              console.log(response);
+              self.task_description=""
+              self.task_title =""
+              self.List_Kamban_Task_Project_Select(self.selectedProjectCreate)
+              
 
             })
             .catch(function (error) {
@@ -487,7 +561,7 @@
         Task_add_comment() {
           var self = this;
           //console.log(self.id_task)
-
+          if(self.id_task_comentario.length <= 225){
           axios.post('/api/v1.0/commentAdd/', {
             comment: self.id_task_comentario,
             owner: ID_Token,
@@ -503,7 +577,10 @@
             })
             .catch(function (error) {
               console.log(error);
-            });
+            });}
+            else{
+              console.log("Demasiados caracteres")
+            }
         },
 
         async Task_Mark_Finished() {
@@ -547,26 +624,46 @@
         //Funcion traera desde la el create project todos los Kamban y sus respectivas task 
         List_Kamban_Task_Project_Select(data) {
           //Extraer Kamban del proyecto seleccionado
+          var self=this;
           console.log("Ejecutando")
           if(data.length > 0 ){
-          
+            //Variable que se utilizara despues para la creacion de cambas
+          this.Proyect_ID_Kamba = data[0].id
           axios.get('/api/v1.0/project/' + data[0].id + '/')
             .then(response => {
               this.kambaProjectCreate = response.data
-              console.log(response.data)
+              //Se llaman las tareas para poder verlas dentro del kamban create project
+              //self.List_Task_Kamban()
+              //console.log(response.data)
               //self.itemsKamban = response.data
             })
             .catch(error => { console.log(error) })
           }
 
         },
-
-
-
-
-
-
         ///CREACION DE PROYECTOS
+
+
+
+        ///############################## HISTORY ########################################
+
+        async history_task_comment(id) {
+          var self = this;
+          console.log("aqui vas ")
+          console.log(id)
+          self.List_Comment_drawer = []
+          //Listado de Comentarios por Task
+          let comment = await axios.get('/api/v1.0/comment/?search=' + id)
+          self.extraImage(comment.data)
+          
+          
+          
+        },
+
+        
+        ///############################## HISTORY ########################################
+
+
 
       },
     });
