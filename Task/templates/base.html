@@ -23,6 +23,13 @@
   <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
+  <!--Video JS-->
+  <link href="https://vjs.zencdn.net/7.8.4/video-js.css" rel="stylesheet" />
+
+  <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
+  <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
+  <script src="https://vjs.zencdn.net/7.8.4/video.js"></script>
+
 </head>
 
 <body>
@@ -108,7 +115,6 @@
   </script>
 
 
-
   <script>
 
     var app = new Vue({
@@ -121,6 +127,8 @@
         dialog: false,
         drawer: false,
         drawer2: false,
+        //Ver archivos adjuntos en comentarios
+        fileDialog : false,
         drawerEdit: false,
 
         //ID temporal del task que servira para poder realizar la insercion de comentarios desde
@@ -166,8 +174,13 @@
         task_title :'',
         task_description :'',
 
-
+        //Arragle de archivos que se subiran al comentario
         files: [],
+        files_path : '',
+        //Variable que direa si muestra iframe modal
+        files_mostrar : true,
+        files_mostar_html :'',
+        files_office_file : false,
 
         //NOTIFICACIONES PUSH
         snackbar: false,
@@ -259,6 +272,134 @@
           ///CALENDAR PRUEBASSSSSSSS
 
       },
+
+      
+      filters: {
+        icon: function(string) {
+        var self = this;
+        let icon = ''
+        var png = string.endsWith(".png");
+        if(png===true){
+          icon = "mdi-file-image"
+         
+        }
+        var pdf = string.endsWith(".pdf");
+        if(pdf===true){
+          icon = "mdi-file-pdf"
+          
+        }
+
+        var doc = string.endsWith(".doc");
+        if(doc===true){
+          icon = "mdi-file-word"
+      
+        }
+
+        var docx = string.endsWith(".docx");
+        if(docx===true){
+          icon = "mdi-file-word"
+    
+        }
+
+        var csv = string.endsWith(".csv");
+        if(csv===true){
+          icon = "mdi-file-excel"
+
+        }
+
+        var xls = string.endsWith(".xls");
+        if(xls===true){
+          icon = "mdi-file-excel"
+      
+        }
+
+        var xlsx = string.endsWith(".xlsx");
+        if(xlsx===true){
+          icon = "mdi-file-excel"
+        
+        }
+
+        var jpg = string.endsWith(".jpg");
+        if(jpg===true){
+          icon = "mdi-file-image"
+        
+        }
+
+        var jpeg = string.endsWith(".jpeg");
+        if(jpeg===true){
+          icon = "mdi-file-image"
+        
+        }
+
+        var mp4 = string.endsWith(".mp4");
+        if(mp4===true){
+          icon = "mdi-video"
+        
+        }
+        
+
+        return icon
+        },
+
+        type_file: function(string){
+          let icon = ''
+        var png = string.endsWith(".png");
+        if(png===true){
+          icon = ".png"
+        }
+        var pdf = string.endsWith(".pdf");
+        if(pdf===true){
+          icon = ".pdf"
+        }
+
+        var doc = string.endsWith(".doc");
+        if(doc===true){
+          icon = ".doc"
+        }
+
+        var docx = string.endsWith(".docx");
+        if(docx===true){
+          icon = ".docx"
+        }
+
+        var csv = string.endsWith(".csv");
+        if(csv===true){
+          icon = ".csv"
+        }
+
+        var xls = string.endsWith(".xls");
+        if(xls===true){
+          icon = ".xls"
+        }
+
+        var xlsx = string.endsWith(".xlsx");
+        if(xlsx===true){
+          icon = ".xlsx"
+        }
+
+        var jpg = string.endsWith(".jpg");
+        if(jpg===true){
+          icon = ".jpg"
+        
+        }
+
+        var jpeg = string.endsWith(".jpeg");
+        if(jpeg===true){
+          icon = ".jpeg"
+        
+        }
+
+        var mp4 = string.endsWith(".mp4");
+        if(mp4===true){
+          icon = ".mp4"
+        
+        }
+        
+
+        return icon
+
+        },
+      },
       watch: {
       },
 
@@ -283,6 +424,12 @@
       },
 
       methods: {
+
+        
+
+
+
+
 
         ///CALENDAR PRUEBASSSSSSSSSSSSSSSSSSSSSSS
         viewDay ({ date }) {
@@ -353,6 +500,49 @@
         },
 
 
+        //Files Commentarios diaglo 
+        Files_Task_comment(id){
+          var self= this;
+          self.files_mostar_html=""
+          //console.log(self.files_office_file)
+          var docx = id.endsWith(".docx");
+          var doc = id.endsWith(".doc");
+          var xls = id.endsWith(".xls");
+          var xlsx = id.endsWith(".xlsx");
+          var mp4 = id.endsWith(".mp4");
+          var pdf = id.endsWith(".pdf");
+
+          
+          self.files_path=id
+          //Ejecutar Modal 
+
+          if((docx===true) || (doc === true ) || (xls === true ) || (xlsx === true )){
+            self.files_mostrar=false
+            self.fileDialog=true
+            
+          }else{
+            if(mp4===true){
+              self.files_mostar_html="mp4"
+              self.files_mostrar=true,
+              self.fileDialog = true
+            }
+            if(pdf===true){
+              self.files_mostar_html="pdf"
+              self.files_mostrar=true,
+              self.fileDialog = true
+            }else{
+              self.files_mostrar=true,
+              self.fileDialog = true
+              
+            }
+            
+          }
+
+          
+        },
+
+        //Files Commentarios diaglo 
+
         //funcion que captura todas las tareas 
         List_Task_Kamban() {
           var self = this;
@@ -419,7 +609,7 @@
 
         Kamban_add(id_proyecto){
           
-          console.log(id_proyecto)
+          //console.log(id_proyecto)
           var self = this;
           self.dialogKamban=true
           axios.post('/api/v1.0/kamban/', {
@@ -431,7 +621,7 @@
             headers: { 'X-CSRFTOKEN': CSRF_TOKEN, },
           })
             .then(function (response) {
-              console.log(response);
+              //console.log(response);
               self.kamban_description=""
               self.kamban_name =""
               self.List_Kamban_Task_Project_Select(self.selectedProjectCreate)
@@ -467,7 +657,7 @@
             headers: { 'X-CSRFTOKEN': CSRF_TOKEN, },
           })
             .then(function (response) {
-              console.log(response);
+              //console.log(response);
               self.task_description=""
               self.task_title =""
               self.List_Kamban_Task_Project_Select(self.selectedProjectCreate)
@@ -548,7 +738,7 @@
             let Profile_Image = await axios.get('/api/v1.0/profile/?search=' + data[i].owner.id)
             let files = await axios.get('/api/v1.0/files/?search=' + data[i].id)
 
-            console.log(files.data)
+            //console.log(files.data)
             //console.log(data[i])
             //console.log(Profile_Image.data[0])
             if (Profile_Image.data[0] != undefined) {
@@ -573,6 +763,7 @@
         //AGREGAR COMENTARIO A TASK POR MEDIO DEL ID DE TASK
         Task_add_comment() {
           var self = this;
+          
           //console.log(self.id_task)
           if(self.id_task_comentario.length <= 225){
           axios.post('/api/v1.0/commentAdd/', {
@@ -586,7 +777,11 @@
               //console.log(response);
               self.List_Coment(self.id_task)
               self.id_task_comentario = ""
-              self.notification('New comment', 'Action added successfully')
+              //De cumplicar esta condicion llamara la funcion de agregar archivos 
+              if(self.files.length >= 1 ){
+                self.Task_add_comment_Files(response.data.id)
+              }
+              //self.notification('New comment', 'Action added successfully')
             })
             .catch(function (error) {
               console.log(error);
@@ -594,6 +789,34 @@
             else{
               console.log("Demasiados caracteres")
             }
+        },
+
+
+        //Funcion para agregar archivos multimedia por
+        async Task_add_comment_Files(id){
+          var self = this;
+          for(i in self.files){
+            let formData = new FormData();
+            formData.append('comment', id);
+            formData.append('owner', ID_Token);
+            formData.append('files', self.files[i]);
+
+            axios.post('/api/v1.0/files/', formData, {
+                headers: { 'X-CSRFTOKEN': CSRF_TOKEN, 'Content-Type': 'multipart/form-data', },
+              })
+                .then(function (response) {
+                  console.log(response);
+                  //formData.delete(name);
+                  //self.files=[]
+                  //self.List_Coment(self.id_task)
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
+
+
+          }
+          self.files=[]
         },
 
         async Task_Mark_Finished() {

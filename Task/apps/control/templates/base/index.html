@@ -74,60 +74,16 @@
         </v-col>
       </v-flex>
 
-
-      <!--Sub Tarea dentro de la tarea-->
-      <v-flex xs12 lg12 md12>
-        <template v-if="List_Comment_drawer != ''">
-          <v-virtual-scroll :items="List_Comment_drawer"  :item-height="60" height="280">
-
-
-            <template v-slot="{ item }">
-              <v-list-item three-line outlined>
-                <v-list-item-avatar>
-                  <v-avatar>
-                    <v-img :src="item.image"></v-img>
-                  </v-avatar>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title three-line dark class="body-2  blue--text">
-                   [[ item.owner.username ]] 
-                  
-                  </v-list-item-title>
-                  <v-list-item-subtitle dense v-text="item.comment"></v-list-item-subtitle>
-
-                  <template  v-for="file in item.files">
-                    <v-list-item-content>
-                      <v-list-item-subtitle dense> 
-                        <v-img
-                        :src="file.files"
-                        class="grey lighten-2"
-                      >
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </template>
-
-
-
-
-                  <v-divider></v-divider>
-                </v-list-item-content>
-              </v-list-item>
-            </template>
-
-          </v-virtual-scroll>
-        </template>
-      </v-flex>
-      <!--Sub Tarea dentro de la tarea-->
-
+      <!--Comentarios y archivos -->
       <template v-if="List_Task_drawer.status === true">
         <v-flex xs12 lg12 md12>
           <v-col>
-            <template>
-              <v-file-input chips counter show-size multiple label="File input"></v-file-input>
-            </template>
             <v-textarea rows="3"  outlined dense :rules="rules" counter v-model="id_task_comentario" label="New Comment" dense>
             </v-textarea>
-            <v-btn small text outlined rounded color="success" @click="Task_add_comment()">
+            <template>
+              <v-file-input v-model="files" label="Type : image/*, .mp4 ,.pdf, .doc, .docx, .xls, .xlsx, .csv" accept="image/*,.mp4 ,.pdf,.doc, .docx, .xls, .xlsx, .csv " chips counter show-size multiple label="File input"></v-file-input>
+            </template>
+            <v-btn small   rounded block color="success" @click="Task_add_comment()">
               <v-icon small left>mdi-pencil</v-icon> Add Comment
             </v-btn>
           </v-col>
@@ -139,12 +95,136 @@
           <v-col cols="12" md="12">
             <v-textarea rows="3" outlined name="input-7-4" v-model="id_task_comentario" label="New Comment" disabled
               dense></v-textarea>
-            <v-btn disabled small text outlined rounded color="success" @click="Task_add_comment()">
+            <v-btn disabled small   rounded block color="success" @click="Task_add_comment()">
               <v-icon small left>mdi-pencil</v-icon> Add Comment
             </v-btn>
           </v-col>
         </v-flex>
       </template>
+      <!--Comentarios y archivos -->
+
+
+      <!--Sub Tarea dentro de la tarea-->
+      <v-flex xs12 lg12 md12>
+        <template v-if="List_Comment_drawer != ''">
+
+          <template>
+            <v-timeline dense>
+              <v-timeline-item
+                v-for="comment in List_Comment_drawer"
+                :key="comment.id"
+                color="red lighten-2"
+                large
+              >
+              <template v-slot:icon>
+                <v-avatar>
+                  <img :src="comment.image">
+                </v-avatar>
+              </template>
+                <v-card class="elevation-2">
+                  <v-card-title class="body-1 blue--text">[[ comment.owner.username ]] <v-spacer vertical></v-spacer> [[ comment.date_create]] - [[ comment.date_time_c ]]</v-card-title>
+                  <v-card-text>
+                   [[ comment.comment ]]
+
+                   <template>
+                    <div class="text-rigth">
+                      <v-chip
+                        small
+                        class="ma-2"
+                        color="success"
+                        outlined
+                        v-for="file in comment.files"
+                        @click="Files_Task_comment(file.files)"
+                        x-small
+                      >
+                        <!--Extraer el tipo de archivo a raiz de dos funciones programadas filters/icon filters/type_file-->
+                        <v-icon left>[[ file.files | icon ]]</v-icon>
+                        [[ file.files | type_file ]]
+
+                        
+                        </div>
+                       
+                        <!--Extraer el tipo de archivo a raiz de dos funciones programadas filters/icon filters/type_file-->
+
+                      </v-chip>
+                    </div>
+                  </template>
+                  </v-card-text>
+
+                 
+
+                </v-card>
+              </v-timeline-item>
+            </v-timeline><br>
+          </template>
+
+
+          
+        </template>
+      </v-flex>
+      <!--Sub Tarea dentro de la tarea-->
+
+<!--##################################Diaglo para mostrar archivos adjunto de los comentarios #####################################-->
+<template>
+ 
+    <v-dialog dark eager height="500" width="500" v-model="fileDialog">
+ 
+  
+    <v-card class="mx-auto" v-if="files_mostrar===true">
+      <template v-if="files_mostar_html==='pdf'">
+        <iframe :src='files_path' height="700" width="1000"></iframe>
+      </template>
+      <template v-else-if="files_mostar_html==='mp4'">
+        
+        <video
+        id="my-video"
+        class="video-js"
+        controls
+        autoplay="true"
+        preload="auto"
+        width="500"
+        height="500"
+        poster="MY_VIDEO_POSTER.jpg"
+        data-setup="{}"
+      >
+        <source :src='files_path' type="video/mp4" />
+      
+        <p class="vjs-no-js">
+          To view this video please enable JavaScript, and consider upgrading to a
+          web browser that
+          <a href="https://videojs.com/html5-video-support/" target="_blank"
+            >supports HTML5 video</a
+          >
+        </p>
+      </video>
+  
+
+      </template>
+      <template v-else>
+         <v-img
+         :src="files_path"
+          class="grey darken-4"
+          ></v-img>
+      </template>
+
+     
+
+
+    </v-card>
+    <v-card class="mx-auto" v-if="files_mostrar===false">
+      <v-card-text>
+        <p class="display-1 text-decoration-none" align="center">
+          Sorry, it can't be visualized. <v-icon>mdi-select-off</v-icon>
+        </p>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn block color="green accent-4" :href="files_path">
+          Download this file
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+</template>
 
 
 
@@ -664,6 +744,31 @@
                                             </v-card-title>
                                             <v-card-text>
                                               [[ item.comment ]]
+
+                                              <template>
+                                                <div class="text-rigth">
+                                                  <v-chip
+                                                    small
+                                                    class="ma-2"
+                                                    color="success"
+                                                    outlined
+                                                    v-for="file in item.files"
+                                                    @click="Files_Task_comment(file.files)"
+                                                    x-small
+                                                  >
+                                                    <!--Extraer el tipo de archivo a raiz de dos funciones programadas filters/icon filters/type_file-->
+                                                    <v-icon left>[[ file.files | icon ]]</v-icon>
+                                                    [[ file.files | type_file ]]
+                            
+                                                    
+                                                    </div>
+                                                   
+                                                    <!--Extraer el tipo de archivo a raiz de dos funciones programadas filters/icon filters/type_file-->
+                            
+                                                  </v-chip>
+                                                </div>
+                                              </template>
+
                                             </v-card-text>
                                           </v-card>
                                         </v-timeline-item>
