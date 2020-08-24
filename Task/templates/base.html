@@ -546,13 +546,26 @@
           var self = this;
           for (i in data) {
             let Profile_Image = await axios.get('/api/v1.0/profile/?search=' + data[i].owner.id)
-            console.log(data[i])
-            console.log(Profile_Image.data[0])
+            let files = await axios.get('/api/v1.0/files/?search=' + data[i].id)
+
+            console.log(files.data)
+            //console.log(data[i])
+            //console.log(Profile_Image.data[0])
             if (Profile_Image.data[0] != undefined) {
-              self.List_Comment_drawer.push({ 'id': data[i].id, 'owner': data[i].owner, 'image': Profile_Image.data[0].image, 'comment': data[i].comment, 'date_create': data[i].date_create, 'date_time_c': data[i].date_time_c })
+              if(files.data != []){
+                self.List_Comment_drawer.push({ 'id': data[i].id, 'owner': data[i].owner, 'image': Profile_Image.data[0].image, 'comment': data[i].comment, 'date_create': data[i].date_create, 'date_time_c': data[i].date_time_c, 'files' : files.data })
+              }
+              else{
+                self.List_Comment_drawer.push({ 'id': data[i].id, 'owner': data[i].owner, 'image': Profile_Image.data[0].image, 'comment': data[i].comment, 'date_create': data[i].date_create, 'date_time_c': data[i].date_time_c , 'files' : [] })
+              }
             }
             else {
-              self.List_Comment_drawer.push({ 'id': data[i].id, 'owner': data[i].owner, 'image': 'https://k60.kn3.net/89F951249.gif', 'comment': data[i].comment, 'date_create': data[i].date_create, 'date_time_c': data[i].date_time_c })
+              if(files.data != []){
+                self.List_Comment_drawer.push({ 'id': data[i].id, 'owner': data[i].owner, 'image': 'https://k60.kn3.net/89F951249.gif', 'comment': data[i].comment, 'date_create': data[i].date_create, 'date_time_c': data[i].date_time_c, 'files' : files.data })
+              }
+              else{
+                self.List_Comment_drawer.push({ 'id': data[i].id, 'owner': data[i].owner, 'image': 'https://k60.kn3.net/89F951249.gif', 'comment': data[i].comment, 'date_create': data[i].date_create, 'date_time_c': data[i].date_time_c, 'files' : [] })
+              }
             }
           }
         },

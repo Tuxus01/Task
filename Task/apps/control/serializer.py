@@ -74,7 +74,16 @@ class CommentAddSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+##Archivos que son subidos por comentarios
+class Comment_FileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment_File
+        fields = '__all__'
+
+
 class MembersSerializer(serializers.ModelSerializer):
     class Meta:
         model = members
         fields = '__all__'
+
+

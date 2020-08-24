@@ -164,6 +164,12 @@ class CommentAddViewSet(viewsets.ModelViewSet):
     serializer_class = CommentAddSerializer
     
 
+class Comment_FileViewSet(viewsets.ModelViewSet):
+    queryset = Comment_File.objects.all().order_by('-id')
+    serializer_class = Comment_FileSerializer
+    search_fields = ['comment__id']
+    filter_backends = (filters.SearchFilter,)
+
 
 class MembersViewSet(viewsets.ModelViewSet):
     queryset = members.objects.all().order_by('-id')

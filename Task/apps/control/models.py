@@ -154,3 +154,18 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+def File_comment(self, filename):
+    path = "static/MultimediaData/comment/%s/%s" %(str(self.comment.task.project.name),  str(filename))
+    return path
+
+#Almacenara los archivos multimedia de los comentarios agregados
+class Comment_File(ModelBase):
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    files = models.FileField(upload_to=File_comment)
+
+    def __str__(self):
+        return self.comment.comment
+
+
