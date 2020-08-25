@@ -1,13 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load l10n %}
-
-
 {% block content %}
-
-
-
-
 <!--################################ DRAWER IZQUIERO Y DERECHO #####################################-->
 <!--Barra de navegacion entre projectos -->
 <v-navigation-drawer v-model="drawer2" temporary absolute dark app>
@@ -16,20 +10,16 @@
       <v-list-item-avatar>
         <img src="https://k60.kn3.net/89F951249.gif">
       </v-list-item-avatar>
-
       <v-list-item-content>
         <v-list-item-title>List Projects!!</v-list-item-title>
         <v-list-item-subtitle>@{{ user }}</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
-
     <v-divider></v-divider>
-
     <v-list-item v-for="item in Project_list" :key="item.id" @click="List_Table(item.id)" link>
       <v-list-item-icon>
         <v-icon>mdi-view-dashboard</v-icon>
       </v-list-item-icon>
-
       <v-list-item-content>
         <v-list-item-title>[[ item.name ]]</v-list-item-title>
       </v-list-item-content>
@@ -37,7 +27,6 @@
   </v-list>
 </v-navigation-drawer>
 <!--Barra de navegacion entre projectos -->
-
 
 <!--Barra de navegacion Izquierda para modificar eventos entre projectos -->
 <v-navigation-drawer v-model="drawerEdit" width="1000" temporary absolute right dark app>
@@ -54,7 +43,6 @@
         <v-btn @click="drawerEdit=false" text outlined rounded color="warning">
           <v-icon left>mdi-arrow-left-bold</v-icon> Minimize
         </v-btn>
-      
         <!--Antigua separacion del flex -->
         <v-col xs4 lg4 md4>
           <h3 class="green--text">Subject : [[ List_Task_drawer.title ]]</h3>
@@ -78,12 +66,15 @@
       <template v-if="List_Task_drawer.status === true">
         <v-flex xs12 lg12 md12>
           <v-col>
-            <v-textarea rows="3"  outlined dense :rules="rules" counter v-model="id_task_comentario" label="New Comment" dense>
+            <v-textarea rows="3" outlined dense :rules="rules" counter v-model="id_task_comentario" label="New Comment"
+              dense>
             </v-textarea>
             <template>
-              <v-file-input v-model="files" label="Type : image/*, .mp4 ,.pdf, .doc, .docx, .xls, .xlsx, .csv" accept="image/*,.mp4 ,.pdf,.doc, .docx, .xls, .xlsx, .csv " chips counter show-size multiple label="File input"></v-file-input>
+              <v-file-input v-model="files" label="Type : image/*, .mp4 ,.pdf, .doc, .docx, .xls, .xlsx, .csv"
+                accept="image/*,.mp4 ,.pdf,.doc, .docx, .xls, .xlsx, .csv " chips counter show-size multiple
+                label="File input"></v-file-input>
             </template>
-            <v-btn small   rounded block color="success" @click="Task_add_comment()">
+            <v-btn small rounded block color="success" @click="Task_add_comment()">
               <v-icon small left>mdi-pencil</v-icon> Add Comment
             </v-btn>
           </v-col>
@@ -95,7 +86,7 @@
           <v-col cols="12" md="12">
             <v-textarea rows="3" outlined name="input-7-4" v-model="id_task_comentario" label="New Comment" disabled
               dense></v-textarea>
-            <v-btn disabled small   rounded block color="success" @click="Task_add_comment()">
+            <v-btn disabled small rounded block color="success" @click="Task_add_comment()">
               <v-icon small left>mdi-pencil</v-icon> Add Comment
             </v-btn>
           </v-col>
@@ -110,48 +101,37 @@
 
           <template>
             <v-timeline dense>
-              <v-timeline-item
-                v-for="comment in List_Comment_drawer"
-                :key="comment.id"
-                color="red lighten-2"
-                large
-              >
-              <template v-slot:icon>
-                <v-avatar>
-                  <img :src="comment.image">
-                </v-avatar>
-              </template>
+              <v-timeline-item v-for="comment in List_Comment_drawer" :key="comment.id" color="red lighten-2" large>
+                <template v-slot:icon>
+                  <v-avatar>
+                    <img :src="comment.image">
+                  </v-avatar>
+                </template>
                 <v-card class="elevation-2">
-                  <v-card-title class="body-1 blue--text">[[ comment.owner.username ]] <v-spacer vertical></v-spacer> [[ comment.date_create]] - [[ comment.date_time_c ]]</v-card-title>
+                  <v-card-title class="body-1 blue--text">[[ comment.owner.username ]] <v-spacer vertical></v-spacer> [[
+                    comment.date_create]] - [[ comment.date_time_c ]]</v-card-title>
                   <v-card-text>
-                   [[ comment.comment ]]
+                    [[ comment.comment ]]
 
-                   <template>
-                    <div class="text-rigth">
-                      <v-chip
-                        small
-                        class="ma-2"
-                        color="success"
-                        outlined
-                        v-for="file in comment.files"
-                        @click="Files_Task_comment(file.files)"
-                        x-small
-                      >
-                        <!--Extraer el tipo de archivo a raiz de dos funciones programadas filters/icon filters/type_file-->
-                        <v-icon left>[[ file.files | icon ]]</v-icon>
-                        [[ file.files | type_file ]]
+                    <template>
+                      <div class="text-rigth">
+                        <v-chip small class="ma-2" color="success" outlined v-for="file in comment.files"
+                          @click="Files_Task_comment(file.files)" x-small>
+                          <!--Extraer el tipo de archivo a raiz de dos funciones programadas filters/icon filters/type_file-->
+                          <v-icon left>[[ file.files | icon ]]</v-icon>
+                          [[ file.files | type_file ]]
 
-                        
-                        </div>
-                       
-                        <!--Extraer el tipo de archivo a raiz de dos funciones programadas filters/icon filters/type_file-->
+
+                      </div>
+
+                      <!--Extraer el tipo de archivo a raiz de dos funciones programadas filters/icon filters/type_file-->
 
                       </v-chip>
-                    </div>
-                  </template>
+                      </div>
+                    </template>
                   </v-card-text>
 
-                 
+
 
                 </v-card>
               </v-timeline-item>
@@ -159,102 +139,82 @@
           </template>
 
 
-          
+
         </template>
       </v-flex>
       <!--Sub Tarea dentro de la tarea-->
 
-<!--##################################Diaglo para mostrar archivos adjunto de los comentarios #####################################-->
-    <template>
- 
-    <v-dialog dark eager height="700" width="1000" v-model="fileDialog">
- 
-  
-    <v-card class="mx-auto" v-if="files_mostrar===true">
-      <template v-if="files_mostar_html==='pdf'">
-        <iframe :src='files_path' height="700" width="1000"></iframe>
+      <!--##################################Diaglo para mostrar archivos adjunto de los comentarios #####################################-->
+      <template>
+
+        <v-dialog dark eager height="700" width="1000" v-model="fileDialog">
+
+
+          <v-card class="mx-auto" v-if="files_mostrar===true">
+            <template v-if="files_mostar_html==='pdf'">
+              <iframe :src='files_path' height="700" width="1000"></iframe>
+            </template>
+
+            <template v-else>
+              <v-img :src="files_path" class="grey darken-4"></v-img>
+            </template>
+
+
+
+
+          </v-card>
+          <v-card class="mx-auto" v-if="files_mostrar===false">
+            <v-card-text>
+              <p class="display-1 text-decoration-none" align="center">
+                Sorry, it can't be visualized. <v-icon>mdi-select-off</v-icon>
+              </p>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn block color="green accent-4" :href="files_path">
+                Download this file
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </template>
-      
-      <template v-else>
-         <v-img
-         :src="files_path"
-          class="grey darken-4"
-          ></v-img>
+      <!--Navigation Drawer para Videos -->
+
+      <template>
+        <div class="text-center">
+          <v-dialog dark v-model="dialogVideo" width="350">
+
+
+            <v-card>
+              <v-card-title class="headline black lighten-2">
+                Play Video
+              </v-card-title>
+
+              <v-card-text>
+
+
+                <video id="my-video" class="video-js" controls autoplay="true" preload="auto" width="700" height="1200"
+                  poster="MY_VIDEO_POSTER.jpg" data-setup="{}">
+                  <source :src='files_path' type="video/mp4" />
+
+                  <p class="vjs-no-js">
+                    To view this video please enable JavaScript, and consider upgrading to a
+                    web browser that
+                    <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                  </p>
+                </video>
+
+
+
+              </v-card-text>
+            </v-card>
+          </v-dialog>
+        </div>
       </template>
-
-     
-
-
-    </v-card>
-    <v-card class="mx-auto" v-if="files_mostrar===false">
-      <v-card-text>
-        <p class="display-1 text-decoration-none" align="center">
-          Sorry, it can't be visualized. <v-icon>mdi-select-off</v-icon>
-        </p>
-      </v-card-text>
-      <v-card-actions>
-        <v-btn block color="green accent-4" :href="files_path">
-          Download this file
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-</template>
- <!--Navigation Drawer para Videos -->
-
- <template>
-  <div class="text-center">
-    <v-dialog
-      dark 
-      v-model="dialogVideo"
-      width="350"
-    >
-     
-
-      <v-card>
-        <v-card-title class="headline black lighten-2">
-          Play Video
-        </v-card-title>
-
-        <v-card-text>
-        
-        
-            <video
-            id="my-video"
-            class="video-js"
-            controls
-            autoplay="true"
-            preload="auto"
-            width="700"
-            height="1200"
-            poster="MY_VIDEO_POSTER.jpg"
-            data-setup="{}"
-          >
-            <source :src='files_path' type="video/mp4" />
-          
-            <p class="vjs-no-js">
-              To view this video please enable JavaScript, and consider upgrading to a
-              web browser that
-              <a href="https://videojs.com/html5-video-support/" target="_blank"
-                >supports HTML5 video</a
-              >
-            </p>
-          </video>
-      
-    
-      
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-  </div>
-</template>
 
 
     </v-layout>
   </v-container>
 </v-navigation-drawer>
-
-
 
 <!--Navigation Drawer para Videos -->
 <!--Barra de navegacion Izquierda para modificar eventos entre projectos -->
@@ -264,7 +224,6 @@
 <!--Dialog Para agregar y modificar proyectos creados -->
 <template>
   <v-row>
-
     <v-dialog dark v-model="dialogProyecto" fullscreen hide-overlay transition="dialog-bottom-transition">
       <v-card class="d-inline-block mx-auto" outlined>
         <v-toolbar dark>
@@ -274,7 +233,6 @@
           <v-toolbar-title>CREATE OR EDIT YOUR PROJECT</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items>
-            
           </v-toolbar-items>
         </v-toolbar>
         <v-list three-line subheader>
@@ -283,7 +241,6 @@
             <v-list-item-content>
               <v-list-item-subtitle>
                 <v-row>
-
                   <!--Nombre del proyecto-->
                   <v-flex lg5 xs12 sm5 md5>
                     <v-col>
@@ -299,7 +256,6 @@
                       </div>
                     </v-col>
                   </v-flex>
-
                   <!--Datatable de proyectos creados -->
                   <v-flex lg7 xs12 sm7 md7>
                     <template>
@@ -314,11 +270,9 @@
                   <h3>This project will only be visible by users who are given permission or assigned to
                     a specific task</h3>
                 </v-list-item-subtitle>
-
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
-
         </v-list>
         <v-divider></v-divider>
         <v-list v-if="getProjectID != ''" three-line subheader>
@@ -329,7 +283,6 @@
           </v-subheader>
           <v-list-item>
             <v-list-item-content>
-
               <!--Apartado del listado de Kamban -->
               <v-flex lg2 xs12 sm3 md3 v-for="item in kambaProjectCreate" :key="item.id">
                 <v-col>
@@ -347,11 +300,12 @@
                     <v-card-title>
                       [[ item.description ]]
                     </v-card-title>
-
                     <v-card-actions>
                       <v-btn @click="task_kamban_modal(item.id,Proyect_ID_Kamba)" color="green" block>Add Task</v-btn>
                     </v-card-actions>
-                    <!--
+
+
+
                     <v-expand-transition>
                       <div v-show="show">
                         <v-divider></v-divider>
@@ -366,15 +320,15 @@
                                 </thead>
                                 <tbody>
                                   <tr v-for="items in Task_Kamban" :key="items.id">
-                                    
-                                      <td >  [[ items.title ]]</td>
-                                      <td>
-                                        <v-btn color="red" fab small dark>
-                                          <v-icon small>mdi-delete</v-icon>
-                                        </v-btn>
-                                      </td>
-                               
-                                  
+
+                                    <td> [[ items.title ]]</td>
+                                    <td>
+                                      <v-btn color="red" fab small dark>
+                                        <v-icon small>mdi-delete</v-icon>
+                                      </v-btn>
+                                    </td>
+
+
                                   </tr>
                                 </tbody>
                               </template>
@@ -385,7 +339,9 @@
                         </v-card-text>
                       </div>
                     </v-expand-transition>
-                    -->
+
+
+
                   </v-card>
                   <!--Lista de Kamban tipo card-->
                 </v-col>
@@ -393,7 +349,6 @@
               <!--Apartado del listado de Kamban -->
             </v-list-item-content>
           </v-list-item>
-
         </v-list>
       </v-card>
     </v-dialog>
@@ -405,7 +360,6 @@
 <template>
   <v-row justify="center">
     <v-dialog v-model="dialogKamban" persistent max-width="600px">
-
       <v-card dark>
         <v-card-title align="center">
           <span class="headline text-center">
@@ -420,7 +374,8 @@
                 <v-text-field v-model="kamban_name" outlined label="Name" required></v-text-field>
               </v-col>
               <v-col cols="12" md="12">
-                <v-textarea v-model="kamban_description" outlined name="input-7-4" required label="Description" value=""></v-textarea>
+                <v-textarea v-model="kamban_description" outlined name="input-7-4" required label="Description"
+                  value=""></v-textarea>
               </v-col>
             </v-row>
           </v-container>
@@ -481,41 +436,32 @@
 <template>
   <v-row justify="center">
     <v-dialog v-model="dialogColaboradores" persistent max-width="600px">
-     
       <v-card>
         <v-card-title>
           <span class="headline">User Profile</span>
         </v-card-title>
         <v-card-text>
-
           <v-container>
-           <v-row>
-            <v-col cols="12" sm="7" md="7">
-              <v-text-field
-                label="Username"
-                prepend-icon="mdi-account"
-                outlined
-                dense
-                v-model="search_usuario"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="5" md="5">
-              <v-btn rounded color="primary" @click="SearchUsuario()" dark>Search</v-btn>
-            </v-col>
-
-            <div v-if="search_complete != ''">
-            <v-col  cols="12" sm="12" md="12">
-              <v-card align="center">
-                <v-card-text dense>
-                    <h4> [[ search_complete.username ]] [[ search_complete.email ]] <v-icon @click="Members_add(Project_ID_Global,search_complete.id)" color="green">mdi-plus</v-icon></h4>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </div>
-
-           
-           </v-row>
-
+            <v-row>
+              <v-col cols="12" sm="7" md="7">
+                <v-text-field label="Username" prepend-icon="mdi-account" outlined dense v-model="search_usuario">
+                </v-text-field>
+              </v-col>
+              <v-col cols="12" sm="5" md="5">
+                <v-btn rounded color="primary" @click="SearchUsuario()" dark>Search</v-btn>
+              </v-col>
+              <div v-if="search_complete != ''">
+                <v-col cols="12" sm="12" md="12">
+                  <v-card align="center">
+                    <v-card-text dense>
+                      <h4> [[ search_complete.username ]] [[ search_complete.email ]] <v-icon
+                          @click="Members_add(Project_ID_Global,search_complete.id)" color="green">mdi-plus</v-icon>
+                      </h4>
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+              </div>
+            </v-row>
           </v-container>
 
           <template>
@@ -529,14 +475,14 @@
                   </tr>
                 </thead>
                 <tbody v-for="items in List_Members_for_project">
-                  <tr >
+                  <tr>
                     <td>[[ items.username ]]</td>
                     <td>[[ items.email ]]</td>
                     <td>
-                        <v-icon @click="" color="red">mdi-delete</v-icon>
+                      <v-icon @click="" color="red">mdi-delete</v-icon>
                     </td>
                   </tr>
-                 
+
                 </tbody>
               </template>
             </v-simple-table>
@@ -546,7 +492,6 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="dialogColaboradores = false">Close</v-btn>
-         
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -555,41 +500,32 @@
 <!--Agregar Colaboradores de proyecto -->
 <!--############################# Seccion de Dialog ##################################-->
 
-
 <!--########################################### BOTON NAVEGACION DASHBOARD #######################################-->
 <!-- Botones de navegacion -->
-
-
 
 <v-bottom-navigation dense v-model="bottomNav" dark shift fixed grow>
   <v-btn>
     <span>Dashboard</span>
     <v-icon>mdi-tablet-dashboard</v-icon>
   </v-btn>
-
   <v-btn>
     <span>Table</span>
     <v-icon>mdi-table-large-plus</v-icon>
   </v-btn>
-
   <v-btn>
     <span>History</span>
     <v-icon>mdi-comment-multiple-outline</v-icon>
   </v-btn>
-
- 
   <v-btn>
     <span>Profile</span>
     <v-icon>mdi-language-python</v-icon>
   </v-btn>
 </v-bottom-navigation>
 
-
 <!-- Botones de navegacion -->
 
 <!--DIV DASHBOARD PRINCIPAL -->
 <div v-if="bottomNav=== 0">
-
   <v-container grid-list-lg>
     <v-layout row wrap>
       <v-flex xs12 lg6 md6>
@@ -676,15 +612,12 @@
   <v-container grid-list-lg>
     <v-layout row wrap justify-center>
       <v-flex xs12 lg10 md10>
-
-       
         <template>
           <v-expansion-panels popout dark flat>
             <v-expansion-panel v-for="item in itemsKamban" :key="item.id" v-model="item.active"
               @click="List_subTask(item.id)">
               <v-expansion-panel-header>
                 <h4>
-               
                   <v-icon> mdi-checkbox-multiple-marked-outline</v-icon>
                   [[ item.name ]]
                   <v-divider vertical></v-divider>
@@ -698,7 +631,6 @@
                 </template>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
-
                 <template>
                   <v-card class="mx-auto">
                     <v-simple-table fixed-header dense dark>
@@ -714,7 +646,6 @@
                         </thead>
                         <tbody>
                           <tr v-for="subItem in subitemKamban" :key="subItem.id" @click="List_Coment(subItem.id)">
-
                             <td>
                               <v-avatar size="40" color="red">
                                 <img
@@ -756,79 +687,67 @@
                                 <v-chip class="ma-2" color="blue">Wait</v-chip>
                               </td>
                             </template>
-
-
                           </tr>
                         </tbody>
                       </template>
                     </v-simple-table>
                   </v-card>
                 </template>
-
-
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
         </template>
-
-
-
-
-
       </v-flex>
     </v-layout>
   </v-container>
 </div>
 <!--DIV Table Data -->
 
-
 <!--Comentarios Historial -->
 <div v-if="bottomNav=== 2">
   <v-container dark grid-list-lg>
     <h2 align="center">Comment History</h2><br>
     <v-separate></v-separate>
-  <v-card>
-    <v-layout row wrap justify-left>
-      
-      <v-flex xs12 lg12 md12>
-        
-        <template>
-          <v-expansion-panels light popout flat >
-            <v-expansion-panel v-for="item in Project_list" :key="item.id" @click="List_Table(item.id)" link>
-              <v-expansion-panel-header >
-                <h4>
-                  <v-icon color="green"> mdi-checkbox-multiple-marked-outline</v-icon>
-                  [[ item.name ]]
-                </h4>
-                <template v-slot:actions>
-                  <v-icon color="green">$expand</v-icon>
-                </template>
-               </v-expansion-panel-header>
-              
-              <v-expansion-panel-content dark>
+    <v-card>
+      <v-layout row wrap justify-left>
+        <v-flex xs12 lg12 md12>
+          <template>
+            <v-expansion-panels light popout flat>
+              <v-expansion-panel v-for="item in Project_list" :key="item.id" @click="List_Table(item.id)" link>
+                <v-expansion-panel-header>
+                  <h4>
+                    <v-icon color="green"> mdi-checkbox-multiple-marked-outline</v-icon>
+                    [[ item.name ]]
+                  </h4>
+                  <template v-slot:actions>
+                    <v-icon color="green">$expand</v-icon>
+                  </template>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content dark>
                   <!--Tareas del proyecto -->
                   <template>
-                    <v-expansion-panels  popout flat>
-                      <v-expansion-panel  v-for="item in itemsKamban" :key="item.id" v-model="item.active"
-                      @click="List_subTask(item.id)" >
+                    <v-expansion-panels popout flat>
+                      <v-expansion-panel v-for="item in itemsKamban" :key="item.id" v-model="item.active"
+                        @click="List_subTask(item.id)">
                         <v-expansion-panel-header>
                           <h4>
                             <v-icon color="green"> mdi-checkbox-multiple-marked-outline</v-icon>
                             [[ item.name ]]
                           </h4>
-                          </v-expansion-panel-header>
+                        </v-expansion-panel-header>
                         <v-expansion-panel-content>
                           <v-expansion-panel-content dark>
                             <!--Tareas del proyecto -->
                             <template>
                               <v-expansion-panels popout flat>
-                                <v-expansion-panel v-for="subItem in subitemKamban" :key="subItem.id" @click="history_task_comment(subItem.id)" >
+                                <v-expansion-panel v-for="subItem in subitemKamban" :key="subItem.id"
+                                  @click="history_task_comment(subItem.id)">
                                   <v-expansion-panel-header>
                                     <h4>
                                       <v-icon color="green"> mdi-checkbox-multiple-marked-outline</v-icon>
                                       [[ subItem.title ]]
                                     </h4>
-                                    </v-expansion-panel-header>
+                                  </v-expansion-panel-header>
                                   <v-expansion-panel-content>
                                     <!--Lista de comentario y eventos dentro de ese task-->
                                     <template>
@@ -839,17 +758,14 @@
                                               <img :src="item.image">
                                             </v-avatar>
                                           </template>
-          
+
                                           <v-card class="elevation-2">
-                                            <v-card-title  class="body-2 blue--text">[[ item.owner.username ]] 
+                                            <v-card-title class="body-2 blue--text">[[ item.owner.username ]]
                                               <v-divider dark></v-divider>
-                                            <h5>[[ item.date_create ]] - [[ item.date_time_c]]</h5>
+                                              <h5>[[ item.date_create ]] - [[ item.date_time_c]]</h5>
                                             </v-card-title>
                                             <v-card-text>
                                               [[ item.comment ]]
-
-                                             
-
                                             </v-card-text>
                                           </v-card>
                                         </v-timeline-item>
@@ -861,38 +777,24 @@
                               </v-expansion-panels>
                             </template>
                             <!--Tareas del proyecto-->
-                         
-                        </v-expansion-panel-content>
-
-
-                         
+                          </v-expansion-panel-content>
                         </v-expansion-panel-content>
                       </v-expansion-panel>
                     </v-expansion-panels>
                   </template>
                   <!--Tareas del proyecto-->
-               
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-expansion-panels>
-        </template>
-
-
-
-
-      </v-flex>
-    
-    </v-layout>
-  </v-card>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </template>
+        </v-flex>
+      </v-layout>
+    </v-card>
   </v-container>
 </div>
 <!--Comentarios Historial -->
 
-
-
 <!--########################################### BOTON NAVEGACION DASHBOARD #######################################-->
-
-
 
 <!--########################################### NOTIFICACIONES PUSH ###############################################-->
 <template>

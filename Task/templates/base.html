@@ -40,43 +40,36 @@
           <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app dark dense>
             <v-app-bar-nav-icon @click.stop="drawer2 = !drawer2"></v-app-bar-nav-icon>
             <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
-              <span >Task Manager </span>
+              <span>Task Manager </span>
             </v-toolbar-title>
-            
             <v-divider inset class="mx-1" vertical></v-divider>
-           
+
 
             <!--asignacion de participantes por proyectos -->
-            <div v-if="Project_owner_ID_Global != 0" >
-              <div v-if="Project_owner_ID_Global == Project_owner_ID_OWNER" >
+            <div v-if="Project_owner_ID_Global != 0">
+              <div v-if="Project_owner_ID_Global == Project_owner_ID_OWNER">
                 <div v-if="itemsKamban != ''">
                   <v-btn @click="dialogColaboradores=true" small fab color="blue">
-                    <v-icon>	mdi-account-plus</v-icon>
+                    <v-icon> mdi-account-plus</v-icon>
                   </v-btn>
-                  <v-chip v-for="i in List_Members_for_project" pill class="hidden-sm-and-down" >
-                  <v-avatar left>
-                    <v-img :src="i.image"></v-img>
-                  </v-avatar>
-                  [[ i.username ]]
-                </v-chip>
-      
-      
+                  <v-chip v-for="i in List_Members_for_project" pill class="hidden-sm-and-down">
+                    <v-avatar left>
+                      <v-img :src="i.image"></v-img>
+                    </v-avatar>
+                    [[ i.username ]]
+                  </v-chip>
                 </div>
                 <!--asignacion de participantes por proyectos -->
-               
               </div>
               <div v-else>
-
                 <div v-if="itemsKamban != ''">
-             
-              
-                </div>
 
+
+
+                </div>
                 <h1></h1>
               </div>
             </div>
-            
-
             <v-spacer></v-spacer>
 
             {% if user.is_authenticated %}
@@ -85,8 +78,6 @@
             </v-btn>
             <v-divider inset class="mx-4" vertical></v-divider>
 
-
-
             {{ user.first_name }} {{ user.last_name}}</br>
 
             {% else %}
@@ -94,28 +85,16 @@
               <v-icon>mdi-facebook</v-icon>
               </v-badge>
             </v-btn>
-
             {% endif %}
-
-
           </v-app-bar>
-
-
         </form>
-
-
-
         <v-main>
-
           {% block content %}
 
           {%  endblock %}
-
         </v-main>
       </v-app>
     </template>
-
-
   </div>
 
 
@@ -125,8 +104,6 @@
 
 
   <!--Informacion del contenido a mostrar -->
-
-
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
@@ -137,14 +114,9 @@
   {% endblock %}
 
 
-
   <script>
-
-
     var CSRF_TOKEN = '{{ csrf_token }}'
     var ID_Token = {{ user.id }}
-
-    console.log(csrf_token)
   </script>
 
 
@@ -161,12 +133,12 @@
         drawer: false,
         drawer2: false,
         //Modal para agregar colabores a proyecto
-        dialogColaboradores:false,
+        dialogColaboradores: false,
         //Ver archivos adjuntos en comentarios
-        fileDialog : false,
+        fileDialog: false,
         drawerEdit: false,
         //Mostrar Videos Diaglo
-        dialogVideo:false,
+        dialogVideo: false,
 
         //ID temporal del task que servira para poder realizar la insercion de comentarios desde
         //el drawer izquierdo de la aplicacion
@@ -176,9 +148,9 @@
 
         //Menu Derecho con lista de Projectos agregados como miembro.
         Project_list: [],
-        Project_owner_ID_Global :0,
-        Project_owner_ID_OWNER : 0,
-        Project_ID_Global : 0,
+        Project_owner_ID_Global: 0,
+        Project_owner_ID_OWNER: 0,
+        Project_ID_Global: 0,
 
 
         //List Desplegado Kamban Table
@@ -197,7 +169,7 @@
         //Adjunto de archivos varios
 
         //Lista de colabores
-        List_Members_for_project : [],
+        List_Members_for_project: [],
 
         //Diaglo para agregar y modificar Proyecto
         dialogProyecto: false,
@@ -206,23 +178,23 @@
         //Diaglo para agregar task a kamban del proyecto
         dialogKambanTask: false,
         //ID que se usara para la creacion de kambas
-        Proyect_ID_Kamba:0,
-        kamban_name : '',
-        kamban_description :'',
+        Proyect_ID_Kamba: 0,
+        kamban_name: '',
+        kamban_description: '',
 
-        task_project_id : 0,
+        task_project_id: 0,
         //Variables para fomulario y guardar task de proyecto
-        task_id:0,
-        task_title :'',
-        task_description :'',
+        task_id: 0,
+        task_title: '',
+        task_description: '',
 
         //Arragle de archivos que se subiran al comentario
         files: [],
-        files_path : '',
+        files_path: '',
         //Variable que direa si muestra iframe modal
-        files_mostrar : true,
-        files_mostar_html :'',
-        files_office_file : false,
+        files_mostrar: true,
+        files_mostar_html: '',
+        files_office_file: false,
 
         //NOTIFICACIONES PUSH
         snackbar: false,
@@ -241,7 +213,7 @@
         //Card de creacion de task
         show: true,
 
-        Task_Kamban: [ ],
+        Task_Kamban: [],
 
 
         //Variables para agregar proyecto desde fomulario Dialogo
@@ -250,7 +222,7 @@
         //Projecto Lista de Tabla 
         singleSelectProjectCreate: false,
         selectedProjectCreate: [],
-        kambaProjectCreate : [],
+        kambaProjectCreate: [],
         headersProjectCreate: [
           {
             text: 'Project Name',
@@ -262,172 +234,146 @@
           { text: 'Description', value: 'description' },
 
         ],
-        dessertsProjectCreate: [
-          {
-            name: 'Frozen Yogurt',
-            calories: 159,
-            fat: 6.0,
-            carbs: 24,
-            protein: 4.0,
-            iron: '1%',
-          },
-          {
-            name: 'Ice cream sandwich',
-            calories: 237,
-            fat: 9.0,
-            carbs: 37,
-            protein: 4.3,
-            iron: '1%',
-          },
-          {
-            name: 'Eclair',
-            calories: 262,
-            fat: 16.0,
-            carbs: 23,
-            protein: 6.0,
-            iron: '7%',
-          },
-
-        ],
+        dessertsProjectCreate: [],
 
         ///////////HISTORY
-        history_task_comment_var : [],
+        history_task_comment_var: [],
         //////////HISTORY
 
 
-         //Busqueda de usuario y agregado a proyecto en curso
-          search_usuario : '',
-          search_complete : [],
-          //Busqueda de usuario y agregado a proyecto en curso
+        //Busqueda de usuario y agregado a proyecto en curso
+        search_usuario: '',
+        search_complete: [],
+        //Busqueda de usuario y agregado a proyecto en curso
 
 
 
       },
 
-      
+
       filters: {
-        icon: function(string) {
-        var self = this;
-        let icon = ''
-        var png = string.endsWith(".png");
-        if(png===true){
-          icon = "mdi-file-image"
-         
-        }
-        var pdf = string.endsWith(".pdf");
-        if(pdf===true){
-          icon = "mdi-file-pdf"
-          
-        }
+        icon: function (string) {
+          var self = this;
+          let icon = ''
+          var png = string.endsWith(".png");
+          if (png === true) {
+            icon = "mdi-file-image"
 
-        var doc = string.endsWith(".doc");
-        if(doc===true){
-          icon = "mdi-file-word"
-      
-        }
+          }
+          var pdf = string.endsWith(".pdf");
+          if (pdf === true) {
+            icon = "mdi-file-pdf"
 
-        var docx = string.endsWith(".docx");
-        if(docx===true){
-          icon = "mdi-file-word"
-    
-        }
+          }
 
-        var csv = string.endsWith(".csv");
-        if(csv===true){
-          icon = "mdi-file-excel"
+          var doc = string.endsWith(".doc");
+          if (doc === true) {
+            icon = "mdi-file-word"
 
-        }
+          }
 
-        var xls = string.endsWith(".xls");
-        if(xls===true){
-          icon = "mdi-file-excel"
-      
-        }
+          var docx = string.endsWith(".docx");
+          if (docx === true) {
+            icon = "mdi-file-word"
 
-        var xlsx = string.endsWith(".xlsx");
-        if(xlsx===true){
-          icon = "mdi-file-excel"
-        
-        }
+          }
 
-        var jpg = string.endsWith(".jpg");
-        if(jpg===true){
-          icon = "mdi-file-image"
-        
-        }
+          var csv = string.endsWith(".csv");
+          if (csv === true) {
+            icon = "mdi-file-excel"
 
-        var jpeg = string.endsWith(".jpeg");
-        if(jpeg===true){
-          icon = "mdi-file-image"
-        
-        }
+          }
 
-        var mp4 = string.endsWith(".mp4");
-        if(mp4===true){
-          icon = "mdi-video"
-        
-        }
-        
+          var xls = string.endsWith(".xls");
+          if (xls === true) {
+            icon = "mdi-file-excel"
 
-        return icon
+          }
+
+          var xlsx = string.endsWith(".xlsx");
+          if (xlsx === true) {
+            icon = "mdi-file-excel"
+
+          }
+
+          var jpg = string.endsWith(".jpg");
+          if (jpg === true) {
+            icon = "mdi-file-image"
+
+          }
+
+          var jpeg = string.endsWith(".jpeg");
+          if (jpeg === true) {
+            icon = "mdi-file-image"
+
+          }
+
+          var mp4 = string.endsWith(".mp4");
+          if (mp4 === true) {
+            icon = "mdi-video"
+
+          }
+
+
+          return icon
         },
 
-        type_file: function(string){
+        type_file: function (string) {
           let icon = ''
-        var png = string.endsWith(".png");
-        if(png===true){
-          icon = ".png"
-        }
-        var pdf = string.endsWith(".pdf");
-        if(pdf===true){
-          icon = ".pdf"
-        }
+          var png = string.endsWith(".png");
+          if (png === true) {
+            icon = ".png"
+          }
+          var pdf = string.endsWith(".pdf");
+          if (pdf === true) {
+            icon = ".pdf"
+          }
 
-        var doc = string.endsWith(".doc");
-        if(doc===true){
-          icon = ".doc"
-        }
+          var doc = string.endsWith(".doc");
+          if (doc === true) {
+            icon = ".doc"
+          }
 
-        var docx = string.endsWith(".docx");
-        if(docx===true){
-          icon = ".docx"
-        }
+          var docx = string.endsWith(".docx");
+          if (docx === true) {
+            icon = ".docx"
+          }
 
-        var csv = string.endsWith(".csv");
-        if(csv===true){
-          icon = ".csv"
-        }
+          var csv = string.endsWith(".csv");
+          if (csv === true) {
+            icon = ".csv"
+          }
 
-        var xls = string.endsWith(".xls");
-        if(xls===true){
-          icon = ".xls"
-        }
+          var xls = string.endsWith(".xls");
+          if (xls === true) {
+            icon = ".xls"
+          }
 
-        var xlsx = string.endsWith(".xlsx");
-        if(xlsx===true){
-          icon = ".xlsx"
-        }
+          var xlsx = string.endsWith(".xlsx");
+          if (xlsx === true) {
+            icon = ".xlsx"
+          }
 
-        var jpg = string.endsWith(".jpg");
-        if(jpg===true){
-          icon = ".jpg"
-        
-        }
+          var jpg = string.endsWith(".jpg");
+          if (jpg === true) {
+            icon = ".jpg"
 
-        var jpeg = string.endsWith(".jpeg");
-        if(jpeg===true){
-          icon = ".jpeg"
-        
-        }
+          }
 
-        var mp4 = string.endsWith(".mp4");
-        if(mp4===true){
-          icon = ".mp4"
-        
-        }
-        
+          var jpeg = string.endsWith(".jpeg");
+          if (jpeg === true) {
+            icon = ".jpeg"
 
-        return icon
+          }
+
+          var mp4 = string.endsWith(".mp4");
+          if (mp4 === true) {
+            icon = ".mp4"
+
+          }
+
+
+          return icon
 
         },
       },
@@ -450,15 +396,14 @@
         ///Calendarios
         //this.$refs.calendar.checkChange()
         //Lista de colabores 
-        
+
         //Mostrar listado de proyecto automaticamente 
         this.ListProject()
       },
 
       methods: {
-
         //Busqueda de usuario y agregado a proyecto en curso
-        SearchUsuario(){
+        SearchUsuario() {
           var self = this;
           //console.log(id)
           axios.get('/api/v1.0/users/?search=' + self.search_usuario)
@@ -466,18 +411,15 @@
               //this.Project_list = response.data
               console.log(response.data)
               self.search_complete = response.data[0]
-              
             })
             .catch(error => { console.log(error) })
-
-
         },
 
-    
+
         //Files Commentarios diaglo 
-        Files_Task_comment(id){
-          var self= this;
-          self.files_mostar_html=""
+        Files_Task_comment(id) {
+          var self = this;
+          self.files_mostar_html = ""
           //console.log(self.files_office_file)
           var docx = id.endsWith(".docx");
           var doc = id.endsWith(".doc");
@@ -486,37 +428,31 @@
           var mp4 = id.endsWith(".mp4");
           var pdf = id.endsWith(".pdf");
 
-          
-          self.files_path=id
+
+          self.files_path = id
           //Ejecutar Modal 
 
-          if((docx===true) || (doc === true ) || (xls === true ) || (xlsx === true )){
-            self.files_mostrar=false
-            self.fileDialog=true
-            
-          }else{
-            if(mp4===true){
-              self.files_mostar_html="mp4"
-              self.files_mostrar=true,
-              self.dialogVideo = true
+          if ((docx === true) || (doc === true) || (xls === true) || (xlsx === true)) {
+            self.files_mostrar = false
+            self.fileDialog = true
+
+          } else {
+            if (mp4 === true) {
+              self.files_mostar_html = "mp4"
+              self.files_mostrar = true,
+                self.dialogVideo = true
             }
-            if(pdf===true){
-              self.files_mostar_html="pdf"
-              self.files_mostrar=true,
-              self.fileDialog = true
-            }else{
-              self.files_mostrar=true,
-              self.fileDialog = true
-              
+            if (pdf === true) {
+              self.files_mostar_html = "pdf"
+              self.files_mostrar = true,
+                self.fileDialog = true
+            } else {
+              self.files_mostrar = true,
+                self.fileDialog = true
             }
-            
           }
-
-          
         },
-
         //Files Commentarios diaglo 
-
         //funcion que captura todas las tareas 
         List_Task_Kamban() {
           var self = this;
@@ -528,17 +464,15 @@
               self.Task_Kamban = response.data
 
               //Get calendar
-              
+
             })
             .catch(error => { console.log(error) })
         },
         //Listar projecto a los cuales pertenezco 
-
         //Funcion para agregar nuevos proyectos a db
         ListProjectAdd() {
           var self = this;
           //console.log(self.id_task)
-
           axios.post('/api/v1.0/project/', {
             name: self.project_name_add,
             owner: ID_Token,
@@ -552,56 +486,44 @@
               self.project_description_add = ""
               self.notification('New Project', 'Action added successfully')
               self.Members_add(response.data.id, ID_Token)
-
-
             })
             .catch(function (error) {
               console.log(error);
             });
 
         },
-
-
-        Member_list(id){
+        Member_list(id) {
           var self = this;
-          self.List_Members_for_project =[]
-          axios.get('/api/v1.0/membersDetail/?search='+ id)
+          self.List_Members_for_project = []
+          axios.get('/api/v1.0/membersDetail/?search=' + id)
             .then(response => {
               //self.List_Members_for_project = response.data
-              
               self.Member_list_image(response.data)
             })
             .catch(error => { console.log(error) })
         },
-
-
-        Member_list_image(array_member){
+        Member_list_image(array_member) {
           var self = this;
           colabores = []
           console.log(array_member.length)
-          for(i in array_member){
-            axios.get('/api/v1.0/profile/'+ array_member[i].member.id +'/')
-                .then(response => {
-                  colabores = response.data
-                  //console.log(response.data)
-                  
-                  //self.List_Members_for_project = response.data
-                  self.List_Members_for_project.push({ 'id': colabores.user.id, 'email': colabores.user.email, 'username': colabores.user.username,'image': response.data.image  })
-                 
-                })
-                .catch(error => { 
-                  //console.log(error.response.status);
-                  //console.log(error) 
-                  //console.log(error.response.headers);
-                })
-
-            
+          for (i in array_member) {
+            axios.get('/api/v1.0/profile/' + array_member[i].member.id + '/')
+              .then(response => {
+                colabores = response.data
+                //console.log(response.data)
+                //self.List_Members_for_project = response.data
+                self.List_Members_for_project.push({ 'id': colabores.user.id, 'email': colabores.user.email, 'username': colabores.user.username, 'image': response.data.image })
+              })
+              .catch(error => {
+                //console.log(error.response.status);
+                //console.log(error) 
+                //console.log(error.response.headers);
+              })
           }
         },
         Members_add(project_id, user_id) {
           var self = this;
           //console.log(self.id_task)
-
           axios.post('/api/v1.0/members/', {
             project: project_id,
             owner: ID_Token,
@@ -613,78 +535,66 @@
               //console.log(response);
               self.ListProject()
               self.Member_list(project_id)
-              self.search_usuario=''
-              self.search_complete=''
+              self.search_usuario = ''
+              self.search_complete = ''
 
             })
             .catch(function (error) {
               console.log(error);
             });
-
         },
-
-
-        Kamban_add(id_proyecto){
-          
+        Kamban_add(id_proyecto) {
           //console.log(id_proyecto)
           var self = this;
-          self.dialogKamban=true
+          self.dialogKamban = true
           axios.post('/api/v1.0/kamban/', {
             project: id_proyecto,
             owner: ID_Token,
             name: self.kamban_name,
-            description : self.kamban_description,
+            description: self.kamban_description,
           }, {
             headers: { 'X-CSRFTOKEN': CSRF_TOKEN, },
           })
             .then(function (response) {
               //console.log(response);
-              self.kamban_description=""
-              self.kamban_name =""
+              self.kamban_description = ""
+              self.kamban_name = ""
               self.List_Kamban_Task_Project_Select(self.selectedProjectCreate)
-              
-
             })
             .catch(function (error) {
               console.log(error);
             });
 
         },
-
-
-        task_kamban_modal(id_kamban,id_project){
-          var self=this;
+        task_kamban_modal(id_kamban, id_project) {
+          var self = this;
           self.dialogKambanTask = true
           self.task_id = id_kamban
           self.task_project_id = id_project
         },
 
-        task_kamban_add(){
-          
+        task_kamban_add() {
           var self = this;
           //console.log(id_kamban)
           axios.post('/api/v1.0/task/', {
             project: self.task_project_id,
-            kamban : self.task_id,
+            kamban: self.task_id,
             owner: ID_Token,
             title: self.task_title,
-            description : self.task_description,
-            priority : self.Nivel_urgencia_select
+            description: self.task_description,
+            priority: self.Nivel_urgencia_select
           }, {
             headers: { 'X-CSRFTOKEN': CSRF_TOKEN, },
           })
             .then(function (response) {
               //console.log(response);
-              self.task_description=""
-              self.task_title =""
+              self.task_description = ""
+              self.task_title = ""
               self.List_Kamban_Task_Project_Select(self.selectedProjectCreate)
-              
-
             })
             .catch(function (error) {
               console.log(error);
             });
-
         },
 
         ListProject() {
@@ -707,16 +617,12 @@
               //this.Project_list = response.data
               //console.log(response.data)
               self.itemsKamban = response.data
-
               //Variables globales para poder verificar si es el propietario del proyecto a la hora de agregar mas colabores
               self.Project_owner_ID_Global = response.data[0].owner
               self.Project_owner_ID_OWNER = ID_Token
-
-
-
               self.Project_ID_Global = id
               self.Member_list(id)
-              
+
             })
             .catch(error => { console.log(error) })
         },
@@ -731,7 +637,6 @@
               self.subitemKamban = response.data
             })
             .catch(error => { console.log(error) })
-
         },
         //Funcion para apartado de tabla
         async List_Coment(id) {
@@ -753,7 +658,6 @@
           let Detail_Task = await axios.get('/api/v1.0/task/' + id + '/')
           self.List_Task_drawer = Detail_Task.data
           //console.log(self.List_Task_drawer)
-
           //Guadamos temporal el id para agragar a futuro nuevos comentarios
           self.id_task = id
         },
@@ -764,24 +668,23 @@
           for (i in data) {
             let Profile_Image = await axios.get('/api/v1.0/profile/?search=' + data[i].owner.id)
             let files = await axios.get('/api/v1.0/files/?search=' + data[i].id)
-
             //console.log(files.data)
             //console.log(data[i])
             //console.log(Profile_Image.data[0])
             if (Profile_Image.data[0] != undefined) {
-              if(files.data != []){
-                self.List_Comment_drawer.push({ 'id': data[i].id, 'owner': data[i].owner, 'image': Profile_Image.data[0].image, 'comment': data[i].comment, 'date_create': data[i].date_create, 'date_time_c': data[i].date_time_c, 'files' : files.data })
+              if (files.data != []) {
+                self.List_Comment_drawer.push({ 'id': data[i].id, 'owner': data[i].owner, 'image': Profile_Image.data[0].image, 'comment': data[i].comment, 'date_create': data[i].date_create, 'date_time_c': data[i].date_time_c, 'files': files.data })
               }
-              else{
-                self.List_Comment_drawer.push({ 'id': data[i].id, 'owner': data[i].owner, 'image': Profile_Image.data[0].image, 'comment': data[i].comment, 'date_create': data[i].date_create, 'date_time_c': data[i].date_time_c , 'files' : [] })
+              else {
+                self.List_Comment_drawer.push({ 'id': data[i].id, 'owner': data[i].owner, 'image': Profile_Image.data[0].image, 'comment': data[i].comment, 'date_create': data[i].date_create, 'date_time_c': data[i].date_time_c, 'files': [] })
               }
             }
             else {
-              if(files.data != []){
-                self.List_Comment_drawer.push({ 'id': data[i].id, 'owner': data[i].owner, 'image': 'https://k60.kn3.net/89F951249.gif', 'comment': data[i].comment, 'date_create': data[i].date_create, 'date_time_c': data[i].date_time_c, 'files' : files.data })
+              if (files.data != []) {
+                self.List_Comment_drawer.push({ 'id': data[i].id, 'owner': data[i].owner, 'image': 'https://k60.kn3.net/89F951249.gif', 'comment': data[i].comment, 'date_create': data[i].date_create, 'date_time_c': data[i].date_time_c, 'files': files.data })
               }
-              else{
-                self.List_Comment_drawer.push({ 'id': data[i].id, 'owner': data[i].owner, 'image': 'https://k60.kn3.net/89F951249.gif', 'comment': data[i].comment, 'date_create': data[i].date_create, 'date_time_c': data[i].date_time_c, 'files' : [] })
+              else {
+                self.List_Comment_drawer.push({ 'id': data[i].id, 'owner': data[i].owner, 'image': 'https://k60.kn3.net/89F951249.gif', 'comment': data[i].comment, 'date_create': data[i].date_create, 'date_time_c': data[i].date_time_c, 'files': [] })
               }
             }
           }
@@ -790,126 +693,108 @@
         //AGREGAR COMENTARIO A TASK POR MEDIO DEL ID DE TASK
         Task_add_comment() {
           var self = this;
-          
           //console.log(self.id_task)
-          if(self.id_task_comentario.length <= 225){
-          axios.post('/api/v1.0/commentAdd/', {
-            comment: self.id_task_comentario,
-            owner: ID_Token,
-            task: self.id_task,
-          }, {
-            headers: { 'X-CSRFTOKEN': CSRF_TOKEN, },
-          })
-            .then(function (response) {
-              //console.log(response);
-              self.List_Coment(self.id_task)
-              self.id_task_comentario = ""
-              //De cumplicar esta condicion llamara la funcion de agregar archivos 
-              if(self.files.length >= 1 ){
-                self.Task_add_comment_Files(response.data.id)
-              }
-              //self.notification('New comment', 'Action added successfully')
+          if (self.id_task_comentario.length <= 225) {
+            axios.post('/api/v1.0/commentAdd/', {
+              comment: self.id_task_comentario,
+              owner: ID_Token,
+              task: self.id_task,
+            }, {
+              headers: { 'X-CSRFTOKEN': CSRF_TOKEN, },
             })
-            .catch(function (error) {
-              console.log(error);
-            });}
-            else{
-              console.log("Demasiados caracteres")
-            }
+              .then(function (response) {
+                //console.log(response);
+                self.List_Coment(self.id_task)
+                self.id_task_comentario = ""
+                //De cumplicar esta condicion llamara la funcion de agregar archivos 
+                if (self.files.length >= 1) {
+                  self.Task_add_comment_Files(response.data.id)
+                }
+                //self.notification('New comment', 'Action added successfully')
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+          }
+          else {
+            console.log("Demasiados caracteres")
+          }
         },
-
-
         //Funcion para agregar archivos multimedia por
-        async Task_add_comment_Files(id){
+        async Task_add_comment_Files(id) {
           var self = this;
-          for(i in self.files){
+          for (i in self.files) {
             let formData = new FormData();
             formData.append('comment', id);
             formData.append('owner', ID_Token);
             formData.append('files', self.files[i]);
 
             axios.post('/api/v1.0/files/', formData, {
-                headers: { 'X-CSRFTOKEN': CSRF_TOKEN, 'Content-Type': 'multipart/form-data', },
+              headers: { 'X-CSRFTOKEN': CSRF_TOKEN, 'Content-Type': 'multipart/form-data', },
+            })
+              .then(function (response) {
+                console.log(response);
+                //formData.delete(name);
+                //self.files=[]
+                //self.List_Coment(self.id_task)
               })
-                .then(function (response) {
-                  console.log(response);
-                  //formData.delete(name);
-                  //self.files=[]
-                  //self.List_Coment(self.id_task)
-                })
-                .catch(function (error) {
-                  console.log(error);
-                });
-
-
+              .catch(function (error) {
+                console.log(error);
+              });
           }
-          self.files=[]
+          self.files = []
         },
 
         async Task_Mark_Finished() {
           var self = this;
           //console.log(self.id_task)
-
           axios.put('/api/v1.0/task/' + self.id_task + '/', {
             id: self.id_task,
             status: false,
             owner: ID_Token,
             title: self.List_Task_drawer.title,
             project: self.List_Task_drawer.project,
-
-
           }, {
             headers: { 'X-CSRFTOKEN': CSRF_TOKEN, },
           })
             .then(function (response) {
               console.log(response);
-
             })
             .catch(function (error) {
               console.log(error);
             });
-
         },
-
         //NOTIFICACIONES PUSH
         notification(titulo, comentario) {
           var self = this;
-
           self.snackbar_titulo = titulo
           self.snackbar_comentario = comentario
           self.snackbar = true
 
         },
-
-
-
         ///CREACION DE PROYECTOS
         //Funcion traera desde la el create project todos los Kamban y sus respectivas task 
         List_Kamban_Task_Project_Select(data) {
           //Extraer Kamban del proyecto seleccionado
-          var self=this;
+          var self = this;
           console.log("Ejecutando")
-          if(data.length > 0 ){
+          if (data.length > 0) {
             //Variable que se utilizara despues para la creacion de cambas
-          this.Proyect_ID_Kamba = data[0].id
-          axios.get('/api/v1.0/project/' + data[0].id + '/')
-            .then(response => {
-              this.kambaProjectCreate = response.data
-              //Se llaman las tareas para poder verlas dentro del kamban create project
-              //self.List_Task_Kamban()
-              //console.log(response.data)
-              //self.itemsKamban = response.data
-            })
-            .catch(error => { console.log(error) })
+            this.Proyect_ID_Kamba = data[0].id
+            axios.get('/api/v1.0/project/' + data[0].id + '/')
+              .then(response => {
+                this.kambaProjectCreate = response.data
+                //Se llaman las tareas para poder verlas dentro del kamban create project
+                //self.List_Task_Kamban()
+                //console.log(response.data)
+                //self.itemsKamban = response.data
+              })
+              .catch(error => { console.log(error) })
           }
-
         },
         ///CREACION DE PROYECTOS
 
-
-
         ///############################## HISTORY ########################################
-
         async history_task_comment(id) {
           var self = this;
           //console.log("aqui vas ")
@@ -918,16 +803,8 @@
           //Listado de Comentarios por Task
           let comment = await axios.get('/api/v1.0/comment/?search=' + id)
           self.extraImage(comment.data)
-          
-          
-          
         },
-
-        
         ///############################## HISTORY ########################################
-
-
-
       },
     });
 
