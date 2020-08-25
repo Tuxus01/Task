@@ -21,4 +21,6 @@ router.register('commentAdd',CommentAddViewSet )
 router.register('files',Comment_FileViewSet )
 router.register('members',MembersViewSet )
 
+router.register('membersDetail',MembersDetailViewSet )
+
 urlpatterns = router.urls

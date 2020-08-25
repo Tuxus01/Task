@@ -47,38 +47,35 @@
            
 
             <!--asignacion de participantes por proyectos -->
-            <div v-if="itemsKamban != ''">
-            <v-btn @click="dialogColaboradores=true" small fab color="blue">
-              <v-icon>	mdi-account-plus</v-icon>
-            </v-btn>
-            <v-chip pill class="hidden-sm-and-down" >
-            <v-avatar left>
-              <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
-            </v-avatar>
-            Usuario
-          </v-chip>
+            <div v-if="Project_owner_ID_Global != 0" >
+              <div v-if="Project_owner_ID_Global == Project_owner_ID_OWNER" >
+                <div v-if="itemsKamban != ''">
+                  <v-btn @click="dialogColaboradores=true" small fab color="blue">
+                    <v-icon>	mdi-account-plus</v-icon>
+                  </v-btn>
+                  <v-chip v-for="i in List_Members_for_project" pill class="hidden-sm-and-down" >
+                  <v-avatar left>
+                    <v-img :src="i.image"></v-img>
+                  </v-avatar>
+                  [[ i.username ]]
+                </v-chip>
+      
+      
+                </div>
+                <!--asignacion de participantes por proyectos -->
+               
+              </div>
+              <div v-else>
 
-          <v-chip pill class="hidden-sm-and-down" >
-            <v-avatar left>
-              <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
-            </v-avatar>
-            Usuario
-          </v-chip>
-          <v-chip pill class="hidden-sm-and-down" >
-            <v-avatar left>
-              <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
-            </v-avatar>
-            Usuario
-          </v-chip>
+                <div v-if="itemsKamban != ''">
+             
+              
+                </div>
 
-          <v-chip pill color="blue" class="hidden-sm-and-down" >
-            <v-avatar left>
-              <span class="white--text headline">+4</span>
-            </v-avatar>
+                <h1></h1>
+              </div>
+            </div>
             
-          </v-chip>
-          </div>
-          <!--asignacion de participantes por proyectos -->
 
             <v-spacer></v-spacer>
 
@@ -168,6 +165,8 @@
         //Ver archivos adjuntos en comentarios
         fileDialog : false,
         drawerEdit: false,
+        //Mostrar Videos Diaglo
+        dialogVideo:false,
 
         //ID temporal del task que servira para poder realizar la insercion de comentarios desde
         //el drawer izquierdo de la aplicacion
@@ -177,6 +176,9 @@
 
         //Menu Derecho con lista de Projectos agregados como miembro.
         Project_list: [],
+        Project_owner_ID_Global :0,
+        Project_owner_ID_OWNER : 0,
+        Project_ID_Global : 0,
 
 
         //List Desplegado Kamban Table
@@ -194,6 +196,8 @@
         rules: [v => v.length <= 225 || 'Max 225 characters'],
         //Adjunto de archivos varios
 
+        //Lista de colabores
+        List_Members_for_project : [],
 
         //Diaglo para agregar y modificar Proyecto
         dialogProyecto: false,
@@ -445,7 +449,8 @@
       mounted() {
         ///Calendarios
         //this.$refs.calendar.checkChange()
-
+        //Lista de colabores 
+        
         //Mostrar listado de proyecto automaticamente 
         this.ListProject()
       },
@@ -469,8 +474,6 @@
         },
 
     
-
-
         //Files Commentarios diaglo 
         Files_Task_comment(id){
           var self= this;
@@ -495,7 +498,7 @@
             if(mp4===true){
               self.files_mostar_html="mp4"
               self.files_mostrar=true,
-              self.fileDialog = true
+              self.dialogVideo = true
             }
             if(pdf===true){
               self.files_mostar_html="pdf"
@@ -558,6 +561,43 @@
 
         },
 
+
+        Member_list(id){
+          var self = this;
+          self.List_Members_for_project =[]
+          axios.get('/api/v1.0/membersDetail/?search='+ id)
+            .then(response => {
+              //self.List_Members_for_project = response.data
+              
+              self.Member_list_image(response.data)
+            })
+            .catch(error => { console.log(error) })
+        },
+
+
+        Member_list_image(array_member){
+          var self = this;
+          colabores = []
+          console.log(array_member.length)
+          for(i in array_member){
+            axios.get('/api/v1.0/profile/'+ array_member[i].member.id +'/')
+                .then(response => {
+                  colabores = response.data
+                  //console.log(response.data)
+                  
+                  //self.List_Members_for_project = response.data
+                  self.List_Members_for_project.push({ 'id': colabores.user.id, 'email': colabores.user.email, 'username': colabores.user.username,'image': response.data.image  })
+                 
+                })
+                .catch(error => { 
+                  //console.log(error.response.status);
+                  //console.log(error) 
+                  //console.log(error.response.headers);
+                })
+
+            
+          }
+        },
         Members_add(project_id, user_id) {
           var self = this;
           //console.log(self.id_task)
@@ -572,6 +612,9 @@
             .then(function (response) {
               //console.log(response);
               self.ListProject()
+              self.Member_list(project_id)
+              self.search_usuario=''
+              self.search_complete=''
 
             })
             .catch(function (error) {
@@ -664,6 +707,15 @@
               //this.Project_list = response.data
               //console.log(response.data)
               self.itemsKamban = response.data
+
+              //Variables globales para poder verificar si es el propietario del proyecto a la hora de agregar mas colabores
+              self.Project_owner_ID_Global = response.data[0].owner
+              self.Project_owner_ID_OWNER = ID_Token
+
+
+
+              self.Project_ID_Global = id
+              self.Member_list(id)
               
             })
             .catch(error => { console.log(error) })
@@ -860,8 +912,8 @@
 
         async history_task_comment(id) {
           var self = this;
-          console.log("aqui vas ")
-          console.log(id)
+          //console.log("aqui vas ")
+          //console.log(id)
           self.List_Comment_drawer = []
           //Listado de Comentarios por Task
           let comment = await axios.get('/api/v1.0/comment/?search=' + id)

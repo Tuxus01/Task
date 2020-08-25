@@ -87,3 +87,10 @@ class MembersSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class MembersDetailSerializer(serializers.ModelSerializer):
+    member = UserSerializer()
+    class Meta:
+        model = members
+        fields = '__all__'
+
+

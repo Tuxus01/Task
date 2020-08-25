@@ -165,7 +165,7 @@
       <!--Sub Tarea dentro de la tarea-->
 
 <!--##################################Diaglo para mostrar archivos adjunto de los comentarios #####################################-->
-<template>
+    <template>
  
     <v-dialog dark eager height="700" width="1000" v-model="fileDialog">
  
@@ -174,32 +174,7 @@
       <template v-if="files_mostar_html==='pdf'">
         <iframe :src='files_path' height="700" width="1000"></iframe>
       </template>
-      <template v-else-if="files_mostar_html==='mp4'">
-        
-        <video
-        id="my-video"
-        class="video-js"
-        controls
-        autoplay="true"
-        preload="auto"
-        width="500"
-        height="500"
-        poster="MY_VIDEO_POSTER.jpg"
-        data-setup="{}"
-      >
-        <source :src='files_path' type="video/mp4" />
       
-        <p class="vjs-no-js">
-          To view this video please enable JavaScript, and consider upgrading to a
-          web browser that
-          <a href="https://videojs.com/html5-video-support/" target="_blank"
-            >supports HTML5 video</a
-          >
-        </p>
-      </video>
-  
-
-      </template>
       <template v-else>
          <v-img
          :src="files_path"
@@ -225,12 +200,63 @@
     </v-card>
   </v-dialog>
 </template>
+ <!--Navigation Drawer para Videos -->
 
+ <template>
+  <div class="text-center">
+    <v-dialog
+      dark 
+      v-model="dialogVideo"
+      width="350"
+    >
+     
+
+      <v-card>
+        <v-card-title class="headline black lighten-2">
+          Play Video
+        </v-card-title>
+
+        <v-card-text>
+        
+        
+            <video
+            id="my-video"
+            class="video-js"
+            controls
+            autoplay="true"
+            preload="auto"
+            width="700"
+            height="1200"
+            poster="MY_VIDEO_POSTER.jpg"
+            data-setup="{}"
+          >
+            <source :src='files_path' type="video/mp4" />
+          
+            <p class="vjs-no-js">
+              To view this video please enable JavaScript, and consider upgrading to a
+              web browser that
+              <a href="https://videojs.com/html5-video-support/" target="_blank"
+                >supports HTML5 video</a
+              >
+            </p>
+          </video>
+      
+    
+      
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+  </div>
+</template>
 
 
     </v-layout>
   </v-container>
 </v-navigation-drawer>
+
+
+
+<!--Navigation Drawer para Videos -->
 <!--Barra de navegacion Izquierda para modificar eventos entre projectos -->
 <!--################################ DRAWER IZQUIERO Y DERECHO #####################################-->
 
@@ -245,10 +271,10 @@
           <v-btn icon dark @click="dialogProyecto = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title>New Project</v-toolbar-title>
+          <v-toolbar-title>CREATE OR EDIT YOUR PROJECT</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items>
-            <v-btn dark text @click="dialogProyecto = false">Save</v-btn>
+            
           </v-toolbar-items>
         </v-toolbar>
         <v-list three-line subheader>
@@ -325,7 +351,7 @@
                     <v-card-actions>
                       <v-btn @click="task_kamban_modal(item.id,Proyect_ID_Kamba)" color="green" block>Add Task</v-btn>
                     </v-card-actions>
-
+                    <!--
                     <v-expand-transition>
                       <div v-show="show">
                         <v-divider></v-divider>
@@ -359,6 +385,7 @@
                         </v-card-text>
                       </div>
                     </v-expand-transition>
+                    -->
                   </v-card>
                   <!--Lista de Kamban tipo card-->
                 </v-col>
@@ -476,9 +503,15 @@
               <v-btn rounded color="primary" @click="SearchUsuario()" dark>Search</v-btn>
             </v-col>
 
-            <v-col cols="12" sm="12" md="12">
-              [[ search_complete.username ]] [[ search_complete.email ]]
+            <div v-if="search_complete != ''">
+            <v-col  cols="12" sm="12" md="12">
+              <v-card align="center">
+                <v-card-text dense>
+                    <h4> [[ search_complete.username ]] [[ search_complete.email ]] <v-icon @click="Members_add(Project_ID_Global,search_complete.id)" color="green">mdi-plus</v-icon></h4>
+                </v-card-text>
+              </v-card>
             </v-col>
+          </div>
 
            
            </v-row>
@@ -495,21 +528,15 @@
                     <th class="text-left">action</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody v-for="items in List_Members_for_project">
                   <tr >
-                    <td>tuxus</td>
-                    <td>tuxus01@gmail.com</td>
+                    <td>[[ items.username ]]</td>
+                    <td>[[ items.email ]]</td>
                     <td>
                         <v-icon @click="" color="red">mdi-delete</v-icon>
                     </td>
                   </tr>
-                  <tr >
-                    <td>randy</td>
-                    <td>ngdz01@gmail.com</td>
-                    <td>
-                      <v-icon @click="" color="red">mdi-delete</v-icon>
-                    </td>
-                  </tr>
+                 
                 </tbody>
               </template>
             </v-simple-table>
@@ -519,7 +546,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="dialogColaboradores = false">Close</v-btn>
-          <v-btn color="blue darken-1" text @click="dialogColaboradores = false">Save</v-btn>
+         
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -649,6 +676,8 @@
   <v-container grid-list-lg>
     <v-layout row wrap justify-center>
       <v-flex xs12 lg10 md10>
+
+       
         <template>
           <v-expansion-panels popout dark flat>
             <v-expansion-panel v-for="item in itemsKamban" :key="item.id" v-model="item.active"
