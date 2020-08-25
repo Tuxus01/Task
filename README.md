@@ -8,5 +8,7 @@ visualiza el los avences de tu proyecto.
 
 utilizando la ideologia Kanban y asignacion de tareas.
 
+https://youtu.be/wyxXMha5d6Q
+
 
 
