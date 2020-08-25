@@ -42,7 +42,43 @@
             <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
               <span >Task Manager </span>
             </v-toolbar-title>
+            
+            <v-divider inset class="mx-1" vertical></v-divider>
+           
 
+            <!--asignacion de participantes por proyectos -->
+            <div v-if="itemsKamban != ''">
+            <v-btn @click="dialogColaboradores=true" small fab color="blue">
+              <v-icon>	mdi-account-plus</v-icon>
+            </v-btn>
+            <v-chip pill class="hidden-sm-and-down" >
+            <v-avatar left>
+              <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
+            </v-avatar>
+            Usuario
+          </v-chip>
+
+          <v-chip pill class="hidden-sm-and-down" >
+            <v-avatar left>
+              <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
+            </v-avatar>
+            Usuario
+          </v-chip>
+          <v-chip pill class="hidden-sm-and-down" >
+            <v-avatar left>
+              <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
+            </v-avatar>
+            Usuario
+          </v-chip>
+
+          <v-chip pill color="blue" class="hidden-sm-and-down" >
+            <v-avatar left>
+              <span class="white--text headline">+4</span>
+            </v-avatar>
+            
+          </v-chip>
+          </div>
+          <!--asignacion de participantes por proyectos -->
 
             <v-spacer></v-spacer>
 
@@ -127,6 +163,8 @@
         dialog: false,
         drawer: false,
         drawer2: false,
+        //Modal para agregar colabores a proyecto
+        dialogColaboradores:false,
         //Ver archivos adjuntos en comentarios
         fileDialog : false,
         drawerEdit: false,
@@ -253,23 +291,12 @@
         //////////HISTORY
 
 
-          ///CALENDAR PRUEBASSSSSSSS
-          focus: '',
-          type: 'month',
-          typeToLabel: {
-            month: 'Month',
-            week: 'Week',
-            day: 'Day',
-            '4day': '4 Days',
-          },
-          selectedEvent: {},
-          selectedElement: null,
-          selectedOpen: false,
-          events: [],
-          colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
-          names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
+         //Busqueda de usuario y agregado a proyecto en curso
+          search_usuario : '',
+          search_complete : [],
+          //Busqueda de usuario y agregado a proyecto en curso
 
-          ///CALENDAR PRUEBASSSSSSSS
+
 
       },
 
@@ -425,79 +452,23 @@
 
       methods: {
 
-        
+        //Busqueda de usuario y agregado a proyecto en curso
+        SearchUsuario(){
+          var self = this;
+          //console.log(id)
+          axios.get('/api/v1.0/users/?search=' + self.search_usuario)
+            .then(response => {
+              //this.Project_list = response.data
+              console.log(response.data)
+              self.search_complete = response.data[0]
+              
+            })
+            .catch(error => { console.log(error) })
 
 
-
-
-
-        ///CALENDAR PRUEBASSSSSSSSSSSSSSSSSSSSSSS
-        viewDay ({ date }) {
-        this.focus = date
-        this.type = 'day'
-      },
-      getEventColor (event) {
-        return event.color
-      },
-      setToday() {
-        this.focus = ''
-      },
-      prev () {
-        this.$refs.calendar.prev()
-      },
-      next () {
-        this.$refs.calendar.next()
-      },
-      showEvent ({ nativeEvent, event }) {
-        const open = () => {
-          this.selectedEvent = event
-          this.selectedElement = nativeEvent.target
-          setTimeout(() => this.selectedOpen = true, 10)
-        }
-
-        if (this.selectedOpen) {
-          this.selectedOpen = false
-          setTimeout(open, 10)
-        } else {
-          open()
-        }
-
-        nativeEvent.stopPropagation()
-      },
-      updateRange ({ start, end }) {
-        const events = []
-
-        const min = new Date(`${start.date}T00:00:00`)
-        const max = new Date(`${end.date}T23:59:59`)
-        const days = (max.getTime() - min.getTime()) / 86400000
-        const eventCount = this.rnd(days, days + 20)
-
-        for (let i = 0; i < eventCount; i++) {
-          const allDay = this.rnd(0, 3) === 0
-          const firstTimestamp = this.rnd(min.getTime(), max.getTime())
-          const first = new Date(firstTimestamp - (firstTimestamp % 900000))
-          const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
-          const second = new Date(first.getTime() + secondTimestamp)
-
-          events.push({
-            name: this.names[this.rnd(0, this.names.length - 1)],
-            start: first,
-            end: second,
-            color: this.colors[this.rnd(0, this.colors.length - 1)],
-            timed: !allDay,
-          })
-        }
-
-        this.events = events
-      },
-      rnd (a, b) {
-        return Math.floor((b - a + 1) * Math.random()) + a
-      },
-      ///CALENDAR PRUEBASSSSSSSSSSSSSSSSSSSSSSSSS
-
-        alert(dato){
-          console.log('Click')
         },
+
+    
 
 
         //Files Commentarios diaglo 
@@ -552,6 +523,9 @@
               //this.Project_list = response.data
               //console.log(response.data)
               self.Task_Kamban = response.data
+
+              //Get calendar
+              
             })
             .catch(error => { console.log(error) })
         },
@@ -690,6 +664,7 @@
               //this.Project_list = response.data
               //console.log(response.data)
               self.itemsKamban = response.data
+              
             })
             .catch(error => { console.log(error) })
         },

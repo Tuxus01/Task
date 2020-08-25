@@ -167,7 +167,7 @@
 <!--##################################Diaglo para mostrar archivos adjunto de los comentarios #####################################-->
 <template>
  
-    <v-dialog dark eager height="500" width="500" v-model="fileDialog">
+    <v-dialog dark eager height="700" width="1000" v-model="fileDialog">
  
   
     <v-card class="mx-auto" v-if="files_mostrar===true">
@@ -448,6 +448,84 @@
   </v-row>
 </template>
 <!--Sub Diaglo para agregar Task a Kamban del Proyecto -->
+
+
+<!--Agregar Colaboradores de proyecto -->
+<template>
+  <v-row justify="center">
+    <v-dialog v-model="dialogColaboradores" persistent max-width="600px">
+     
+      <v-card>
+        <v-card-title>
+          <span class="headline">User Profile</span>
+        </v-card-title>
+        <v-card-text>
+
+          <v-container>
+           <v-row>
+            <v-col cols="12" sm="7" md="7">
+              <v-text-field
+                label="Username"
+                prepend-icon="mdi-account"
+                outlined
+                dense
+                v-model="search_usuario"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="5" md="5">
+              <v-btn rounded color="primary" @click="SearchUsuario()" dark>Search</v-btn>
+            </v-col>
+
+            <v-col cols="12" sm="12" md="12">
+              [[ search_complete.username ]] [[ search_complete.email ]]
+            </v-col>
+
+           
+           </v-row>
+
+          </v-container>
+
+          <template>
+            <v-simple-table>
+              <template v-slot:default>
+                <thead>
+                  <tr>
+                    <th class="text-left">Name</th>
+                    <th class="text-left">email</th>
+                    <th class="text-left">action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr >
+                    <td>tuxus</td>
+                    <td>tuxus01@gmail.com</td>
+                    <td>
+                        <v-icon @click="" color="red">mdi-delete</v-icon>
+                    </td>
+                  </tr>
+                  <tr >
+                    <td>randy</td>
+                    <td>ngdz01@gmail.com</td>
+                    <td>
+                      <v-icon @click="" color="red">mdi-delete</v-icon>
+                    </td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+          </template>
+
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="dialogColaboradores = false">Close</v-btn>
+          <v-btn color="blue darken-1" text @click="dialogColaboradores = false">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-row>
+</template>
+<!--Agregar Colaboradores de proyecto -->
 <!--############################# Seccion de Dialog ##################################-->
 
 
@@ -472,11 +550,7 @@
     <v-icon>mdi-comment-multiple-outline</v-icon>
   </v-btn>
 
-  <v-btn>
-    <span>Calendar</span>
-    <v-icon>mdi-calendar</v-icon>
-  </v-btn>
-
+ 
   <v-btn>
     <span>Profile</span>
     <v-icon>mdi-language-python</v-icon>
@@ -745,29 +819,7 @@
                                             <v-card-text>
                                               [[ item.comment ]]
 
-                                              <template>
-                                                <div class="text-rigth">
-                                                  <v-chip
-                                                    small
-                                                    class="ma-2"
-                                                    color="success"
-                                                    outlined
-                                                    v-for="file in item.files"
-                                                    @click="Files_Task_comment(file.files)"
-                                                    x-small
-                                                  >
-                                                    <!--Extraer el tipo de archivo a raiz de dos funciones programadas filters/icon filters/type_file-->
-                                                    <v-icon left>[[ file.files | icon ]]</v-icon>
-                                                    [[ file.files | type_file ]]
-                            
-                                                    
-                                                    </div>
-                                                   
-                                                    <!--Extraer el tipo de archivo a raiz de dos funciones programadas filters/icon filters/type_file-->
-                            
-                                                  </v-chip>
-                                                </div>
-                                              </template>
+                                             
 
                                             </v-card-text>
                                           </v-card>
@@ -808,125 +860,7 @@
 <!--Comentarios Historial -->
 
 
-<!--Calendar -->
-<div v-if="bottomNav === 3" >
 
-  <v-container grid-list-lg>
-    <v-layout row wrap justify-center>
-      <v-flex xs12 lg8 md8>
-        <v-card elevation="24" color="black">
-          
-      
-      <template>
-        <v-row  class="fill-height">
-          <v-col>
-            <v-sheet  height="64">
-              <v-toolbar  flat class="black--text">
-                <v-btn fab text small color="grey darken-2" @click="prev">
-                  <v-icon small>mdi-chevron-left</v-icon>
-                </v-btn>
-                <v-btn fab text small color="grey darken-2" @click="next">
-                  <v-icon small>mdi-chevron-right</v-icon>
-                </v-btn>
-                <v-toolbar-title v-if="$refs.calendar">
-                  [[ $refs.calendar.title ]]
-                </v-toolbar-title>
-                <v-spacer></v-spacer>
-                <v-menu bottom right>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      outlined
-                      color="grey darken-2"
-                      v-bind="attrs"
-                      v-on="on"
-                    >
-                      <span>[[ typeToLabel[type] ]]</span>
-                      <v-icon right>mdi-menu-down</v-icon>
-                    </v-btn>
-                  </template>
-                  <v-list>
-                    <v-list-item @click="type = 'day'">
-                      <v-list-item-title>Day</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item @click="type = 'week'">
-                      <v-list-item-title>Week</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item @click="type = 'month'">
-                      <v-list-item-title>Month</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item @click="type = '4day'">
-                      <v-list-item-title>4 days</v-list-item-title>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
-              </v-toolbar>
-            </v-sheet>
-            <v-sheet height="600">
-              <v-calendar
-                
-                ref="calendar"
-                v-model="focus"
-                color="primary"
-                :events="events"
-                :event-color="getEventColor"
-                :type="type"
-                @click:event="showEvent"
-                @click:more="viewDay"
-                @click:date="viewDay"
-                @change="updateRange"
-              ></v-calendar>
-              <v-menu
-                v-model="selectedOpen"
-                :close-on-content-click="false"
-                :activator="selectedElement"
-                offset-x
-              >
-                <v-card
-                  color="grey lighten-4"
-                  min-width="350px"
-                  flat
-                >
-                  <v-toolbar
-                    :color="selectedEvent.color"
-                    dark
-                  >
-                    <v-btn icon>
-                      <v-icon>mdi-pencil</v-icon>
-                    </v-btn>
-                    <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-                    <v-spacer></v-spacer>
-                    <v-btn icon>
-                      <v-icon>mdi-heart</v-icon>
-                    </v-btn>
-                    <v-btn icon>
-                      <v-icon>mdi-dots-vertical</v-icon>
-                    </v-btn>
-                  </v-toolbar>
-                  <v-card-text>
-                    <span v-html="selectedEvent.details"></span>
-                  </v-card-text>
-                  <v-card-actions>
-                    <v-btn
-                      text
-                      color="secondary"
-                      @click="selectedOpen = false"
-                    >
-                      Cancel
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-menu>
-            </v-sheet>
-          </v-col>
-        </v-row>
-      </template>
-
-    </v-card>
-      </v-flex>
-    </v-layout>
-  </v-container>
-</div>
-<!--Calendar -->
 <!--########################################### BOTON NAVEGACION DASHBOARD #######################################-->
 
 

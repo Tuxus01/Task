@@ -57,6 +57,8 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
+    search_fields = ['email']
+    filter_backends = (filters.SearchFilter,)
     
 
 
