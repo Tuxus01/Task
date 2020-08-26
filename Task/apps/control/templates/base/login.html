@@ -16,8 +16,8 @@
           >
             <v-col
               cols="12"
-              sm="8"
-              md="4"
+              sm="10"
+              md="3"
             >
             <form action="." method="post">
               <v-card class="elevation-12">
@@ -49,7 +49,7 @@
                  
                     {% csrf_token %}
                     <v-text-field
-                      label="Login"
+                      label="Username"
                       name="username"
                       id="username"
                       prepend-icon="mdi-account"
@@ -71,6 +71,9 @@
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn block type="submit" color="primary">Login</v-btn>
+
+               
+
                 </v-card-actions>
               </v-card>
             </form>
@@ -80,6 +83,7 @@
       </v-main>
     </v-app>
   </template>
+
 
 
 

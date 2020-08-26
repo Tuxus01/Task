@@ -24,6 +24,7 @@ class ModelBase(models.Model):
     owner = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     date_time_c = models.TimeField(auto_now = False, auto_now_add = True)
     date_time_m = models.TimeField(auto_now = True, auto_now_add = False)
+    
 
     class Meta:
         abstract = True

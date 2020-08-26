@@ -30,12 +30,23 @@
   <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
   <script src="https://vjs.zencdn.net/7.8.4/video.js"></script>
 
+
+  <!--push notification-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/push.js/1.0.5/push.js"></script>
+
+
+
+
+
+
+
+
 </head>
 
 <body>
-  <div id="app">
+  <div id="app" >
     <template>
-      <v-app id="inspire" >
+      <v-app id="inspire"dark >
         <form action="#" method="get">
 
           {% if user.is_authenticated %}
@@ -100,7 +111,7 @@
           </v-app-bar>
           {% endif %}
         </form>
-        <v-main>
+        <v-main >
           {% block content %}
 
           {%  endblock %}
@@ -113,6 +124,8 @@
 
 
 
+  <!--Push Notifications-->
+  <script src="{% static 'pushjs/push.js' %}"></script>
 
 
   <!--Informacion del contenido a mostrar -->
@@ -170,7 +183,7 @@
         subitemKamban: [],
 
         //Navegacion entre opciones, Lista, Dashboard, Table, Kamban, TimeLine, Image
-        bottomNav: 1,
+        bottomNav: 3,
         bottomNavProject: '',
 
         //Barra Izquierda 
@@ -258,7 +271,22 @@
         search_complete: [],
         //Busqueda de usuario y agregado a proyecto en curso
 
-
+          //Calendar
+          focus: '',
+      type: 'month',
+      typeToLabel: {
+        month: 'Month',
+        week: 'Week',
+        day: 'Day',
+        '4day': '4 Days',
+      },
+      selectedEvent: {},
+      selectedElement: null,
+      selectedOpen: false,
+      events: [],
+      colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
+      names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
+          //Calendar
 
       },
 
@@ -414,6 +442,85 @@
       },
 
       methods: {
+
+        ///Calendar
+        viewDay ({ date }) {
+        this.focus = date
+        this.type = 'day'
+      },
+      getEventColor (event) {
+        return event.color
+      },
+      setToday () {
+        this.focus = ''
+      },
+      prev () {
+        this.$refs.calendar.prev()
+      },
+      next () {
+        this.$refs.calendar.next()
+      },
+      showEvent ({ nativeEvent, event }) {
+        const open = () => {
+          this.selectedEvent = event
+          this.selectedElement = nativeEvent.target
+          setTimeout(() => this.selectedOpen = true, 10)
+        }
+
+        if (this.selectedOpen) {
+          this.selectedOpen = false
+          setTimeout(open, 10)
+        } else {
+          open()
+        }
+
+        nativeEvent.stopPropagation()
+      },
+      updateRange (data) {
+        var self = this;
+        
+        const events = []
+        self.events = []
+        //Todos los proyectos
+        for (i in data) {
+
+          axios.get('/api/v1.0/kamban/' + data[i].id + '/')
+            .then(response => {
+              //console.log(response.data)
+              let task_ = response.data
+              for(i in task_){
+                const first  = new Date(`${task_[i].date_create} ${task_[i].date_time_c}`)
+                const first2 = first.getFullYear()+'-'+(first.getMonth()+1)+'-'+first.getDate()+' '+first.getHours() + ":" + first.getMinutes() + ":" + first.getSeconds()
+                const second = new Date(`${task_[i].date_change} ${task_[i].date_time_m}`)
+                const second2 = second.getFullYear()+'-'+(second.getMonth()+1)+'-'+second.getDate()+' '+second.getHours() + ":" + second.getMinutes() + ":" + second.getSeconds()
+                //Variable de calculo temporal para ver los dias que lleva el proceso
+               
+               
+                events.push({
+                  name: task_[i].title,
+                  start: first2,
+                  end:second2,
+                  details:task_[i].description,
+                  color: this.colors[this.rnd(0, this.colors.length - 1)],
+                 
+                })
+              }
+            })
+            .catch(error => { console.log(error) })
+          
+          
+        
+        
+      }
+      self.events = events
+
+
+          },
+      rnd (a, b) {
+        return Math.floor((b - a + 1) * Math.random()) + a
+      },
+
+        ///Calendar
         //Busqueda de usuario y agregado a proyecto en curso
         SearchUsuario() {
           var self = this;
@@ -584,7 +691,6 @@
           self.task_id = id_kamban
           self.task_project_id = id_project
         },
-
         task_kamban_add() {
           var self = this;
           //console.log(id_kamban)
@@ -634,6 +740,11 @@
               self.Project_owner_ID_OWNER = ID_Token
               self.Project_ID_Global = id
               self.Member_list(id)
+              //Ejecutar calendario
+              self.updateRange(response.data)
+
+
+              
 
             })
             .catch(error => { console.log(error) })
@@ -722,7 +833,7 @@
                 if (self.files.length >= 1) {
                   self.Task_add_comment_Files(response.data.id)
                 }
-                //self.notification('New comment', 'Action added successfully')
+                self.notification('New comment', 'Action added successfully')
               })
               .catch(function (error) {
                 console.log(error);
@@ -778,10 +889,19 @@
         },
         //NOTIFICACIONES PUSH
         notification(titulo, comentario) {
-          var self = this;
-          self.snackbar_titulo = titulo
-          self.snackbar_comentario = comentario
-          self.snackbar = true
+          //var self = this;
+          //self.snackbar_titulo = titulo
+          //self.snackbar_comentario = comentario
+          //self.snackbar = true
+          Push.create(titulo, {
+              body: comentario,
+              icon: '{% static 'pushjs/logo.png' %}',
+              timeout: 4000,
+              onClick: function () {
+                  window.focus();
+                  this.close();
+              }
+          });
 
         },
         ///CREACION DE PROYECTOS
