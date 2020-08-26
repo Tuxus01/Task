@@ -176,4 +176,28 @@ MEDIA_URL = '/'
 
 
 
+#Tiempo activa de sesiones
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 86400 # set 24h 86400 , 
+SESSION_SAVE_EVERY_REQUEST = True
+
+#email
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'ngdz01@gmail.com'
+EMAIL_HOST_PASSWORD = '#'
+EMAIL_USE_TLS = True
+
+
+
+LOGIN_REDIRECT_URL = '/'
+
+LOGOUT_REDIRECT_URL = '/login/'
+#LOGOUT_REDIRECT_URL = '/store/'
+
+LOGIN_URL = '/login/'
+
+
+
+
 

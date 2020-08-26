@@ -35,8 +35,10 @@
 <body>
   <div id="app">
     <template>
-      <v-app id="inspire">
+      <v-app id="inspire" >
         <form action="#" method="get">
+
+          {% if user.is_authenticated %}
           <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app dark dense>
             <v-app-bar-nav-icon @click.stop="drawer2 = !drawer2"></v-app-bar-nav-icon>
             <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
@@ -77,8 +79,17 @@
               <v-icon>mdi-plus</v-icon>
             </v-btn>
             <v-divider inset class="mx-4" vertical></v-divider>
+            <v-btn  href="/logout" small fab color="red">
+              <v-icon>mdi-logout</v-icon>
+            </v-btn>
 
-            {{ user.first_name }} {{ user.last_name}}</br>
+
+            <v-divider inset class="mx-4" vertical></v-divider>
+            {% if user.first_name == "" %}
+              {{ user }}
+            {% else %}
+              {{ user.first_name }} {{ user.last_name}}</br>
+            {% endif %}
 
             {% else %}
             <v-btn href="" icon>
@@ -87,6 +98,7 @@
             </v-btn>
             {% endif %}
           </v-app-bar>
+          {% endif %}
         </form>
         <v-main>
           {% block content %}

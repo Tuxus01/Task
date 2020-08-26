@@ -34,7 +34,42 @@ from rest_framework.test import APIRequestFactory
 from django.http import JsonResponse
 
 
+#Login
+from django.contrib.auth import login, logout
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.views import LoginView, LogoutView
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.views.generic import FormView, RedirectView
+import Task.settings as setting
+
+
+
+class LoginFormView(LoginView):
+    template_name = 'base/login.html'
+    success_url = reverse_lazy('base:index')
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect(setting.LOGIN_REDIRECT_URL)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Iniciar sesión'
+        return context
+
+class LogoutRedirectView(RedirectView):
+    pattern_name = 'login'
+    success_url = reverse_lazy('base:login')
+    def dispatch(self, request, *args, **kwargs):
+        logout(request)
+        return super().dispatch(request, *args, **kwargs)
+
+
+
 # Create your views here.
+@login_required(login_url='/login/')
 def Index(request):
     return render(request, 'base/index.html' )
 

@@ -217,6 +217,7 @@
 </v-navigation-drawer>
 
 <!--Navigation Drawer para Videos -->
+
 <!--Barra de navegacion Izquierda para modificar eventos entre projectos -->
 <!--################################ DRAWER IZQUIERO Y DERECHO #####################################-->
 
@@ -611,7 +612,7 @@
 <div v-if="bottomNav=== 1">
   <v-container grid-list-lg>
     <v-layout row wrap justify-center>
-      <v-flex xs12 lg10 md10>
+      <v-flex xs12 lg12 md12>
         <template>
           <v-expansion-panels popout dark flat>
             <v-expansion-panel v-for="item in itemsKamban" :key="item.id" v-model="item.active"
