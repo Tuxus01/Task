@@ -435,7 +435,7 @@
 <!--Agregar Colaboradores de proyecto -->
 <template>
   <v-row justify="center">
-    <v-dialog v-model="dialogColaboradores" persistent max-width="600px">
+    <v-dialog v-model="dialogColaboradores"  max-width="600px">
       <v-card>
         <v-card-title>
           <span class="headline">User Profile</span>
@@ -443,24 +443,28 @@
         <v-card-text>
           <v-container>
             <v-row>
-              <v-col cols="12" sm="7" md="7">
-                <v-text-field label="Username" prepend-icon="mdi-account" outlined dense v-model="search_usuario">
+              <v-col cols="12" sm="12" md="5">
+                <v-text-field label="Username" v-on:keyup.enter="SearchUsuario()"  outlined dense v-model="search_usuario">
                 </v-text-field>
               </v-col>
-              <v-col cols="12" sm="5" md="5">
-                <v-btn rounded color="primary" @click="SearchUsuario()" dark>Search</v-btn>
+              <v-col cols="12" sm="12" md="7">
+                
+                <div v-if="search_complete != ''">
+                  
+                  <v-chip  pill class="hidden-sm-and-down">
+                    <v-avatar left>
+                      <v-img :src="search_complete.image"></v-img>
+                    </v-avatar>
+                    [[ search_complete.email ]] 
+                    <v-icon
+                    @click="Members_add(Project_ID_Global,search_complete.id)" color="green">mdi-plus</v-icon>
+                  </v-chip>
+                  
+                </div>
+
+
               </v-col>
-              <div v-if="search_complete != ''">
-                <v-col cols="12" sm="12" md="12">
-                  <v-card align="center">
-                    <v-card-text dense>
-                      <h4> [[ search_complete.username ]] [[ search_complete.email ]] <v-icon
-                          @click="Members_add(Project_ID_Global,search_complete.id)" color="green">mdi-plus</v-icon>
-                      </h4>
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-              </div>
+              
             </v-row>
           </v-container>
 
@@ -479,7 +483,7 @@
                     <td>[[ items.username ]]</td>
                     <td>[[ items.email ]]</td>
                     <td>
-                      <v-icon @click="" color="red">mdi-delete</v-icon>
+                      <v-icon @click="Members_delete(items.member_id,items.project)" color="red">mdi-delete</v-icon>
                     </td>
                   </tr>
 

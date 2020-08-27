@@ -529,9 +529,26 @@
             .then(response => {
               //this.Project_list = response.data
               console.log(response.data)
-              self.search_complete = response.data[0]
+              //self.search_complete = response.data[0]
+              self.SearchUsuario_Image(response.data)
             })
             .catch(error => { console.log(error) })
+        },
+
+        async SearchUsuario_Image(data){
+          var self = this;
+          console.log(data[0])
+          self.search_complete = []
+          let Profile_Image = await axios.get('/api/v1.0/profile/?search=' + data[0].id)
+            //console.log(Profile_Image)
+            //console.log(data[i])
+            if (Profile_Image.data[0].image != "") {
+              self.search_complete = {'id': data[0].id, 'username': data[0].username,'email':data[0].email, 'image':Profile_Image.data[0].image}
+            }
+            else{
+              self.search_complete = {'id': data[0].id, 'username': data[0].username,'email':data[0].email, 'image':''}
+            }
+
         },
 
 
@@ -624,14 +641,14 @@
         Member_list_image(array_member) {
           var self = this;
           colabores = []
-          console.log(array_member.length)
+          console.log(array_member)
           for (i in array_member) {
             axios.get('/api/v1.0/profile/' + array_member[i].member.id + '/')
               .then(response => {
                 colabores = response.data
                 //console.log(response.data)
                 //self.List_Members_for_project = response.data
-                self.List_Members_for_project.push({ 'id': colabores.user.id, 'email': colabores.user.email, 'username': colabores.user.username, 'image': response.data.image })
+                self.List_Members_for_project.push({ 'id': colabores.user.id,'member_id':array_member[0].id ,'project':array_member[0].project ,'email': colabores.user.email, 'username': colabores.user.username, 'image': response.data.image })
               })
               .catch(error => {
                 //console.log(error.response.status);
@@ -642,25 +659,62 @@
         },
         Members_add(project_id, user_id) {
           var self = this;
+          const validar = []
           //console.log(self.id_task)
-          axios.post('/api/v1.0/members/', {
-            project: project_id,
-            owner: ID_Token,
-            member: user_id,
-          }, {
-            headers: { 'X-CSRFTOKEN': CSRF_TOKEN, },
-          })
-            .then(function (response) {
-              //console.log(response);
-              self.ListProject()
-              self.Member_list(project_id)
-              self.search_usuario = ''
-              self.search_complete = ''
 
+          //Validar si el usuario ya pertenece a este proyecto
+          axios.get(`/api/v1.0/members/?search=${project_id}+${user_id}`)
+            .then(response => {
+              validar = response.data
+              
             })
-            .catch(function (error) {
-              console.log(error);
-            });
+            .catch(error => { console.log(error) })
+
+            if(validar != []){
+              axios.post('/api/v1.0/members/', {
+                project: project_id,
+                owner: ID_Token,
+                member: user_id,
+              }, {
+                headers: { 'X-CSRFTOKEN': CSRF_TOKEN, },
+              })
+                .then(function (response) {
+                  //console.log(response);
+                  self.ListProject()
+                  self.Member_list(project_id)
+                  self.search_usuario = ''
+                  self.search_complete = ''
+
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
+            }
+            else{
+              self.notification('Alert','the selected profile already belongs to this working group.')
+            }
+        },
+
+        Members_delete(id_member, project_id){
+          var self = this;
+      
+            axios
+                .delete(`/api/v1.0/members/${id_member}/`,{
+                headers: {'X-CSRFTOKEN': CSRF_TOKEN,},
+                })
+                .then(response => {
+                  self.Member_list(project_id)
+                  self.notification('Delete','Collaborate removed successfully.')
+                
+                })
+                .catch(error => {
+                    console.log(error)
+                
+                
+                })
+
+
+
         },
         Kamban_add(id_proyecto) {
           //console.log(id_proyecto)

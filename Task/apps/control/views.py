@@ -212,6 +212,8 @@ class Comment_FileViewSet(viewsets.ModelViewSet):
 class MembersViewSet(viewsets.ModelViewSet):
     queryset = members.objects.all().order_by('-id')
     serializer_class = MembersSerializer
+    search_fields = ['project__id','member__id']
+    filter_backends = (filters.SearchFilter,)
 
 
 class MembersDetailViewSet(viewsets.ModelViewSet):
