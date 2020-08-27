@@ -34,30 +34,30 @@
     <v-layout row wrap>
       <v-flex xs12 lg12 md12>
         <template v-if="List_Task_drawer.status === true">
-          <v-btn @click="Task_Mark_Finished()" text outlined rounded color="success">
+          <v-btn dense small @click="Task_Mark_Finished()" text outlined rounded color="success">
             <v-icon left>mdi-content-save</v-icon> Mark as finished
         </template>
         <template v-else>
           <h1 class="red--text">Task Mark Finished</h1>
         </template>
-        <v-btn @click="drawerEdit=false" text outlined rounded color="warning">
+        <v-btn dense small @click="drawerEdit=false" text outlined rounded color="warning">
           <v-icon left>mdi-arrow-left-bold</v-icon> Minimize
         </v-btn>
         <!--Antigua separacion del flex -->
         <v-col xs4 lg4 md4>
-          <h3 class="green--text">Subject : [[ List_Task_drawer.title ]]</h3>
-          <h5 class="white--text" v-if="List_Task_drawer.priority===1"> Level of urgency : <v-chip class="ma-2"
+          <h5 class="green--text">Subject : [[ List_Task_drawer.title ]]</h5>
+          <h6 class="white--text" v-if="List_Task_drawer.priority===1"> Level of urgency : <v-chip x-small class="ma-2"
               color="primary"> Low</v-chip>
-          </h5>
-          <h5 class="white--text" v-if="List_Task_drawer.priority===2"> Level of urgency : <v-chip
+          </h6>
+          <h6 class="white--text" v-if="List_Task_drawer.priority===2"> Level of urgency : <v-chip x-small
               class="ma-2 black--text" color="yellow"> Medium</v-chip>
-          </h5>
-          <h5 class="white--text" v-if="List_Task_drawer.priority===3"> Level of urgency : <v-chip class="ma-2"
+          </h6>
+          <h6 class="white--text" v-if="List_Task_drawer.priority===3"> Level of urgency : <v-chip class="ma-2" x-small
               color="red"> Urgent</v-chip>
-          </h5>
-          <h5 class="white--text" v-if="List_Task_drawer.priority===4"> Level of urgency : <v-chip class="ma-2"> Wait
+          </h6>
+          <h6 class="white--text" v-if="List_Task_drawer.priority===4"> Level of urgency : <v-chip class="ma-2" x-small> Wait
             </v-chip>
-          </h5>
+          </h6>
           <h5 class="white--text">[[ List_Task_drawer.description ]]</h5>
         </v-col>
       </v-flex>
@@ -66,14 +66,13 @@
       <template v-if="List_Task_drawer.status === true">
         <v-flex xs12 lg12 md12>
           <v-col>
-            <v-textarea rows="3" outlined dense :rules="rules" counter v-model="id_task_comentario" label="New Comment"
-              dense>
+            <v-textarea rows="3" outlined dense :rules="rules" counter v-model="id_task_comentario" label="New Comment" dense>
             </v-textarea>
-            <template>
-              <v-file-input v-model="files" label="Type : image/*, .mp4 ,.pdf, .doc, .docx, .xls, .xlsx, .csv"
-                accept="image/*,.mp4 ,.pdf,.doc, .docx, .xls, .xlsx, .csv " chips counter show-size multiple
-                label="File input"></v-file-input>
-            </template>
+      
+            <v-file-input v-model="files" label="Type : image/*, .mp4 ,.pdf, .doc, .docx, .xls, .xlsx, .csv"
+              accept="image/*,.mp4 ,.pdf,.doc, .docx, .xls, .xlsx, .csv " chips counter show-size multiple label="File input">
+            </v-file-input>
+      
             <v-btn small rounded block color="success" @click="Task_add_comment()">
               <v-icon small left>mdi-pencil</v-icon> Add Comment
             </v-btn>
@@ -650,7 +649,7 @@
                             <td>
                               <v-avatar size="40" color="red">
                                 <img
-                                  src="https://e7.pngegg.com/pngimages/266/560/png-clipart-python-computer-icons-programmer-javascript-programming-language-python-logo-angle-text.png"
+                                  :src="subItem.image"
                                   alt="alt">
                               </v-avatar>
                             </td>

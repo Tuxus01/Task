@@ -183,7 +183,7 @@
         subitemKamban: [],
 
         //Navegacion entre opciones, Lista, Dashboard, Table, Kamban, TimeLine, Image
-        bottomNav: 3,
+        bottomNav: 1,
         bottomNavProject: '',
 
         //Barra Izquierda 
@@ -756,10 +756,36 @@
           axios.get('/api/v1.0/kamban/' + id + '/')
             .then(response => {
               //this.Project_list = response.data
-              //console.log(response.data)
-              self.subitemKamban = response.data
+              console.log(response.data)
+              self.List_subTask_Image(response.data)
+              //self.subitemKamban = response.data
             })
             .catch(error => { console.log(error) })
+        },
+
+        //Extraer imagen del owner de task por kamban
+        async List_subTask_Image(data) {
+          var self = this;
+          console.log(data)
+          self.subitemKamban = []
+          //Iterar los registros para extraer la imagen del owner
+          for (i in data) {
+            let Profile_Image = await axios.get('/api/v1.0/profile/?search=' + data[i].owner)
+            console.log(Profile_Image)
+            //console.log(data[i])
+            if (Profile_Image.data[0].image != "") {
+                console.log(data[i].title)
+                self.subitemKamban.push({'id':data[i].id, 'image': Profile_Image.data[0].image,'owner':data[i].owner ,'kamban':data[i].kamban, 'priority': data[i].priority, 'project':data[i].project , 'status': data[i].status, 'title': data[i].title,'date_create':data[i].date_create,'date_change':data[i].date_change,'description':data[i].descrition})
+            }else{
+              self.subitemKamban.push({'id':data[i].id, 'image': '','owner':data[i].owner ,'kamban':data[i].kamban, 'priority': data[i].priority, 'project':data[i].project , 'status': data[i].status, 'title': data[i].title,'date_create':data[i].date_create,'date_change':data[i].date_change,'description':data[i].descrition})
+
+                //self.subitemKamban.push({'id':data[i].id ,'owner':data[i].owner ,'kamban':data[i].kamban, 'priority': data[i].priority, 'project':data[i].project , 'status': data[i].status, 'title': data[i].title,'date_create':data[i].date_create,'date_change':data[i].date_change,'description':data[i].descrition,'image':''})
+            }
+          }
+         
+          
+
+
         },
         //Funcion para apartado de tabla
         async List_Coment(id) {
