@@ -151,7 +151,7 @@ def Profile_file(self,filename):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to=Profile_file, blank=True, null=True)
+    image = models.ImageField(upload_to=Profile_file, blank=True, null=True, default='static/img/perfil.png')
 
     def __str__(self):
         return self.user.username

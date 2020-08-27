@@ -119,7 +119,7 @@ WSGI_APPLICATION = 'Task.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'Task.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'Task4.sqlite3'),
     }
 }
 

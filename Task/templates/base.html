@@ -288,13 +288,45 @@
       names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
           //Calendar
 
+
+
+          //Reglas para validar usuario en singin
+
+      valid: false,
+      password2:'',
+      password1:'',
+      username: '',
+      usernameRules: [
+        v => !!v || 'Name is required',
+        v => v.length <= 10 || 'Name must be less than 10 characters',
+      ],
+      email: '',
+      emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+/.test(v) || 'E-mail must be valid',
+      ],
+
+
       },
 
 
       filters: {
         icon: function (string) {
           var self = this;
-          let icon = ''
+          let icon = 'mdi-language-python'
+
+          var py = string.endsWith(".py");
+          if (py === true) {
+            icon = "mdi-database"
+
+          }
+
+          var sql = string.endsWith(".sql");
+          if (sql === true) {
+            icon = "mdi-database"
+
+          }
+
           var png = string.endsWith(".png");
           if (png === true) {
             icon = "mdi-file-image"
@@ -360,6 +392,20 @@
 
         type_file: function (string) {
           let icon = ''
+
+          var sql = string.endsWith(".sql");
+          if (sql === true) {
+            icon = ".sql"
+
+          }
+
+          var py = string.endsWith(".py");
+          if (py === true) {
+            icon = ".py"
+
+          }
+
+
           var png = string.endsWith(".png");
           if (png === true) {
             icon = ".png"
@@ -428,7 +474,39 @@
             this.List_Kamban_Task_Project_Select(id)
             return this.selectedProjectCreate
           }
-        }
+        },
+        Validar_Contra: function () {
+          var id = ""
+          if((this.password1 != "") && (this.password2 != "") ){
+            if (this.password2 != this.password1) {
+              id = "Passwords do not match"
+              
+              return id
+            }
+          }
+        },
+
+        Validar_Contra_seguridad: function () {
+          var id = ""
+          //return id
+          if(this.password1 != ''){
+            if (this.password1.length < 8) {
+              id = 'Too short'
+              return id
+            }
+            if (!this.password1.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)){
+            id = 'for security add Uppercase and Lowercase Letters, Example = Admin@1234'
+            return id
+          }
+         
+
+          
+          }
+          
+         
+           
+        },
+       
 
 
       },
@@ -642,11 +720,12 @@
           var self = this;
           colabores = []
           console.log(array_member)
+          //console.log("Creo que se ejecuta aqui : " + str(array_member[i].member.id))
           for (i in array_member) {
             axios.get('/api/v1.0/profile/' + array_member[i].member.id + '/')
               .then(response => {
                 colabores = response.data
-                //console.log(response.data)
+                
                 //self.List_Members_for_project = response.data
                 self.List_Members_for_project.push({ 'id': colabores.user.id,'member_id':array_member[0].id ,'project':array_member[0].project ,'email': colabores.user.email, 'username': colabores.user.username, 'image': response.data.image })
               })
@@ -660,13 +739,14 @@
         Members_add(project_id, user_id) {
           var self = this;
           const validar = []
-          //console.log(self.id_task)
+          console.log(project_id)
+          console.log(user_id)
 
           //Validar si el usuario ya pertenece a este proyecto
+          
           axios.get(`/api/v1.0/members/?search=${project_id}+${user_id}`)
             .then(response => {
               validar = response.data
-              
             })
             .catch(error => { console.log(error) })
 

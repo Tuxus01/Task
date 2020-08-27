@@ -8,7 +8,7 @@
   <v-list dense nav class="py-1">
     <v-list-item two-line class="px-0">
       <v-list-item-avatar>
-        <img src="https://k60.kn3.net/89F951249.gif">
+        <v-img src="/{{ IMAGE.image }}">
       </v-list-item-avatar>
       <v-list-item-content>
         <v-list-item-title>List Projects!!</v-list-item-title>
@@ -69,8 +69,8 @@
             <v-textarea rows="3" outlined dense :rules="rules" counter v-model="id_task_comentario" label="New Comment" dense>
             </v-textarea>
       
-            <v-file-input v-model="files" label="Type : image/*, .mp4 ,.pdf, .doc, .docx, .xls, .xlsx, .csv"
-              accept="image/*,.mp4 ,.pdf,.doc, .docx, .xls, .xlsx, .csv " chips counter show-size multiple label="File input">
+            <v-file-input v-model="files" label="Type : image/*, .mp4 ,.pdf, .doc, .docx, .xls, .xlsx, .csv, .sql"
+              accept="image/*,.mp4 ,.pdf,.doc, .docx, .xls, .xlsx, .csv, .sql, .py " chips counter show-size multiple label="File input">
             </v-file-input>
       
             <v-btn small rounded block color="success" @click="Task_add_comment()">
@@ -456,6 +456,8 @@
                       <v-img :src="search_complete.image"></v-img>
                     </v-avatar>
                     [[ search_complete.email ]] 
+                  
+                 
                     <v-icon
                     @click="Members_add(Project_ID_Global,search_complete.id)" color="green">mdi-plus</v-icon>
                   </v-chip>

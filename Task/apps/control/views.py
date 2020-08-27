@@ -1,3 +1,5 @@
+import os
+import sys
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -44,6 +46,38 @@ from django.urls import reverse_lazy
 from django.views.generic import FormView, RedirectView
 import Task.settings as setting
 
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render, redirect
+from .forms import SignUpForm
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+from django.core.files import File
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            #agregando imagen al perfil de usuario
+            profile = UserProfile()
+            profile.user = user
+
+            
+            path='perfil.png'
+            profile.image = File(open(path, 'rb'))
+            profile.save()
+            login(request, user)
+            return HttpResponseRedirect('/')
+    else:
+        form = SignUpForm()
+    return render(request, 'base/signup.html', {'form': form})
+
+
+
 
 
 class LoginFormView(LoginView):
@@ -71,7 +105,10 @@ class LogoutRedirectView(RedirectView):
 # Create your views here.
 @login_required(login_url='/login/')
 def Index(request):
-    return render(request, 'base/index.html' )
+    foto = UserProfile.objects.get(user=request.user)
+    print(foto)
+    ctx ={ 'IMAGE': foto }
+    return render(request, 'base/index.html' ,ctx)
 
 
 
@@ -92,7 +129,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
-    search_fields = ['email']
+    search_fields = ['=username']
     filter_backends = (filters.SearchFilter,)
     
 
@@ -212,7 +249,7 @@ class Comment_FileViewSet(viewsets.ModelViewSet):
 class MembersViewSet(viewsets.ModelViewSet):
     queryset = members.objects.all().order_by('-id')
     serializer_class = MembersSerializer
-    search_fields = ['project__id','member__id']
+    search_fields = ['=project__id','=member__id']
     filter_backends = (filters.SearchFilter,)
 
 

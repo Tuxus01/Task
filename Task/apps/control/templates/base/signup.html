@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load l10n %}
+{% block content %}
+
+<template>
+    <v-app id="inspire">
+      <v-main>
+        <v-container
+          class="fill-height"
+          fluid
+        >
+          <v-row
+            align="center"
+            justify="center"
+          >
+            <v-col
+              cols="12"
+              sm="10"
+              md="3"
+            >
+            <form action="." method="post">
+              <v-card class="elevation-12">
+                <v-toolbar
+                  color="primary"
+                  dark
+                  flat
+                >
+                  <v-toolbar-title>Signup - User creation </v-toolbar-title>
+                  <v-spacer></v-spacer>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                      <v-btn
+                        :href="source"
+                        icon
+                        large
+                        target="_blank"
+                        v-on="on"
+                        href="https://github.com/Tuxus01/Task"
+                      >
+                        <v-icon>mdi-code-tags</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Source</span>
+                  </v-tooltip>
+                </v-toolbar>
+              
+                <v-card-text>
+                 
+                    {% csrf_token %}
+                    <v-text-field
+                      label="Username"
+                      name="username"
+                      id="username"
+                      v-model="username"
+                      :rules="usernameRules"
+                     :counter="10"
+                      prepend-icon="mdi-account"
+                      type="text"
+                      autocomplete="off"
+                    ></v-text-field>
+                   
+
+                    <v-text-field
+                      label="First name"
+                      name="first_name"
+                      id="first_name"
+                      prepend-icon="mdi-account-plus"
+                      type="text"
+                      autocomplete="off"
+                    ></v-text-field>
+
+                    <v-text-field
+                      label="Last name"
+                      name="last_name"
+                      id="last_name"
+                      prepend-icon="mdi-account-plus"
+                      type="text"
+                      autocomplete="off"
+                    ></v-text-field>
+
+
+                    <v-text-field
+                      label="Email"
+                      name="email"
+                      id="email"
+                      v-model="email"
+                      :rules="emailRules"
+                      prepend-icon="mdi-email"
+                      type="email"
+                      autocomplete="off"
+                    ></v-text-field>
+  
+                    <v-text-field
+                      id="password1"
+                      label="Password"
+                      name="password1"
+                      v-model="password1"
+                      prepend-icon="mdi-lock"
+                      type="password"
+                      
+                    ></v-text-field>
+                    
+                   
+
+                    <v-text-field
+                    id="password2"
+                    label="Repeat password"
+                    name="password2"
+                    v-model="password2"
+                    prepend-icon="mdi-lock"
+                    type="password"
+                    
+                  ></v-text-field>
+
+                <v-alert
+                    v-if="Validar_Contra"
+                    dense
+                    outlined
+                    type="error"
+                    >
+                    [[Validar_Contra]]
+                </v-alert>
+                 
+
+                <v-alert
+                    v-if="Validar_Contra_seguridad" 
+                    dense
+                    outlined
+                    type="info"
+                    >
+                    [[Validar_Contra_seguridad]]
+                </v-alert>
+
+
+               
+                 
+                </v-card-text>
+               
+
+                <v-card-actions >
+                  <v-spacer></v-spacer>
+                  <v-btn block type="submit" color="primary">Create and Login</v-btn>
+                </v-card-actions>
+                <v-card-actions>
+                    <v-btn block href="/login" color="warning">Login</v-btn>
+                 </v-card-actions>
+               
+              </v-card>
+            </form>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-main>
+    </v-app>
+  </template>
+
+
+
+
+{% endblock %}
