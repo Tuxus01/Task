@@ -10,11 +10,11 @@ utilizando la ideologia Kanban y asignacion de tareas.
 
 
 1. Creacion de Usuario y Proyecto.
-https://www.youtube.com/watch?v=XW_gD_pn0yc&t=9s
+https://www.youtube.com/watch?v=XW_gD_pn0yc
 2. Creacion de grupo de trabajo.
 https://www.youtube.com/watch?v=Vtgt55F1fLo
 3. Creacion de tareas.
-https://www.youtube.com/watch?v=urkoSSc0t94&t=19s
+https://www.youtube.com/watch?v=urkoSSc0t94
 4. Comentario/Multimedia/Logs/Calendarios
 https://www.youtube.com/watch?v=cfd09u22hDM
 
