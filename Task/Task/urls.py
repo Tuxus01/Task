@@ -25,6 +25,7 @@ urlpatterns = [
     #path('',TemplateView.as_view(template_name='index.html')),
     #API
     path('api/v1.0/',include('apps.control.urlsAPI')),
+    path('', include('pwa.urls')),
 
 ]+ static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)
 

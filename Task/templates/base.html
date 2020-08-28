@@ -4,6 +4,10 @@
 
 <head>
 
+  {% load pwa %}
+
+  {% progressive_web_app_meta %}
+
   <!--############################### TE GUSTA LEER EL CODIGO AJENO ? #####################################-->
   <!--############################### SUERTE ENTENDIENDO LO QUE HICE :(  #####################################-->
 
@@ -36,6 +40,19 @@
 
 
 
+ <!--Firebase-->
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+
+
+
+<script src="https://www.gstatic.com/firebasejs/3.9.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.9.0/firebase-messaging.js"></script>
+
+
+
+{% block head %}
+{% endblock %}
+
 
 
 
@@ -44,6 +61,11 @@
 </head>
 
 <body>
+
+
+
+
+
   <div id="app" >
     <template>
       <v-app id="inspire"dark >
@@ -119,7 +141,6 @@
       </v-app>
     </template>
   </div>
-
 
 
 

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.control',
     'rest_framework',
+    'pwa',
 
 ]
 
@@ -198,6 +199,7 @@ LOGOUT_REDIRECT_URL = '/login/'
 LOGIN_URL = '/login/'
 
 
+PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'serviceworker.js')
 
 
 

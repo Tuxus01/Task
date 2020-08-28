@@ -1,7 +1,87 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load l10n %}
+
+
+ <!--Firebase-->
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+{% block head %}
+
+
+<script src="https://www.gstatic.com/firebasejs/3.9.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.9.0/firebase-messaging.js"></script>
+
+
+
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+<script>
+   // Your web app's Firebase configuration
+   var firebaseConfig = {
+    apiKey: "AIzaSyDrD2mK5SWzhnE5jbQGjUNLDTXtRJ1knNI",
+    authDomain: "task-manager-61af9.firebaseapp.com",
+    databaseURL: "https://task-manager-61af9.firebaseio.com",
+    projectId: "task-manager-61af9",
+    storageBucket: "task-manager-61af9.appspot.com",
+    messagingSenderId: "968347017557",
+    appId: "1:968347017557:web:d4d1e83373864fff238fdc"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  let messaging = firebase.messaging();
+
+
+
+  //enlazar el servicewoker
+  navigator.serviceWorker
+  .register('./serviceworker.js')
+  .then(function(register){
+
+    messaging.useServiceWorker(register);
+
+    //solicitamos permiso para notificaciones de usuario
+    messaging.requestPermission()
+    .then(function() {
+      console.log("acepto notificaciones ")
+      return messaging.getToken();
+     
+    })
+    .then(function(Token){
+      console.log(Token)
+    })
+    .catch(function(e){
+      console.log(e)
+    })
+
+
+    //programamos recepcion de notificacion
+
+    messaging.onMessage(function(payload){
+      let title = "titilo";
+      let options = {
+        body:'Cuerpo',
+        icon:'/static/img/perfil.png'
+      } 
+
+      let mensaje = new Notification(title,options)
+    });
+
+    
+  });
+
+  
+
+</script>
+{% endblock %}
+
+
 {% block content %}
+
+
+
+
 <!--################################ DRAWER IZQUIERO Y DERECHO #####################################-->
 <!--Barra de navegacion entre projectos -->
 <v-navigation-drawer v-model="drawer2" temporary absolute dark app>
@@ -66,9 +146,12 @@
       <template v-if="List_Task_drawer.status === true">
         <v-flex xs12 lg12 md12>
           <v-col>
+            <!--<v-textarea rows="3" outlined dense :rules="rules" counter v-model="id_task_comentario" label="New Comment" dense>
+            </v-textarea>-->
             <v-textarea rows="3" outlined dense :rules="rules" counter v-model="id_task_comentario" label="New Comment" dense>
             </v-textarea>
-      
+
+
             <v-file-input v-model="files" label="Type : image/*, .mp4 ,.pdf, .doc, .docx, .xls, .xlsx, .csv, .sql"
               accept="image/*,.mp4 ,.pdf,.doc, .docx, .xls, .xlsx, .csv, .sql, .py " chips counter show-size multiple label="File input">
             </v-file-input>
