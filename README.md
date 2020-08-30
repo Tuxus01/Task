@@ -8,6 +8,8 @@ visualiza el los avences de tu proyecto.
 
 utilizando la ideologia Kanban y asignacion de tareas.
 
+Demo.
+https://task01.pythonanywhere.com/
 
 1. Creacion de Usuario y Proyecto.
 https://www.youtube.com/watch?v=XW_gD_pn0yc
