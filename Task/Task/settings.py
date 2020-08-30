@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'apps.control',
     'rest_framework',
     'pwa',
+    'fcm_django',
 
 ]
 
@@ -200,6 +201,15 @@ LOGIN_URL = '/login/'
 
 
 PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'serviceworker.js')
+
+
+FCM_DJANGO_SETTINGS  = {
+    "APP_VERBOSE_NAME": "project-968347017557",
+    "FCM_SERVER_KEY": "AAAA4XX64VU:APA91bH3q9qRCZschremqTWchnCOcLhQJ7jTiT6GFGT5WPnVOJ4EI4YYVeE6t1FVuLhme3vIqd_0lPga7BHcqiP8JIRZ-vu9R7OZpNj_VzEvKXOYIBI9I6tZJJajRbu4StJ2MyN8P7HU",
+    "ONE_DEVICE_PER_USER" : False,
+    "DELETE_INACTIVE_DEVICES":True,
+
+}
 
 
 

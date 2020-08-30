@@ -1,8 +1,6 @@
 var CACHE_NAME = "Task_Cache";
 var urlsToCache = [
   "/",
-  "/static/",
-  
 ];
 
 self.addEventListener("install", function (event) {
@@ -48,6 +46,9 @@ self.addEventListener("fetch", function (event) {
 importScripts('https://www.gstatic.com/firebasejs/3.9.0/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/3.9.0/firebase-messaging.js');
 
+
+
+
 var firebaseConfig = {
   apiKey: "AIzaSyDrD2mK5SWzhnE5jbQGjUNLDTXtRJ1knNI",
   authDomain: "task-manager-61af9.firebaseapp.com",
@@ -64,10 +65,10 @@ firebase.initializeApp(firebaseConfig);
 let messaging = firebase.messaging();
 
 messaging.setBackgroundMessageHandler(function(payload){
-      let title = "titilo";
+      let title = payload.notification.title;
       let options = {
-        body:'Cuerpo',
-        icon:'/static/img/perfil.png'
+        body:payload.notification.body,
+        icon:payload.notification.icon
       }
 
       self.registration.showNotification(title, options)

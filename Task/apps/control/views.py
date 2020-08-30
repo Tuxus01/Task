@@ -51,8 +51,61 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from .forms import SignUpForm
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 from django.core.files import File
+
+#Extraer Usuario del la base de datos.
+#Usuario
+from rest_framework import permissions
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.decorators import permission_required
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from django.contrib.auth.models import User, Group
+
+
+#Token de Firebase
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse, HttpResponseBadRequest
+from django.core import serializers
+import json
+from fcm_django.models import FCMDevice
+from pyfcm import FCMNotification
+
+
+@csrf_exempt
+@require_http_methods(['POST'])
+def guardar_token(request):
+    print('Hola qui vas')
+    body = request.body.decode('utf-8')
+    bodyDic = json.loads(body)
+    token = bodyDic['token']
+    tipo = bodyDic['tipo']
+    #print(tipo)
+
+    
+    existe = FCMDevice.objects.filter(registration_id = token, active = True)
+
+    if len(existe) > 0:
+        return HttpResponseBadRequest(json.dumps({'mensaje':'el token ya existe en la base de datos'}))
+
+    dispositov = FCMDevice()
+    dispositov.registration_id = token
+    dispositov.active = True
+    #dispositov.type='web'
+
+
+    #Validar usuaario inicio session 
+    if request.user.is_authenticated:
+        dispositov.user = request.user
+    
+    try:
+        dispositov.save()
+        return HttpResponse(json.dumps({'mensaje':'tokke guardado'}))
+
+    except:
+        return HttpResponseBadRequest(json.dumps({'mensaje':'no se a guardado el token'}))
+    
+
 
 def signup(request):
     if request.method == 'POST':
@@ -70,26 +123,28 @@ def signup(request):
             path='perfil.png'
             profile.image = File(open(path, 'rb'))
             profile.save()
+            
+
+
             login(request, user)
             return HttpResponseRedirect('/')
     else:
         form = SignUpForm()
     return render(request, 'base/signup.html', {'form': form})
 
-
-
-
-
 class LoginFormView(LoginView):
     template_name = 'base/login.html'
     success_url = reverse_lazy('base:index')
+    
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect(setting.LOGIN_REDIRECT_URL)
+            
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        
         context['title'] = 'Iniciar sesión'
         return context
 
@@ -100,26 +155,31 @@ class LogoutRedirectView(RedirectView):
         logout(request)
         return super().dispatch(request, *args, **kwargs)
 
+from pyfcm import FCMNotification
 
+def notification_firebase(id, titulo, body, owner):
+    if not titulo:
+        raise BaseException("No Text")
+    img = UserProfile.objects.filter(user__id=owner)[0]
+    username = User.objects.get(pk=owner)
+    device = FCMDevice.objects.filter(user__id=id)
+    device.send_message(
+        title = titulo + " by " + str(username.email),
+        body = body,
+        icon = str(img.image),
+        #sound = "default"
+    )
 
 # Create your views here.
 @login_required(login_url='/login/')
 def Index(request):
+    
+    
     foto = UserProfile.objects.get(user=request.user)
-    print(foto)
+    #print(foto)
     ctx ={ 'IMAGE': foto }
+    #ctx={}
     return render(request, 'base/index.html' ,ctx)
-
-
-
-#Extraer Usuario del la base de datos.
-#Usuario
-from rest_framework import permissions
-from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth.decorators import permission_required
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from django.contrib.auth.models import User, Group
-
 
 class UserViewSet(viewsets.ModelViewSet):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
@@ -131,8 +191,6 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     search_fields = ['=username']
     filter_backends = (filters.SearchFilter,)
-    
-
 
 class GroupViewSet(viewsets.ModelViewSet):
     
@@ -142,12 +200,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
-
 #Usuario
-
-
-
-
 #Listado de projectos en los que estoy trabajando
 class projectViewSet(viewsets.ModelViewSet):
     queryset = project.objects.all()
@@ -166,6 +219,8 @@ class projectViewSet(viewsets.ModelViewSet):
             #Validacion de project activo
             if pro.status == True:
                 projecto_list.append(pro)
+
+        
         
         #print(projecto_list)
         #queryset = project.objects.filter(owner=request.user)
@@ -187,8 +242,6 @@ class projectViewSet(viewsets.ModelViewSet):
         serializer = kambanSerializer(kam, many=True)
         return Response(serializer.data)
 
-
-
 #Listado de Kamban por Projecto en los que estoy trabajando
 class kambanViewSet(viewsets.ModelViewSet):
     queryset = kamban.objects.all()
@@ -201,20 +254,17 @@ class kambanViewSet(viewsets.ModelViewSet):
         #list_task = Task.objects.filter(kamban=id_kamban).filter(status=True)
         list_task = Task.objects.filter(kamban=id_kamban)
         print(list_task)
+        
         queryset = list_task
         serializer = TaskSerializer(queryset, many=True)
         return Response(serializer.data)
         
-
-
-
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all().order_by('-id')
     serializer_class = CommentSerializer
     #filter_fields = ('code',)
     search_fields = ['task__id']
     filter_backends = (filters.SearchFilter,)
-
 
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
@@ -237,6 +287,25 @@ class TaskViewSet(viewsets.ModelViewSet):
 class CommentAddViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all().order_by('-id')
     serializer_class = CommentAddSerializer
+
+    def create(self, request,  *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        #capturando id de tarea para notificar a los mientrbos de un nuevo comentario
+        tarea = request.data['task']
+        comentario = request.data['comment']
+        owners = request.data['owner']
+        task = Task.objects.get(pk=tarea)
+        #print(task.project)
+        miembr0s = members.objects.filter(project__id = task.project.id)
+        for i in miembr0s:
+            notification_firebase(i.member.id, 'New Comment', comentario,owners)
+
+        
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data)
+        
     
 
 class Comment_FileViewSet(viewsets.ModelViewSet):
@@ -251,6 +320,20 @@ class MembersViewSet(viewsets.ModelViewSet):
     serializer_class = MembersSerializer
     search_fields = ['=project__id','=member__id']
     filter_backends = (filters.SearchFilter,)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        project = request.data['project']
+        owner = request.data['owner']
+        member = request.data['member']
+        #print(request.data)
+        #notification_firebase(member, 'New Project', 'your user was added to a new project',owner)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        notification_firebase(member, 'New Project', 'your user was added to a new project',owner)
+        return Response(serializer.data)
+        #return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class MembersDetailViewSet(viewsets.ModelViewSet):

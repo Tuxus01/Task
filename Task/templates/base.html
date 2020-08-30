@@ -11,9 +11,7 @@
   <!--############################### TE GUSTA LEER EL CODIGO AJENO ? #####################################-->
   <!--############################### SUERTE ENTENDIENDO LO QUE HICE :(  #####################################-->
 
-
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
   <!-- Fotorama from CDNJS, 19 KB -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script>
@@ -39,14 +37,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/push.js/1.0.5/push.js"></script>
 
 
-
- <!--Firebase-->
-<!-- The core Firebase JS SDK is always required and must be listed first -->
-
-
-
-<script src="https://www.gstatic.com/firebasejs/3.9.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/3.9.0/firebase-messaging.js"></script>
 
 
 
@@ -542,6 +532,7 @@
 
       methods: {
 
+
         ///Calendar
         viewDay ({ date }) {
         this.focus = date
@@ -1014,7 +1005,7 @@
                 if (self.files.length >= 1) {
                   self.Task_add_comment_Files(response.data.id)
                 }
-                self.notification('New comment', 'Action added successfully')
+                //self.notification('New comment', 'Action added successfully')
               })
               .catch(function (error) {
                 console.log(error);

@@ -6,11 +6,12 @@
  <!--Firebase-->
 <!-- The core Firebase JS SDK is always required and must be listed first -->
 {% block head %}
+ <!--Firebase-->
+<!-- The core Firebase JS SDK is always required and must be listed first -->
 
 
 <script src="https://www.gstatic.com/firebasejs/3.9.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/3.9.0/firebase-messaging.js"></script>
-
 
 
 
@@ -30,9 +31,9 @@
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
-  let messaging = firebase.messaging();
+  const messaging = firebase.messaging();
 
-
+  
 
   //enlazar el servicewoker
   navigator.serviceWorker
@@ -46,34 +47,97 @@
     .then(function() {
       console.log("acepto notificaciones ")
       return messaging.getToken();
-     
+      //Enviar token a modelo Django
+
+      
+
+
     })
-    .then(function(Token){
-      console.log(Token)
+    .then(function(token){
+      console.log(token)
+
+      let dispositivo = getMobileOperatingSystem()
+      let tipo = ''
+      if(dispositivo=='desconocido'){
+        tipo = 'web'
+      }
+      if(dispositivo=='Windows Phone'){
+        tipo = ''
+      }
+      if(dispositivo=='Android'){
+        tipo = 'android'
+      }
+
+      if(dispositivo=='iOS'){
+        tipo = 'ios'
+      }
+      
+      
+
+      fetch('save_token/',{
+        method: 'post',
+        headers:{
+          'Content-Type':'application/json',
+          'Accept': 'application/json',
+        },
+        body:JSON.stringify({
+          'token':token,
+          'tipo':tipo,
+
+        })
+      })
+      .then(function(resultado){
+        console.log("se a guardado el token")
+      })
+      .catch(function(e){
+        console.log("se a generado un error al guardar token")
+      })
+      
     })
     .catch(function(e){
       console.log(e)
     })
+  })
 
+  //programamos recepcion de notificacion
+  messaging.onMessage(function(payload){
+    console.log(payload)
+    let title = payload.notification.title
+    let options = {
+      body:payload.notification.body,
+      icon:payload.notification.icon
+    } 
 
-    //programamos recepcion de notificacion
-
-    messaging.onMessage(function(payload){
-      let title = "titilo";
-      let options = {
-        body:'Cuerpo',
-        icon:'/static/img/perfil.png'
-      } 
-
-      let mensaje = new Notification(title,options)
-    });
-
-    
+    let mensaje = new Notification(title,options)
+    console.log(mensaje)
   });
+
 
   
 
 </script>
+
+<script>
+  function getMobileOperatingSystem() {
+  var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+  // Windows Phone debe ir primero porque su UA tambien contiene "Android"
+ if (/windows phone/i.test(userAgent)) {
+    return "Windows Phone";
+ }
+
+ if (/android/i.test(userAgent)) {
+    return "Android";
+}
+
+     if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    return "iOS";
+}
+
+return "desconocido";
+}
+</script>
+
 {% endblock %}
 
 
